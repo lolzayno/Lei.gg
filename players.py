@@ -64,7 +64,7 @@ def fetch_rank(true_region, summoner_id, api_key):
     else:
         return 'None', 'None', 0, 0, 0
 
-def fetch_data(region, ign, api_key):
+def fetch_data(region, ign, engine, api_key):
     puuid = fetch_id(region, ign, api_key)
     summoner_id, account_id, profile_icon, summoner_level = fetch_additional(region, puuid, api_key)
     account_info = {
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     api_key = get_json("API_KEY")
     region = "NA1"
     ign = "Zayno#NA1"
-    player = fetch_data(region, ign, api_key)
+    player = fetch_data(region, ign, engine, api_key)
     puuid = player[1]
     last_updated = player[4]
     patch = match.fetch_patch()
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     rune_map = match.fetch_rune(patch)
     time_zone = pytz.timezone('America/Los_Angeles')
     all_matches = match.fetch_matches(region, puuid, int(last_updated.timestamp()), api_key)
-    #update_time = database.update_time(engine, puuid, datetime.now())
+    database.update_timestamp(engine, puuid)
     dict_update = {}
     for game in all_matches:
         details = match.fetch_match_data(game, puuid, region, item_map, rune_map, dict_update, api_key)
@@ -129,8 +129,8 @@ if __name__ == '__main__':
                 bluesup_champ, bluesup_data,
                 redsup_champ, redsup_data)
         break
-    print(dict_update)
     for champ in dict_update:
+        database.update_champions(engine, puuid, champ)
         for rune in dict_update[champ]['runes']:
             database.update_runes(engine, puuid, champ, rune)
         for item in dict_update[champ]['items']:
