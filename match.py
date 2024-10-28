@@ -2,6 +2,33 @@ import time
 import requests
 from datetime import datetime
 import players
+
+def fetch_item(patch):
+    url = f"https://ddragon.leagueoflegends.com/cdn/{patch}/data/en_US/item.json"
+    response = requests.get(url)
+    item_data = response.json()
+
+    # Mapping item_id to a dictionary with 'name', 'status', and 'gold' (total cost)
+    item_mapping = {
+        int(item_id): {
+            'name': item_info['name'],
+            'status': 'completed' if 'into' not in item_info else 'component',
+            'gold': item_info['gold']['total']  # Get the total gold cost
+        } 
+        for item_id, item_info in item_data['data'].items()
+    }
+
+    # Map 0 to 'None' with a status of 'none' and gold cost of 0
+    item_mapping[0] = {'name': 'None', 'status': 'none', 'gold': 0}
+    
+    return item_mapping
+
+def fetch_patch():
+    patch_url = f'https://ddragon.leagueoflegends.com/api/versions.json'
+    response = requests.get(patch_url)
+    data = response.json()
+    return data[0]
+
 def get_timeline(region, match_code, api_key, puuid, item_map, item0, item1, item2, item3, item4, item5):
     timeline_url = f"https://{region}.api.riotgames.com/lol/match/v5/matches/{match_code}/timeline?api_key={api_key}"
     time.sleep(1)
@@ -54,7 +81,7 @@ def get_timeline(region, match_code, api_key, puuid, item_map, item0, item1, ite
 
 
 #fetches specific match data 
-def fetch_match_data(match_id, puuid, region, api_key):
+def fetch_match_data(match_id, puuid, region, item_map, api_key):
     true_region = region
     if region in ['BR1', 'LA1', 'LA2', 'NA1', 'OC1']:
         region = 'americas'
@@ -82,391 +109,501 @@ def fetch_match_data(match_id, puuid, region, api_key):
         result = 'Blue'
     else:
         result = 'Red'
-    for count, player in enumerate(data['info']['participants']):
+    for player in data['info']['participants']:
         try:
             if player['puuid'] == puuid:
-                summoner_champ = player[count]['championName']
-                summoner_allin = player[count]['allInPings']
-                summoner_assistme = player[count]['assistmePings']
-                summoner_pings = player[count]['basicPings']
-                summoner_commandping = player[count]['commandPings']
-                summoner_dangerping = player[count]['dangerPings']
-                summoner_missingping = player[count]['missingPings']
-                summoner_visionping = player[count]['enemyVisionPings']
-                summoner_backping = player[count]['getBackPings']
-                summoner_holdping = player[count]['holdPings']
-                summoner_needvisionping = player[count]['needVisionPings']
-                summoner_onmywayping = player[count]['onMyWayPings']
-                summoner_pushpings = player[count]['pushPings']
-                summoner_supportitem = player[count]['challenges']['completeSupportQuestInTime']
-                summoner_controlward = player[count]['challenges']['controlWardsPlaced']
-                summoner_damagepermin = round(player[count]['challenges']['damagePerMinute'], 0)
-                summoner_damagetaken = round(player[count]['challenges']['damageTakenOnTeamPercentage'], 2)
-                summoner_dodgeclose = player[count]['challenges']['dodgeSkillShotsSmallWindow']
-                summoner_healshield = player[count]['challenges']['effectiveHealAndShielding']
-                summoner_cc = player[count]['challenges']['enemyChampionImmobilizations']
-                summoner_earlyturrets = player[count]['challenges']['kTurretsDestroyedBeforePlatesFall']
-                summoner_kda = round(player[count]['challenges']['kda'], 2)
-                summoner_kp = round(player[count]['challenges']['killParticipation'], 2)
-                summoner_killsunderturret = player[count]['challenges']['killsNearEnemyTurret']
-                summoner_knockintoteamkill = player[count]['challenges']['knockEnemyIntoTeamAndKill']
-                summoner_earlyskillshots = player[count]['challenges']['landSkillShotsEarlyGame']
-                summoner_minion10 = player[count]['challenges']['laneMinionsFirst10Minutes']
-                summoner_maxcs = player[count]['challenges']['maxCsAdvantageOnLaneOpponent']
-                summoner_maxlvl = player[count]['challenges']['maxLevelLeadLaneOpponent']
-                summoner_rift = player[count]['challenges']['riftHeraldTakedowns']
-                summoner_scuttle = player[count]['scuttleCrabKills']
-                summoner_totaldodge = player[count]['challenges']['skillshotsDodged']
-                summoner_totalland = player[count]['challenges']['skillshotsHit']
-                summoner_solokill = player[count]['challenges']['soloKills']
-                summoner_wards = player[count]['challenges']['stealthWardsPlaced']
-                summoner_baron = player[count]['challenges']['teamBaronKills']
-                summoner_damagepercent = round(player[count]['challenges']['teamDamagePercentage'], 2)
-                summoner_plates = player[count]['challenges']['turretPlatesTaken']
-                summoner_turrets = player[count]['challenges']['turretTakedowns']
-                summoner_visionadvantage = round(player[count]['challenges']['visionScoreAdvantageLaneOpponent'], 2)
-                summoner_visionscorepermin = round(player[count]['challenges']['visionScorePerMinute'], 2)
-                summoner_lvl = player[count]['champLevel']
-                summoner_exp = player[count]['champExperience']
-                summoner_damagebuilding = player[count]['damageDealtToBuildings']
-                summoner_damageobj = player[count]['damageDealtToTurrets']
-                summoner_deaths = player[count]['deaths']
-                summoner_drag = player[count]['dragonKills']
-                summoner_surrender = player[count]['gameEndedInEarlySurrender']
+                summoner_champ = player['championName']
+                summoner_allin = player['allInPings']
+                summoner_assistme = player['assistMePings']
+                summoner_pings = player['basicPings']
+                summoner_commandping = player['commandPings']
+                summoner_dangerping = player['dangerPings']
+                summoner_missingping = player['enemyMissingPings']
+                summoner_visionping = player['enemyVisionPings']
+                summoner_backping = player['getBackPings']
+                summoner_holdping = player['holdPings']
+                summoner_needvisionping = player['needVisionPings']
+                summoner_onmywayping = player['onMyWayPings']
+                summoner_pushpings = player['pushPings']
+                summoner_supportitem = player['challenges']['completeSupportQuestInTime']
+                summoner_controlward = player['challenges']['controlWardsPlaced']
+                summoner_damagepermin = round(player['challenges']['damagePerMinute'], 0)
+                summoner_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                summoner_dodgeclose = player['challenges']['dodgeSkillShotsSmallWindow']
+                summoner_healshield = player['challenges']['effectiveHealAndShielding']
+                summoner_cc = player['challenges']['enemyChampionImmobilizations']
+                summoner_earlyturrets = player['challenges']['kTurretsDestroyedBeforePlatesFall']
+                summoner_kda = round(player['challenges']['kda'], 2)
+                summoner_kp = round(player['challenges']['killParticipation'], 2)
+                summoner_killsunderturret = player['challenges']['killsNearEnemyTurret']
+                summoner_knockintoteamkill = player['challenges']['knockEnemyIntoTeamAndKill']
+                summoner_earlyskillshots = player['challenges']['landSkillShotsEarlyGame']
+                summoner_minion10 = player['challenges']['laneMinionsFirst10Minutes']
+                summoner_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                summoner_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                summoner_rift = player['challenges']['riftHeraldTakedowns']
+                summoner_scuttle = player['challenges']['scuttleCrabKills']
+                summoner_totaldodge = player['challenges']['skillshotsDodged']
+                summoner_totalland = player['challenges']['skillshotsHit']
+                summoner_solokill = player['challenges']['soloKills']
+                summoner_wards = player['challenges']['stealthWardsPlaced']
+                summoner_baron = player['challenges']['teamBaronKills']
+                summoner_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                summoner_plates = player['challenges']['turretPlatesTaken']
+                summoner_turrets = player['challenges']['turretTakedowns']
+                summoner_visionadvantage = round(player['challenges']['visionScoreAdvantageLaneOpponent'], 2)
+                summoner_visionscorepermin = round(player['challenges']['visionScorePerMinute'], 2)
+                summoner_lvl = player['champLevel']
+                summoner_exp = player['champExperience']
+                summoner_damagebuilding = player['damageDealtToBuildings']
+                summoner_damageobj = player['damageDealtToTurrets']
+                summoner_deaths = player['deaths']
+                summoner_drag = player['dragonKills']
+                summoner_surrender = player['gameEndedInEarlySurrender']
                 summoner_lane = player['teamPosition']
-                summoner_item0 = player[count]['item0']
-                summoner_item1 = player[count]['item1']
-                summoner_item2 = player[count]['item2']
-                summoner_item3 = player[count]['item3']
-                summoner_item4 = player[count]['item4']
-                summoner_item5 = player[count]['item5']
-                summoner_item6 = player[count]['item6']
-                summoner_kills = player[count]['kills']
-                summoner_magictaken = player[count]['magicDamageTaken']
-                summoner_magicdmg = player[count]['magicDamageDealtToChampions']
-                summoner_physicaltaken = player[count]['physicalDamageTaken']
-                summoner_physicaldmg = player[count]['physicalDamageDealtToChampions']
-                summoner_totaldmg = player[count]['totalDamageDealtToChampions']
-                summoner_totaltaken = player[count]['totalDamageTaken']
-                summoner_truetaken = player[count]['trueDamageTaken']
-                summoner_truedmg = player[count]['trueDamageDealtToChampions']
-                summoner_q = player[count]['spell1Casts']
-                summoner_w = player[count]['spell2Casts']
-                summoner_e = player[count]['spell3Casts']
-                summoner_r = player[count]['spell4Casts']
-                summoner_spell1casts = player[count]['summoner1Casts']
-                summoner_spell1 = player[count]['summoner1Id']
-                summoner_spell2casts = player[count]['summoner2Casts']
-                summoner_spell2 = player[count]['summoner2Id']
-                summoner_team = player[count]['teamId']
-                summoner_ccing = player[count]['timeCCingOtheres']
-                summoner_visionscore = player[count]['visionScore']
-                summoner_wardskilled = player[count]['wardsKilled']
+                summoner_item0 = player['item0']
+                summoner_item1 = player['item1']
+                summoner_item2 = player['item2']
+                summoner_item3 = player['item3']
+                summoner_item4 = player['item4']
+                summoner_item5 = player['item5']
+                summoner_item6 = player['item6']
+                summoner_kills = player['kills']
+                summoner_magictaken = player['magicDamageTaken']
+                summoner_magicdmg = player['magicDamageDealtToChampions']
+                summoner_physicaltaken = player['physicalDamageTaken']
+                summoner_physicaldmg = player['physicalDamageDealtToChampions']
+                summoner_totaldmg = player['totalDamageDealtToChampions']
+                summoner_totaltaken = player['totalDamageTaken']
+                summoner_truetaken = player['trueDamageTaken']
+                summoner_truedmg = player['trueDamageDealtToChampions']
+                summoner_q = player['spell1Casts']
+                summoner_w = player['spell2Casts']
+                summoner_e = player['spell3Casts']
+                summoner_r = player['spell4Casts']
+                summoner_spell1casts = player['summoner1Casts']
+                summoner_spell1 = player['summoner1Id']
+                summoner_spell2casts = player['summoner2Casts']
+                summoner_spell2 = player['summoner2Id']
+                summoner_team = player['teamId']
+                summoner_ccing = player['timeCCingOthers']
+                summoner_visionscore = player['visionScore']
+                summoner_wardskilled = player['wardsKilled']
                 summoner_result = player['win']
-                summoner_rune0 = player[count]['perks']['styles'][0]['selections'][0]['perk']
-                summoner_rune1 = player[count]['perks']['styles'][0]['selections'][1]['perk']
-                summoner_rune2 = player[count]['perks']['styles'][0]['selections'][2]['perk']
-                summoner_rune3 = player[count]['perks']['styles'][0]['selections'][3]['perk']
-                summoner_rune4 = player[count]['perks']['styles'][1]['selections'][0]['perk']
-                summoner_rune5 = player[count]['perks']['styles'][1]['selections'][1]['perk']
-                summoner_rune8 = player[count]['perks']['statPerks']['defense']
-                summoner_rune7 = player[count]['perks']['statPerks']['flex']
-                summoner_rune6 = player[count]['perks']['statPerks']['offense']
-                summoner_totalhealing = player[count]['totalHeal']
-                summoner_healteam = player[count]['totalHealsOnTeammates']
-                summoner_shield = player[count]['totalDamageShieldedOnTeammates']
-                summoner_minions = player[count]['totalMinionsKilled']
-                bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5)
+                summoner_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                summoner_rune1 = player['perks']['styles'][0]['selections'][1]['perk']
+                summoner_rune2 = player['perks']['styles'][0]['selections'][2]['perk']
+                summoner_rune3 = player['perks']['styles'][0]['selections'][3]['perk']
+                summoner_rune4 = player['perks']['styles'][1]['selections'][0]['perk']
+                summoner_rune5 = player['perks']['styles'][1]['selections'][1]['perk']
+                summoner_rune8 = player['perks']['statPerks']['defense']
+                summoner_rune7 = player['perks']['statPerks']['flex']
+                summoner_rune6 = player['perks']['statPerks']['offense']
+                summoner_totalhealing = player['totalHeal']
+                summoner_healteam = player['totalHealsOnTeammates']
+                summoner_shield = player['totalDamageShieldedOnTeammates']
+                summoner_minions = player['totalMinionsKilled']
+                summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5 = get_timeline(region, match_id, api_key, puuid, item_map, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5)
             if player['teamPosition'] == 'TOP' and player['teamId'] == 100:
-                bluetop_id = data['info']['participants'][count]['summonerId']
-                bluetop_ign = player[count]['riotIdGameName']
-                bluetop_tag = player[count]['riotIdTagline']
-                bluetop_kills = player[count]['kills']
-                bluetop_deaths = player[count]['deaths']
-                bluetop_assists = player[count]['assists']
-                bluetop_kp = round(player[count]['killParticipation'], 2)
-                bluetop_kda = round(player[count]['kda'], 2)
-                bluetop_dmg = player[count]['totalDamageDealtToChampions']
-                bluetop_taken = player[count]['totalDamageTaken']
-                bluetop_vision = player[count]['visionScore']
-                bluetop_summoner1 = player[count]['summoner1Id']
-                bluetop_summoner2 = player[count]['summoner2Id']
-                bluetop_minions = player[count]['totalMinionsKilled']
-                bluetop_champ = data['info']['participants'][count]['championName']
-                bluetop_item0 = data['info']['participants'][count]['item0']
-                bluetop_item1 = data['info']['participants'][count]['item1']
-                bluetop_item2 = data['info']['participants'][count]['item2']
-                bluetop_item3 = data['info']['participants'][count]['item3']
-                bluetop_item4 = data['info']['participants'][count]['item4']
-                bluetop_item5 = data['info']['participants'][count]['item5']
-                bluetop_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                bluetop_id = player['summonerId']
+                bluetop_ign = player['riotIdGameName']
+                bluetop_tag = player['riotIdTagline']
+                bluetop_kills = player['kills']
+                bluetop_deaths = player['deaths']
+                bluetop_assists = player['assists']
+                bluetop_kp = round(player['challenges']['killParticipation'], 2)
+                bluetop_kda = round(player['challenges']['kda'], 2)
+                bluetop_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                bluetop_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                bluetop_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                bluetop_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                bluetop_dmg = player['totalDamageDealtToChampions']
+                bluetop_taken = player['totalDamageTaken']
+                bluetop_magictaken = player['magicDamageTaken']
+                bluetop_magicdmg = player['magicDamageDealtToChampions']
+                bluetop_physicaltaken = player['physicalDamageTaken']
+                bluetop_physicaldmg = player['physicalDamageDealtToChampions']
+                bluetop_truetaken = player['trueDamageTaken']
+                bluetop_truedmg = player['trueDamageDealtToChampions']
+                bluetop_vision = player['visionScore']
+                bluetop_summoner1 = player['summoner1Id']
+                bluetop_summoner2 = player['summoner2Id']
+                bluetop_minions = player['totalMinionsKilled']
+                bluetop_champ = player['championName']
+                bluetop_item0 = player['item0']
+                bluetop_item1 = player['item1']
+                bluetop_item2 = player['item2']
+                bluetop_item3 = player['item3']
+                bluetop_item4 = player['item4']
+                bluetop_item5 = player['item5']
+                bluetop_item6 = player['item6']
+                bluetop_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                bluetop_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, bluetop_id, api_key)
                 bluetop_rank = rank_details[0]
                 bluetop_tier = rank_details[1]
                 bluetop_lp = rank_details[2]
-                bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5)
+                bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5 = get_timeline(region, match_id, api_key, bluetop_puuid, item_map, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5)
             elif player['teamPosition'] == 'TOP' and player['teamId'] == 200:
-                redtop_id = data['info']['participants'][count]['summonerId']
-                redtop_ign = player[count]['riotIdGameName']
-                redtop_tag = player[count]['riotIdTagline']
-                redtop_kills = player[count]['kills']
-                redtop_deaths = player[count]['deaths']
-                redtop_assists = player[count]['assists']
-                redtop_kp = round(player[count]['killParticipation'], 2)
-                redtop_kda = round(player[count]['kda'], 2)
-                redtop_dmg = player[count]['totalDamageDealtToChampions']
-                redtop_taken = player[count]['totalDamageTaken']
-                redtop_vision = player[count]['visionScore']
-                redtop_summoner1 = player[count]['summoner1Id']
-                redtop_summoner2 = player[count]['summoner2Id']
-                redtop_minions = player[count]['totalMinionsKilled']
-                redtop_champ = data['info']['participants'][count]['championName']
-                redtop_item0 = data['info']['participants'][count]['item0']
-                redtop_item1 = data['info']['participants'][count]['item1']
-                redtop_item2= data['info']['participants'][count]['item2']
-                redtop_item3 = data['info']['participants'][count]['item3']
-                redtop_item4 = data['info']['participants'][count]['item4']
-                redtop_item5 = data['info']['participants'][count]['item5']
-                redtop_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                redtop_id = player['summonerId']
+                redtop_ign = player['riotIdGameName']
+                redtop_tag = player['riotIdTagline']
+                redtop_kills = player['kills']
+                redtop_deaths = player['deaths']
+                redtop_assists = player['assists']
+                redtop_kp = round(player['challenges']['killParticipation'], 2)
+                redtop_kda = round(player['challenges']['kda'], 2)
+                redtop_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                redtop_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                redtop_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                redtop_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                redtop_dmg = player['totalDamageDealtToChampions']
+                redtop_taken = player['totalDamageTaken']
+                redtop_magictaken = player['magicDamageTaken']
+                redtop_magicdmg = player['magicDamageDealtToChampions']
+                redtop_physicaltaken = player['physicalDamageTaken']
+                redtop_physicaldmg = player['physicalDamageDealtToChampions']
+                redtop_truetaken = player['trueDamageTaken']
+                redtop_truedmg = player['trueDamageDealtToChampions']
+                redtop_vision = player['visionScore']
+                redtop_summoner1 = player['summoner1Id']
+                redtop_summoner2 = player['summoner2Id']
+                redtop_minions = player['totalMinionsKilled']
+                redtop_champ = player['championName']
+                redtop_item0 = player['item0']
+                redtop_item1 = player['item1']
+                redtop_item2= player['item2']
+                redtop_item3 = player['item3']
+                redtop_item4 = player['item4']
+                redtop_item5 = player['item5']
+                redtop_item6 = player['item6']
+                redtop_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                redtop_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, redtop_id, api_key)
                 redtop_rank = rank_details[0]
                 redtop_tier = rank_details[1]
                 redtop_lp = rank_details[2]
-                redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5 = get_timeline(region, match_id, api_key, puuid, item_map, redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5)
+                redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5 = get_timeline(region, match_id, api_key, redtop_puuid, item_map, redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5)
             elif player['teamPosition'] == 'JUNGLE' and player['teamId'] == 100:
-                bluejg_id = data['info']['participants'][count]['summonerId']
-                bluejg_ign = player[count]['riotIdGameName']
-                bluejg_tag = player[count]['riotIdTagline']
-                bluejg_kills = player[count]['kills']
-                bluejg_deaths = player[count]['deaths']
-                bluejg_assists = player[count]['assists']
-                bluejg_kp = round(player[count]['killParticipation'], 2)
-                bluejg_kda = round(player[count]['kda'], 2)
-                bluejg_dmg = player[count]['totalDamageDealtToChampions']
-                bluejg_taken = player[count]['totalDamageTaken']
-                bluejg_vision = player[count]['visionScore']
-                bluejg_summoner1 = player[count]['summoner1Id']
-                bluejg_summoner2 = player[count]['summoner2Id']
-                bluejg_minions = player[count]['totalMinionsKilled']
-                bluejg_champ = data['info']['participants'][count]['championName']
-                bluejg_item0 = data['info']['participants'][count]['item0']
-                bluejg_item1 = data['info']['participants'][count]['item1']
-                bluejg_item2 = data['info']['participants'][count]['item2']
-                bluejg_item3 = data['info']['participants'][count]['item3']
-                bluejg_item4 = data['info']['participants'][count]['item4']
-                bluejg_item5 = data['info']['participants'][count]['item5']
-                bluejg_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                bluejg_id = player['summonerId']
+                bluejg_ign = player['riotIdGameName']
+                bluejg_tag = player['riotIdTagline']
+                bluejg_kills = player['kills']
+                bluejg_deaths = player['deaths']
+                bluejg_assists = player['assists']
+                bluejg_kp = round(player['challenges']['killParticipation'], 2)
+                bluejg_kda = round(player['challenges']['kda'], 2)
+                bluejg_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                bluejg_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                bluejg_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                bluejg_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                bluejg_dmg = player['totalDamageDealtToChampions']
+                bluejg_taken = player['totalDamageTaken']
+                bluejg_magictaken = player['magicDamageTaken']
+                bluejg_magicdmg = player['magicDamageDealtToChampions']
+                bluejg_physicaltaken = player['physicalDamageTaken']
+                bluejg_physicaldmg = player['physicalDamageDealtToChampions']
+                bluejg_truetaken = player['trueDamageTaken']
+                bluejg_truedmg = player['trueDamageDealtToChampions']
+                bluejg_vision = player['visionScore']
+                bluejg_summoner1 = player['summoner1Id']
+                bluejg_summoner2 = player['summoner2Id']
+                bluejg_minions = player['totalMinionsKilled']
+                bluejg_champ = player['championName']
+                bluejg_item0 = player['item0']
+                bluejg_item1 = player['item1']
+                bluejg_item2 = player['item2']
+                bluejg_item3 = player['item3']
+                bluejg_item4 = player['item4']
+                bluejg_item5 = player['item5']
+                bluejg_item6 = player['item6']
+                bluejg_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                bluejg_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, bluejg_id, api_key)
                 bluejg_rank = rank_details[0]
                 bluejg_tier = rank_details[1]
                 bluejg_lp = rank_details[2]
-                bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5)
+                bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5 = get_timeline(region, match_id, api_key, bluejg_puuid, item_map, bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5)
             elif player['teamPosition'] == 'JUNGLE' and player['teamId'] == 200:
-                redjg_id = data['info']['participants'][count]['summonerId']
-                redjg_ign = player[count]['riotIdGameName']
-                redjg_tag = player[count]['riotIdTagline']
-                redjg_kills = player[count]['kills']
-                redjg_deaths = player[count]['deaths']
-                redjg_assists = player[count]['assists']
-                redjg_kp = round(player[count]['killParticipation'], 2)
-                redjg_kda = round(player[count]['kda'], 2)
-                redjg_dmg = player[count]['totalDamageDealtToChampions']
-                redjg_taken = player[count]['totalDamageTaken']
-                redjg_vision = player[count]['visionScore']
-                redjg_summoner1 = player[count]['summoner1Id']
-                redjg_summoner2 = player[count]['summoner2Id']
-                redjg_minions = player[count]['totalMinionsKilled']
-                redjg_champ = data['info']['participants'][count]['championName']
-                redjg_item0 = data['info']['participants'][count]['item0']
-                redjg_item1 = data['info']['participants'][count]['item1']
-                redjg_item2 = data['info']['participants'][count]['item2']
-                redjg_item3 = data['info']['participants'][count]['item3']
-                redjg_item4 = data['info']['participants'][count]['item4']
-                redjg_item5 = data['info']['participants'][count]['item5']
-                redjg_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                redjg_id = player['summonerId']
+                redjg_ign = player['riotIdGameName']
+                redjg_tag = player['riotIdTagline']
+                redjg_kills = player['kills']
+                redjg_deaths = player['deaths']
+                redjg_assists = player['assists']
+                redjg_kp = round(player['challenges']['killParticipation'], 2)
+                redjg_kda = round(player['challenges']['kda'], 2)
+                redjg_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                redjg_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                redjg_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                redjg_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                redjg_dmg = player['totalDamageDealtToChampions']
+                redjg_taken = player['totalDamageTaken']
+                redjg_magictaken = player['magicDamageTaken']
+                redjg_magicdmg = player['magicDamageDealtToChampions']
+                redjg_physicaltaken = player['physicalDamageTaken']
+                redjg_physicaldmg = player['physicalDamageDealtToChampions']
+                redjg_truetaken = player['trueDamageTaken']
+                redjg_truedmg = player['trueDamageDealtToChampions']
+                redjg_vision = player['visionScore']
+                redjg_summoner1 = player['summoner1Id']
+                redjg_summoner2 = player['summoner2Id']
+                redjg_minions = player['totalMinionsKilled']
+                redjg_champ = player['championName']
+                redjg_item0 = player['item0']
+                redjg_item1 = player['item1']
+                redjg_item2 = player['item2']
+                redjg_item3 = player['item3']
+                redjg_item4 = player['item4']
+                redjg_item5 = player['item5']
+                redjg_item6 = player['item6']
+                redjg_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                redjg_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, redjg_id, api_key)
                 redjg_rank = rank_details[0]
                 redjg_tier = rank_details[1]
                 redjg_lp = rank_details[2]
-                redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5 = get_timeline(region, match_id, api_key, puuid, item_map, redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5)
+                redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5 = get_timeline(region, match_id, api_key, redjg_puuid, item_map, redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5)
             elif player['teamPosition'] == 'MIDDLE' and player['teamId'] == 100:
-                bluemid_id = data['info']['participants'][count]['summonerId']
-                bluemid_ign = player[count]['riotIdGameName']
-                bluemid_tag = player[count]['riotIdTagline']
-                bluemid_kills = player[count]['kills']
-                bluemid_deaths = player[count]['deaths']
-                bluemid_assists = player[count]['assists']
-                bluemid_kp = round(player[count]['killParticipation'], 2)
-                bluemid_kda = round(player[count]['kda'], 2)
-                bluemid_dmg = player[count]['totalDamageDealtToChampions']
-                bluemid_taken = player[count]['totalDamageTaken']
-                bluemid_vision = player[count]['visionScore']
-                bluemid_summoner1 = player[count]['summoner1Id']
-                bluemid_summoner2 = player[count]['summoner2Id']
-                bluemid_minions = player[count]['totalMinionsKilled']
-                bluemid_champ = data['info']['participants'][count]['championName']
-                bluemid_item0 = data['info']['participants'][count]['item0']
-                bluemid_item1 = data['info']['participants'][count]['item1']
-                bluemid_item2 = data['info']['participants'][count]['item2']
-                bluemid_item3 = data['info']['participants'][count]['item3']
-                bluemid_item4 = data['info']['participants'][count]['item4']
-                bluemid_item5 = data['info']['participants'][count]['item5']
-                bluemid_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                bluemid_id = player['summonerId']
+                bluemid_ign = player['riotIdGameName']
+                bluemid_tag = player['riotIdTagline']
+                bluemid_kills = player['kills']
+                bluemid_deaths = player['deaths']
+                bluemid_assists = player['assists']
+                bluemid_kp = round(player['challenges']['killParticipation'], 2)
+                bluemid_kda = round(player['challenges']['kda'], 2)
+                bluemid_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                bluemid_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                bluemid_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                bluemid_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                bluemid_dmg = player['totalDamageDealtToChampions']
+                bluemid_taken = player['totalDamageTaken']
+                bluemid_magictaken = player['magicDamageTaken']
+                bluemid_magicdmg = player['magicDamageDealtToChampions']
+                bluemid_physicaltaken = player['physicalDamageTaken']
+                bluemid_physicaldmg = player['physicalDamageDealtToChampions']
+                bluemid_truetaken = player['trueDamageTaken']
+                bluemid_truedmg = player['trueDamageDealtToChampions']
+                bluemid_vision = player['visionScore']
+                bluemid_summoner1 = player['summoner1Id']
+                bluemid_summoner2 = player['summoner2Id']
+                bluemid_minions = player['totalMinionsKilled']
+                bluemid_champ = player['championName']
+                bluemid_item0 = player['item0']
+                bluemid_item1 = player['item1']
+                bluemid_item2 = player['item2']
+                bluemid_item3 = player['item3']
+                bluemid_item4 = player['item4']
+                bluemid_item5 = player['item5']
+                bluemid_item6 = player['item6']
+                bluemid_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                bluemid_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, bluemid_id, api_key)
                 bluemid_rank = rank_details[0]
                 bluemid_tier = rank_details[1]
                 bluemid_lp = rank_details[2]
-                bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5)
+                bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5 = get_timeline(region, match_id, api_key, bluemid_puuid, item_map, bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5)
             elif player['teamPosition'] == 'MIDDLE' and player['teamId'] == 200:
-                redmid_id = data['info']['participants'][count]['summonerId']
-                redmid_ign = player[count]['riotIdGameName']
-                redmid_tag = player[count]['riotIdTagline']
-                redmid_kills = player[count]['kills']
-                redmid_deaths = player[count]['deaths']
-                redmid_assists = player[count]['assists']
-                redmid_kp = round(player[count]['killParticipation'], 2)
-                redmid_kda = round(player[count]['kda'], 2)
-                redmid_dmg = player[count]['totalDamageDealtToChampions']
-                redmid_taken = player[count]['totalDamageTaken']
-                redmid_vision = player[count]['visionScore']
-                redmid_summoner1 = player[count]['summoner1Id']
-                redmid_summoner2 = player[count]['summoner2Id']
-                redmid_minions = player[count]['totalMinionsKilled']
-                redmid_champ = data['info']['participants'][count]['championName']
-                redmid_item0 = data['info']['participants'][count]['item0']
-                redmid_item1 = data['info']['participants'][count]['item1']
-                redmid_item2 = data['info']['participants'][count]['item2']
-                redmid_item3 = data['info']['participants'][count]['item3']
-                redmid_item4 = data['info']['participants'][count]['item4']
-                redmid_item5 = data['info']['participants'][count]['item5']
-                redmid_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                redmid_id = player['summonerId']
+                redmid_ign = player['riotIdGameName']
+                redmid_tag = player['riotIdTagline']
+                redmid_kills = player['kills']
+                redmid_deaths = player['deaths']
+                redmid_assists = player['assists']
+                redmid_kp = round(player['challenges']['killParticipation'], 2)
+                redmid_kda = round(player['challenges']['kda'], 2)
+                redmid_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                redmid_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                redmid_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                redmid_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                redmid_dmg = player['totalDamageDealtToChampions']
+                redmid_taken = player['totalDamageTaken']
+                redmid_magictaken = player['magicDamageTaken']
+                redmid_magicdmg = player['magicDamageDealtToChampions']
+                redmid_physicaltaken = player['physicalDamageTaken']
+                redmid_physicaldmg = player['physicalDamageDealtToChampions']
+                redmid_truetaken = player['trueDamageTaken']
+                redmid_truedmg = player['trueDamageDealtToChampions']
+                redmid_vision = player['visionScore']
+                redmid_summoner1 = player['summoner1Id']
+                redmid_summoner2 = player['summoner2Id']
+                redmid_minions = player['totalMinionsKilled']
+                redmid_champ = player['championName']
+                redmid_item0 = player['item0']
+                redmid_item1 = player['item1']
+                redmid_item2 = player['item2']
+                redmid_item3 = player['item3']
+                redmid_item4 = player['item4']
+                redmid_item5 = player['item5']
+                redmid_item6 = player['item6']
+                redmid_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                redmid_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, redmid_id, api_key)
                 redmid_rank = rank_details[0]
                 redmid_tier = rank_details[1]
                 redmid_lp = rank_details[2]
-                redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5 = get_timeline(region, match_id, api_key, puuid, item_map, redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5)
+                redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5 = get_timeline(region, match_id, api_key, redmid_puuid, item_map, redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5)
             elif player['teamPosition'] == 'BOTTOM' and player['teamId'] == 100:
-                bluebot_id = data['info']['participants'][count]['summonerId']
-                bluebot_ign = player[count]['riotIdGameName']
-                bluebot_tag = player[count]['riotIdTagline']
-                bluebot_kills = player[count]['kills']
-                bluebot_deaths = player[count]['deaths']
-                bluebot_assists = player[count]['assists']
-                bluebot_kp = round(player[count]['killParticipation'], 2)
-                bluebot_kda = round(player[count]['kda'], 2)
-                bluebot_dmg = player[count]['totalDamageDealtToChampions']
-                bluebot_taken = player[count]['totalDamageTaken']
-                bluebot_vision = player[count]['visionScore']
-                bluebot_summoner1 = player[count]['summoner1Id']
-                bluebot_summoner2 = player[count]['summoner2Id']
-                bluebot_minions = player[count]['totalMinionsKilled']
-                bluebot_champ = data['info']['participants'][count]['championName']
-                bluebot_item0 = data['info']['participants'][count]['item0']
-                bluebot_item1 = data['info']['participants'][count]['item1']
-                bluebot_item2 = data['info']['participants'][count]['item2']
-                bluebot_item3 = data['info']['participants'][count]['item3']
-                bluebot_item4 = data['info']['participants'][count]['item4']
-                bluebot_item5 = data['info']['participants'][count]['item5']
-                bluebot_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                bluebot_id = player['summonerId']
+                bluebot_ign = player['riotIdGameName']
+                bluebot_tag = player['riotIdTagline']
+                bluebot_kills = player['kills']
+                bluebot_deaths = player['deaths']
+                bluebot_assists = player['assists']
+                bluebot_kp = round(player['challenges']['killParticipation'], 2)
+                bluebot_kda = round(player['challenges']['kda'], 2)
+                bluebot_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                bluebot_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                bluebot_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                bluebot_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                bluebot_dmg = player['totalDamageDealtToChampions']
+                bluebot_taken = player['totalDamageTaken']
+                bluebot_magictaken = player['magicDamageTaken']
+                bluebot_magicdmg = player['magicDamageDealtToChampions']
+                bluebot_physicaltaken = player['physicalDamageTaken']
+                bluebot_physicaldmg = player['physicalDamageDealtToChampions']
+                bluebot_truetaken = player['trueDamageTaken']
+                bluebot_truedmg = player['trueDamageDealtToChampions']
+                bluebot_vision = player['visionScore']
+                bluebot_summoner1 = player['summoner1Id']
+                bluebot_summoner2 = player['summoner2Id']
+                bluebot_minions = player['totalMinionsKilled']
+                bluebot_champ = player['championName']
+                bluebot_item0 = player['item0']
+                bluebot_item1 = player['item1']
+                bluebot_item2 = player['item2']
+                bluebot_item3 = player['item3']
+                bluebot_item4 = player['item4']
+                bluebot_item5 = player['item5']
+                bluebot_item6 = player['item6']
+                bluebot_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                bluebot_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, bluebot_id, api_key)
                 bluebot_rank = rank_details[0]
                 bluebot_tier = rank_details[1]
                 bluebot_lp = rank_details[2]
-                bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5)
+                bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5 = get_timeline(region, match_id, api_key, bluebot_puuid, item_map, bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5)
             elif player['teamPosition'] == 'BOTTOM' and player['teamId'] == 200:
-                redbot_id = data['info']['participants'][count]['summonerId']
-                redbot_ign = player[count]['riotIdGameName']
-                redbot_tag = player[count]['riotIdTagline']
-                redbot_kills = player[count]['kills']
-                redbot_deaths = player[count]['deaths']
-                redbot_assists = player[count]['assists']
-                redbot_kp = round(player[count]['killParticipation'], 2)
-                redbot_kda = round(player[count]['kda'], 2)
-                redbot_dmg = player[count]['totalDamageDealtToChampions']
-                redbot_taken = player[count]['totalDamageTaken']
-                redbot_vision = player[count]['visionScore']
-                redbot_summoner1 = player[count]['summoner1Id']
-                redbot_summoner2 = player[count]['summoner2Id']
-                redbot_minions = player[count]['totalMinionsKilled']
-                redbot_champ = data['info']['participants'][count]['championName']
-                redbot_item0 = data['info']['participants'][count]['item0']
-                redbot_item1 = data['info']['participants'][count]['item1']
-                redbot_item2 = data['info']['participants'][count]['item2']
-                redbot_item3 = data['info']['participants'][count]['item3']
-                redbot_item4 = data['info']['participants'][count]['item4']
-                redbot_item5 = data['info']['participants'][count]['item5']
-                redbot_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                redbot_id = player['summonerId']
+                redbot_ign = player['riotIdGameName']
+                redbot_tag = player['riotIdTagline']
+                redbot_kills = player['kills']
+                redbot_deaths = player['deaths']
+                redbot_assists = player['assists']
+                redbot_kp = round(player['challenges']['killParticipation'], 2)
+                redbot_kda = round(player['challenges']['kda'], 2)
+                redbot_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                redbot_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                redbot_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                redbot_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                redbot_dmg = player['totalDamageDealtToChampions']
+                redbot_taken = player['totalDamageTaken']
+                redbot_magictaken = player['magicDamageTaken']
+                redbot_magicdmg = player['magicDamageDealtToChampions']
+                redbot_physicaltaken = player['physicalDamageTaken']
+                redbot_physicaldmg = player['physicalDamageDealtToChampions']
+                redbot_truetaken = player['trueDamageTaken']
+                redbot_truedmg = player['trueDamageDealtToChampions']
+                redbot_vision = player['visionScore']
+                redbot_summoner1 = player['summoner1Id']
+                redbot_summoner2 = player['summoner2Id']
+                redbot_minions = player['totalMinionsKilled']
+                redbot_champ = player['championName']
+                redbot_item0 = player['item0']
+                redbot_item1 = player['item1']
+                redbot_item2 = player['item2']
+                redbot_item3 = player['item3']
+                redbot_item4 = player['item4']
+                redbot_item5 = player['item5']
+                redbot_item6 = player['item6']
+                redbot_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                redbot_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, redbot_id, api_key)
                 redbot_rank = rank_details[0]
                 redbot_tier = rank_details[1]
                 redbot_lp = rank_details[2]
-                redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5 = get_timeline(region, match_id, api_key, puuid, item_map, redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5)
+                redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5 = get_timeline(region, match_id, api_key, redbot_puuid, item_map, redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5)
             elif player['teamPosition'] == 'UTILITY' and player['teamId'] == 100:
-                bluesup_id = data['info']['participants'][count]['summonerId']
-                bluesup_ign = player[count]['riotIdGameName']
-                bluesup_tag = player[count]['riotIdTagline']
-                bluesup_kills = player[count]['kills']
-                bluesup_deaths = player[count]['deaths']
-                bluesup_assists = player[count]['assists']
-                bluesup_kp = round(player[count]['killParticipation'], 2)
-                bluesup_kda = round(player[count]['kda'], 2)
-                bluesup_dmg = player[count]['totalDamageDealtToChampions']
-                bluesup_taken = player[count]['totalDamageTaken']
-                bluesup_vision = player[count]['visionScore']
-                bluesup_summoner1 = player[count]['summoner1Id']
-                bluesup_summoner2 = player[count]['summoner2Id']
-                bluesup_minions = player[count]['totalMinionsKilled']
-                bluesup_champ = data['info']['participants'][count]['championName']
-                bluesup_item0 = data['info']['participants'][count]['item0']
-                bluesup_item1 = data['info']['participants'][count]['item1']
-                bluesup_item2 = data['info']['participants'][count]['item2']
-                bluesup_item3 = data['info']['participants'][count]['item3']
-                bluesup_item4 = data['info']['participants'][count]['item4']
-                bluesup_item5 = data['info']['participants'][count]['item5']
-                bluesup_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                bluesup_id = player['summonerId']
+                bluesup_ign = player['riotIdGameName']
+                bluesup_tag = player['riotIdTagline']
+                bluesup_kills = player['kills']
+                bluesup_deaths = player['deaths']
+                bluesup_assists = player['assists']
+                bluesup_kp = round(player['challenges']['killParticipation'], 2)
+                bluesup_kda = round(player['challenges']['kda'], 2)
+                bluesup_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                bluesup_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                bluesup_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                bluesup_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                bluesup_dmg = player['totalDamageDealtToChampions']
+                bluesup_taken = player['totalDamageTaken']
+                bluesup_magictaken = player['magicDamageTaken']
+                bluesup_magicdmg = player['magicDamageDealtToChampions']
+                bluesup_physicaltaken = player['physicalDamageTaken']
+                bluesup_physicaldmg = player['physicalDamageDealtToChampions']
+                bluesup_truetaken = player['trueDamageTaken']
+                bluesup_truedmg = player['trueDamageDealtToChampions']
+                bluesup_vision = player['visionScore']
+                bluesup_summoner1 = player['summoner1Id']
+                bluesup_summoner2 = player['summoner2Id']
+                bluesup_minions = player['totalMinionsKilled']
+                bluesup_champ = player['championName']
+                bluesup_item0 = player['item0']
+                bluesup_item1 = player['item1']
+                bluesup_item2 = player['item2']
+                bluesup_item3 = player['item3']
+                bluesup_item4 = player['item4']
+                bluesup_item5 = player['item5']
+                bluesup_item6 = player['item6']
+                bluesup_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                bluesup_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, bluesup_id, api_key)
                 bluesup_rank = rank_details[0]
                 bluesup_tier = rank_details[1]
                 bluesup_lp = rank_details[2]
-                bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5 = get_timeline(region, match_id, api_key, puuid, item_map, bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5)
+                bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5 = get_timeline(region, match_id, api_key, bluesup_puuid, item_map, bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5)
             elif player['teamPosition'] == 'UTILITY' and player['teamId'] == 200:
-                redsup_id = data['info']['participants'][count]['summonerId']
-                redsup_ign = player[count]['riotIdGameName']
-                redsup_tag = player[count]['riotIdTagline']
-                redsup_kills = player[count]['kills']
-                redsup_deaths = player[count]['deaths']
-                redsup_assists = player[count]['assists']
-                redsup_kp = round(player[count]['killParticipation'], 2)
-                redsup_kda = round(player[count]['kda'], 2)
-                redsup_dmg = player[count]['totalDamageDealtToChampions']
-                redsup_taken = player[count]['totalDamageTaken']
-                redsup_vision = player[count]['visionScore']
-                redsup_summoner1 = player[count]['summoner1Id']
-                redsup_summoner2 = player[count]['summoner2Id']
-                redsup_minions = player[count]['totalMinionsKilled']
-                redsup_champ = data['info']['participants'][count]['championName']
-                redsup_item0 = data['info']['participants'][count]['item0']
-                redsup_item1 = data['info']['participants'][count]['item1']
-                redsup_item2 = data['info']['participants'][count]['item2']
-                redsup_item3 = data['info']['participants'][count]['item3']
-                redsup_item4 = data['info']['participants'][count]['item4']
-                redsup_item5 = data['info']['participants'][count]['item5']
-                redsup_rune0 = data['info']['participants'][count]['perks']['styles'][0]['selections'][0]['perk']
-                puuid = data['info']['participants'][count]['puuid']
+                redsup_id = player['summonerId']
+                redsup_ign = player['riotIdGameName']
+                redsup_tag = player['riotIdTagline']
+                redsup_kills = player['kills']
+                redsup_deaths = player['deaths']
+                redsup_assists = player['assists']
+                redsup_kp = round(player['challenges']['killParticipation'], 2)
+                redsup_kda = round(player['challenges']['kda'], 2)
+                redsup_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
+                redsup_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
+                redsup_damagepercent = round(player['challenges']['teamDamagePercentage'], 2)
+                redsup_damagetaken = round(player['challenges']['damageTakenOnTeamPercentage'], 2)
+                redsup_dmg = player['totalDamageDealtToChampions']
+                redsup_taken = player['totalDamageTaken']
+                redsup_magictaken = player['magicDamageTaken']
+                redsup_magicdmg = player['magicDamageDealtToChampions']
+                redsup_physicaltaken = player['physicalDamageTaken']
+                redsup_physicaldmg = player['physicalDamageDealtToChampions']
+                redsup_truetaken = player['trueDamageTaken']
+                redsup_truedmg = player['trueDamageDealtToChampions']
+                redsup_vision = player['visionScore']
+                redsup_summoner1 = player['summoner1Id']
+                redsup_summoner2 = player['summoner2Id']
+                redsup_minions = player['totalMinionsKilled']
+                redsup_champ = player['championName']
+                redsup_item0 = player['item0']
+                redsup_item1 = player['item1']
+                redsup_item2 = player['item2']
+                redsup_item3 = player['item3']
+                redsup_item4 = player['item4']
+                redsup_item5 = player['item5']
+                redsup_item6 = player['item6']
+                redsup_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
+                redsup_puuid = player['puuid']
                 rank_details = players.fetch_rank(true_region, redsup_id, api_key)
                 redsup_rank = rank_details[0]
                 redsup_tier = rank_details[1]
                 redsup_lp = rank_details[2]
-                redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5 = get_timeline(region, match_id, api_key, puuid, item_map, redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5)
+                redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5 = get_timeline(region, match_id, api_key, redsup_puuid, item_map, redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5)
             else:
                 return None
         except KeyError as e:
@@ -523,7 +660,6 @@ def fetch_match_data(match_id, puuid, region, api_key):
         "summoner_Deaths": summoner_deaths,
         "summoner_Dragon": summoner_drag,
         "summoner_Surrender": summoner_surrender,
-        "summoner_Lane": summoner_lane,
         "summoner_Kills": summoner_kills,
         "summoner_MagicTaken": summoner_magictaken,
         "summoner_MagicDmg": summoner_magicdmg,
@@ -548,56 +684,403 @@ def fetch_match_data(match_id, puuid, region, api_key):
         "summoner_TotalHealing": summoner_totalhealing,
         "summoner_HealTeam": summoner_healteam,
         "summoner_Shield": summoner_shield,
-        "summoner_Minions": summoner_minions
+        "summoner_Minions": summoner_minions,
+        "summoner_Rune6": summoner_rune6,
+        "summoner_Rune7": summoner_rune7,
+        "summoner_Rune8": summoner_rune8
     }
-    # "summoner_Item0": summoner_item0,
-    # "summoner_Item1": summoner_item1,
-    # "summoner_Item2": summoner_item2,
-    # "summoner_Item3": summoner_item3,
-    # "summoner_Item4": summoner_item4,
-    # "summoner_Item5": summoner_item5,
-    # "summoner_Item6": summoner_item6,
-    # "summoner_Result": summoner_result,
-    # "summoner_Rune0": summoner_rune0,
-    # "summoner_Rune1": summoner_rune1,
-    # "summoner_Rune2": summoner_rune2,
-    # "summoner_Rune3": summoner_rune3,
-    # "summoner_Rune4": summoner_rune4,
-    # "summoner_Rune5": summoner_rune5,
-    # "summoner_Rune6": summoner_rune6,
-    # "summoner_Rune7": summoner_rune7,
-    # "summoner_Rune8": summoner_rune8,
-    return (timestamp, gameduration, result,
-        # Blue Top
-        bluetop_id, bluetop_champ, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5, bluetop_rune0, bluetop_rune1, bluetop_rune2, bluetop_rune3, bluetop_rune4, bluetop_rune5, bluetop_rune6, bluetop_rune7, bluetop_rune8,
-        
-        # Blue JG
-        bluejg_id, bluejg_champ, bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5, bluejg_rune0, bluejg_rune1, bluejg_rune2, bluejg_rune3, bluejg_rune4, bluejg_rune5, bluejg_rune6, bluejg_rune7, bluejg_rune8,
-        
-        # Blue Mid
-        bluemid_id, bluemid_champ, bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5, bluemid_rune0, bluemid_rune1, bluemid_rune2, bluemid_rune3, bluemid_rune4, bluemid_rune5, bluemid_rune6, bluemid_rune7, bluemid_rune8,
- 
-        # Blue Bot
-        bluebot_id, bluebot_champ, bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5, bluebot_rune0, bluebot_rune1, bluebot_rune2, bluebot_rune3, bluebot_rune4, bluebot_rune5, bluebot_rune6, bluebot_rune7, bluebot_rune8,
-        
-        # Blue Sup
-        bluesup_id, bluesup_champ, bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5, bluesup_rune0, bluesup_rune1, bluesup_rune2, bluesup_rune3, bluesup_rune4, bluesup_rune5, bluesup_rune6, bluesup_rune7, bluesup_rune8,
-        
-        # Red Top
-        redtop_id, redtop_champ, redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5, redtop_rune0, redtop_rune1, redtop_rune2, redtop_rune3, redtop_rune4, redtop_rune5, redtop_rune6, redtop_rune7, redtop_rune8,
-        
-        # Red JG
-        redjg_id, redjg_champ, redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5, redjg_rune0, redjg_rune1, redjg_rune2, redjg_rune3, redjg_rune4, redjg_rune5, redjg_rune6, redjg_rune7, redjg_rune8,
-        
-        # Red Mid
-        redmid_id, redmid_champ, redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5, redmid_rune0, redmid_rune1, redmid_rune2, redmid_rune3, redmid_rune4, redmid_rune5, redmid_rune6, redmid_rune7, redmid_rune8,
-        
-        # Red Bot
-        redbot_id, redbot_champ, redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5, redbot_rune0, redbot_rune1, redbot_rune2, redbot_rune3, redbot_rune4, redbot_rune5, redbot_rune6, redbot_rune7, redbot_rune8,
-        
-        # Red Sup
-        redsup_id, redsup_champ, redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5, redsup_rune0, redsup_rune1, redsup_rune2, redsup_rune3, redsup_rune4, redsup_rune5, redsup_rune6, redsup_rune7, redsup_rune8
-    )
+    bluetop_data = {
+        "bluetop_ID": bluetop_id,
+        "bluetop_PUUID": bluetop_puuid,
+        "bluetop_IGN": bluetop_ign,
+        "bluetop_Tag": bluetop_tag,
+        "bluetop_Kills": bluetop_kills,
+        "bluetop_deaths": bluetop_deaths,
+        "bluetop_assists": bluetop_assists,
+        "bluetop_KP": bluetop_kp,
+        "bluetop_KDA": bluetop_kda,
+        "bluetop_MaxCS": bluetop_maxcs,
+        "bluetop_MaxLvl": bluetop_maxlvl,
+        "bluetop_DamagePercent": bluetop_damagepercent,
+        "bluetop_TakenPercent": bluetop_damagetaken,
+        "bluetop_MagicTaken": bluetop_magictaken,
+        "bluetop_MagicDMG": bluetop_magicdmg,
+        "bluetop_PhysicalTaken": bluetop_physicaltaken,
+        "bluetop_PhysicalDMG": bluetop_physicaldmg,
+        "bluetop_TrueTaken": bluetop_truetaken,
+        "bluetop_TrueDMG": bluetop_truedmg,
+        "bluetop_DMG": bluetop_dmg,
+        "bluetop_Taken": bluetop_taken,
+        "bluetop_VisionScore": bluetop_vision,
+        "bluetop_Summoner1": bluetop_summoner1,
+        "bluetop_Summoner2": bluetop_summoner2,
+        "bluetop_Minions": bluetop_minions,
+        "bluetop_Rank": bluetop_rank,
+        "bluetop_Tier": bluetop_tier,
+        "bluetop_lp": bluetop_lp,
+        "bluetop_Item0": bluetop_item0,
+        "bluetop_Item1": bluetop_item1,
+        "bluetop_Item2": bluetop_item2,
+        "bluetop_Item3": bluetop_item3,
+        "bluetop_Item4": bluetop_item4,
+        "bluetop_Item5": bluetop_item5,
+        "bluetop_Item6": bluetop_item6,
+        "bluetop_Rune0": bluetop_rune0
+    }
+    redtop_data = {
+        "redtop_ID": redtop_id,
+        "redtop_PUUID": redtop_puuid,
+        "redtop_IGN": redtop_ign,
+        "redtop_Tag": redtop_tag,
+        "redtop_Kills": redtop_kills,
+        "redtop_deaths": redtop_deaths,
+        "redtop_assists": redtop_assists,
+        "redtop_KP": redtop_kp,
+        "redtop_KDA": redtop_kda,
+        "redtop_MaxCS": redtop_maxcs,
+        "redtop_MaxLvl": redtop_maxlvl,
+        "redtop_DamagePercent": redtop_damagepercent,
+        "redtop_TakenPercent": redtop_damagetaken,
+        "redtop_MagicTaken": redtop_magictaken,
+        "redtop_MagicDMG": redtop_magicdmg,
+        "redtop_PhysicalTaken": redtop_physicaltaken,
+        "redtop_PhysicalDMG": redtop_physicaldmg,
+        "redtop_TrueTaken": redtop_truetaken,
+        "redtop_TrueDMG": redtop_truedmg,
+        "redtop_DMG": redtop_dmg,
+        "redtop_Taken": redtop_taken,
+        "redtop_VisionScore": redtop_vision,
+        "redtop_Summoner1": redtop_summoner1,
+        "redtop_Summoner2": redtop_summoner2,
+        "redtop_Minions": redtop_minions,
+        "redtop_Rank": redtop_rank,
+        "redtop_Tier": redtop_tier,
+        "redtop_lp": redtop_lp,
+        "redtop_Item0": redtop_item0,
+        "redtop_Item1": redtop_item1,
+        "redtop_Item2": redtop_item2,
+        "redtop_Item3": redtop_item3,
+        "redtop_Item4": redtop_item4,
+        "redtop_Item5": redtop_item5,
+        "redtop_Item6": redtop_item6,
+        "redtop_Rune0": redtop_rune0
+    }
+    bluejg_data = {
+        "bluejg_ID": bluejg_id,
+        "bluejg_PUUID": bluejg_puuid,
+        "bluejg_IGN": bluejg_ign,
+        "bluejg_Tag": bluejg_tag,
+        "bluejg_Kills": bluejg_kills,
+        "bluejg_deaths": bluejg_deaths,
+        "bluejg_assists": bluejg_assists,
+        "bluejg_KP": bluejg_kp,
+        "bluejg_KDA": bluejg_kda,
+        "bluejg_MaxCS": bluejg_maxcs,
+        "bluejg_MaxLvl": bluejg_maxlvl,
+        "bluejg_DamagePercent": bluejg_damagepercent,
+        "bluejg_TakenPercent": bluejg_damagetaken,
+        "bluejg_MagicTaken": bluejg_magictaken,
+        "bluejg_MagicDMG": bluejg_magicdmg,
+        "bluejg_PhysicalTaken": bluejg_physicaltaken,
+        "bluejg_PhysicalDMG": bluejg_physicaldmg,
+        "bluejg_TrueTaken": bluejg_truetaken,
+        "bluejg_TrueDMG": bluejg_truedmg,
+        "bluejg_DMG": bluejg_dmg,
+        "bluejg_Taken": bluejg_taken,
+        "bluejg_VisionScore": bluejg_vision,
+        "bluejg_Summoner1": bluejg_summoner1,
+        "bluejg_Summoner2": bluejg_summoner2,
+        "bluejg_Minions": bluejg_minions,
+        "bluejg_Rank": bluejg_rank,
+        "bluejg_Tier": bluejg_tier,
+        "bluejg_lp": bluejg_lp,
+        "bluejg_Item0": bluejg_item0,
+        "bluejg_Item1": bluejg_item1,
+        "bluejg_Item2": bluejg_item2,
+        "bluejg_Item3": bluejg_item3,
+        "bluejg_Item4": bluejg_item4,
+        "bluejg_Item5": bluejg_item5,
+        "bluejg_Item6": bluejg_item6,
+        "bluejg_Rune0": bluejg_rune0
+    }
+    redjg_data = {
+        "redjg_ID": redjg_id,
+        "redjg_PUUID": redjg_puuid,
+        "redjg_IGN": redjg_ign,
+        "redjg_Tag": redjg_tag,
+        "redjg_Kills": redjg_kills,
+        "redjg_deaths": redjg_deaths,
+        "redjg_assists": redjg_assists,
+        "redjg_KP": redjg_kp,
+        "redjg_KDA": redjg_kda,
+        "redjg_MaxCS": redjg_maxcs,
+        "redjg_MaxLvl": redjg_maxlvl,
+        "redjg_DamagePercent": redjg_damagepercent,
+        "redjg_TakenPercent": redjg_damagetaken,
+        "redjg_MagicTaken": redjg_magictaken,
+        "redjg_MagicDMG": redjg_magicdmg,
+        "redjg_PhysicalTaken": redjg_physicaltaken,
+        "redjg_PhysicalDMG": redjg_physicaldmg,
+        "redjg_TrueTaken": redjg_truetaken,
+        "redjg_TrueDMG": redjg_truedmg,
+        "redjg_DMG": redjg_dmg,
+        "redjg_Taken": redjg_taken,
+        "redjg_VisionScore": redjg_vision,
+        "redjg_Summoner1": redjg_summoner1,
+        "redjg_Summoner2": redjg_summoner2,
+        "redjg_Minions": redjg_minions,
+        "redjg_Rank": redjg_rank,
+        "redjg_Tier": redjg_tier,
+        "redjg_lp": redjg_lp,
+        "redjg_Item0": redjg_item0,
+        "redjg_Item1": redjg_item1,
+        "redjg_Item2": redjg_item2,
+        "redjg_Item3": redjg_item3,
+        "redjg_Item4": redjg_item4,
+        "redjg_Item5": redjg_item5,
+        "redjg_Item6": redjg_item6,
+        "redjg_Rune0": redjg_rune0
+    }
+    bluemid_data = {
+        "bluemid_ID": bluemid_id,
+        "bluemid_PUUID": bluemid_puuid,
+        "bluemid_IGN": bluemid_ign,
+        "bluemid_Tag": bluemid_tag,
+        "bluemid_Kills": bluemid_kills,
+        "bluemid_deaths": bluemid_deaths,
+        "bluemid_assists": bluemid_assists,
+        "bluemid_KP": bluemid_kp,
+        "bluemid_KDA": bluemid_kda,
+        "bluemid_MaxCS": bluemid_maxcs,
+        "bluemid_MaxLvl": bluemid_maxlvl,
+        "bluemid_DamagePercent": bluemid_damagepercent,
+        "bluemid_TakenPercent": bluemid_damagetaken,
+        "bluemid_MagicTaken": bluemid_magictaken,
+        "bluemid_MagicDMG": bluemid_magicdmg,
+        "bluemid_PhysicalTaken": bluemid_physicaltaken,
+        "bluemid_PhysicalDMG": bluemid_physicaldmg,
+        "bluemid_TrueTaken": bluemid_truetaken,
+        "bluemid_TrueDMG": bluemid_truedmg,
+        "bluemid_DMG": bluemid_dmg,
+        "bluemid_Taken": bluemid_taken,
+        "bluemid_VisionScore": bluemid_vision,
+        "bluemid_Summoner1": bluemid_summoner1,
+        "bluemid_Summoner2": bluemid_summoner2,
+        "bluemid_Minions": bluemid_minions,
+        "bluemid_Rank": bluemid_rank,
+        "bluemid_Tier": bluemid_tier,
+        "bluemid_lp": bluemid_lp,
+        "bluemid_Item0": bluemid_item0,
+        "bluemid_Item1": bluemid_item1,
+        "bluemid_Item2": bluemid_item2,
+        "bluemid_Item3": bluemid_item3,
+        "bluemid_Item4": bluemid_item4,
+        "bluemid_Item5": bluemid_item5,
+        "bluemid_Item6": bluemid_item6,
+        "bluemid_Rune0": bluemid_rune0
+    }
+    redmid_data = {
+        "redmid_ID": redmid_id,
+        "redmid_PUUID": redmid_puuid,
+        "redmid_IGN": redmid_ign,
+        "redmid_Tag": redmid_tag,
+        "redmid_Kills": redmid_kills,
+        "redmid_deaths": redmid_deaths,
+        "redmid_assists": redmid_assists,
+        "redmid_KP": redmid_kp,
+        "redmid_KDA": redmid_kda,
+        "redmid_MaxCS": redmid_maxcs,
+        "redmid_MaxLvl": redmid_maxlvl,
+        "redmid_DamagePercent": redmid_damagepercent,
+        "redmid_TakenPercent": redmid_damagetaken,
+        "redmid_MagicTaken": redmid_magictaken,
+        "redmid_MagicDMG": redmid_magicdmg,
+        "redmid_PhysicalTaken": redmid_physicaltaken,
+        "redmid_PhysicalDMG": redmid_physicaldmg,
+        "redmid_TrueTaken": redmid_truetaken,
+        "redmid_TrueDMG": redmid_truedmg,
+        "redmid_DMG": redmid_dmg,
+        "redmid_Taken": redmid_taken,
+        "redmid_VisionScore": redmid_vision,
+        "redmid_Summoner1": redmid_summoner1,
+        "redmid_Summoner2": redmid_summoner2,
+        "redmid_Minions": redmid_minions,
+        "redmid_Rank": redmid_rank,
+        "redmid_Tier": redmid_tier,
+        "redmid_lp": redmid_lp,
+        "redmid_Item0": redmid_item0,
+        "redmid_Item1": redmid_item1,
+        "redmid_Item2": redmid_item2,
+        "redmid_Item3": redmid_item3,
+        "redmid_Item4": redmid_item4,
+        "redmid_Item5": redmid_item5,
+        "redmid_Item6": redmid_item6,
+        "redmid_Rune0": redmid_rune0
+    }
+    bluebot_data = {
+        "bluebot_ID": bluebot_id,
+        "bluebot_PUUID": bluebot_puuid,
+        "bluebot_IGN": bluebot_ign,
+        "bluebot_Tag": bluebot_tag,
+        "bluebot_Kills": bluebot_kills,
+        "bluebot_deaths": bluebot_deaths,
+        "bluebot_assists": bluebot_assists,
+        "bluebot_KP": bluebot_kp,
+        "bluebot_KDA": bluebot_kda,
+        "bluebot_MaxCS": bluebot_maxcs,
+        "bluebot_MaxLvl": bluebot_maxlvl,
+        "bluebot_DamagePercent": bluebot_damagepercent,
+        "bluebot_TakenPercent": bluebot_damagetaken,
+        "bluebot_MagicTaken": bluebot_magictaken,
+        "bluebot_MagicDMG": bluebot_magicdmg,
+        "bluebot_PhysicalTaken": bluebot_physicaltaken,
+        "bluebot_PhysicalDMG": bluebot_physicaldmg,
+        "bluebot_TrueTaken": bluebot_truetaken,
+        "bluebot_TrueDMG": bluebot_truedmg,
+        "bluebot_DMG": bluebot_dmg,
+        "bluebot_Taken": bluebot_taken,
+        "bluebot_VisionScore": bluebot_vision,
+        "bluebot_Summoner1": bluebot_summoner1,
+        "bluebot_Summoner2": bluebot_summoner2,
+        "bluebot_Minions": bluebot_minions,
+        "bluebot_Rank": bluebot_rank,
+        "bluebot_Tier": bluebot_tier,
+        "bluebot_lp": bluebot_lp,
+        "bluebot_Item0": bluebot_item0,
+        "bluebot_Item1": bluebot_item1,
+        "bluebot_Item2": bluebot_item2,
+        "bluebot_Item3": bluebot_item3,
+        "bluebot_Item4": bluebot_item4,
+        "bluebot_Item5": bluebot_item5,
+        "bluebot_Item6": bluebot_item6,
+        "bluebot_Rune0": bluebot_rune0
+    }
+    redbot_data = {
+        "redbot_ID": redbot_id,
+        "redbot_PUUID": redbot_puuid,
+        "redbot_IGN": redbot_ign,
+        "redbot_Tag": redbot_tag,
+        "redbot_Kills": redbot_kills,
+        "redbot_deaths": redbot_deaths,
+        "redbot_assists": redbot_assists,
+        "redbot_KP": redbot_kp,
+        "redbot_KDA": redbot_kda,
+        "redbot_MaxCS": redbot_maxcs,
+        "redbot_MaxLvl": redbot_maxlvl,
+        "redbot_DamagePercent": redbot_damagepercent,
+        "redbot_TakenPercent": redbot_damagetaken,
+        "redbot_MagicTaken": redbot_magictaken,
+        "redbot_MagicDMG": redbot_magicdmg,
+        "redbot_PhysicalTaken": redbot_physicaltaken,
+        "redbot_PhysicalDMG": redbot_physicaldmg,
+        "redbot_TrueTaken": redbot_truetaken,
+        "redbot_TrueDMG": redbot_truedmg,
+        "redbot_DMG": redbot_dmg,
+        "redbot_Taken": redbot_taken,
+        "redbot_VisionScore": redbot_vision,
+        "redbot_Summoner1": redbot_summoner1,
+        "redbot_Summoner2": redbot_summoner2,
+        "redbot_Minions": redbot_minions,
+        "redbot_Rank": redbot_rank,
+        "redbot_Tier": redbot_tier,
+        "redbot_lp": redbot_lp,
+        "redbot_Item0": redbot_item0,
+        "redbot_Item1": redbot_item1,
+        "redbot_Item2": redbot_item2,
+        "redbot_Item3": redbot_item3,
+        "redbot_Item4": redbot_item4,
+        "redbot_Item5": redbot_item5,
+        "redbot_Item6": redbot_item6,
+        "redbot_Rune0": redbot_rune0
+    }
+    bluesup_data = {
+        "bluesup_ID": bluesup_id,
+        "bluesup_PUUID": bluesup_puuid,
+        "bluesup_IGN": bluesup_ign,
+        "bluesup_Tag": bluesup_tag,
+        "bluesup_Kills": bluesup_kills,
+        "bluesup_deaths": bluesup_deaths,
+        "bluesup_assists": bluesup_assists,
+        "bluesup_KP": bluesup_kp,
+        "bluesup_KDA": bluesup_kda,
+        "bluesup_MaxCS": bluesup_maxcs,
+        "bluesup_MaxLvl": bluesup_maxlvl,
+        "bluesup_DamagePercent": bluesup_damagepercent,
+        "bluesup_TakenPercent": bluesup_damagetaken,
+        "bluesup_MagicTaken": bluesup_magictaken,
+        "bluesup_MagicDMG": bluesup_magicdmg,
+        "bluesup_PhysicalTaken": bluesup_physicaltaken,
+        "bluesup_PhysicalDMG": bluesup_physicaldmg,
+        "bluesup_TrueTaken": bluesup_truetaken,
+        "bluesup_TrueDMG": bluesup_truedmg,
+        "bluesup_DMG": bluesup_dmg,
+        "bluesup_Taken": bluesup_taken,
+        "bluesup_VisionScore": bluesup_vision,
+        "bluesup_Summoner1": bluesup_summoner1,
+        "bluesup_Summoner2": bluesup_summoner2,
+        "bluesup_Minions": bluesup_minions,
+        "bluesup_Rank": bluesup_rank,
+        "bluesup_Tier": bluesup_tier,
+        "bluesup_lp": bluesup_lp,
+        "bluesup_Item0": bluesup_item0,
+        "bluesup_Item1": bluesup_item1,
+        "bluesup_Item2": bluesup_item2,
+        "bluesup_Item3": bluesup_item3,
+        "bluesup_Item4": bluesup_item4,
+        "bluesup_Item5": bluesup_item5,
+        "bluesup_Item6": bluesup_item6,
+        "bluesup_Rune0": bluesup_rune0
+    }
+    redsup_data = {
+        "redsup_ID": redsup_id,
+        "redsup_PUUID": redsup_puuid,
+        "redsup_IGN": redsup_ign,
+        "redsup_Tag": redsup_tag,
+        "redsup_Kills": redsup_kills,
+        "redsup_deaths": redsup_deaths,
+        "redsup_assists": redsup_assists,
+        "redsup_KP": redsup_kp,
+        "redsup_KDA": redsup_kda,
+        "redsup_MaxCS": redsup_maxcs,
+        "redsup_MaxLvl": redsup_maxlvl,
+        "redsup_DamagePercent": redsup_damagepercent,
+        "redsup_TakenPercent": redsup_damagetaken,
+        "redsup_MagicTaken": redsup_magictaken,
+        "redsup_MagicDMG": redsup_magicdmg,
+        "redsup_PhysicalTaken": redsup_physicaltaken,
+        "redsup_PhysicalDMG": redsup_physicaldmg,
+        "redsup_TrueTaken": redsup_truetaken,
+        "redsup_TrueDMG": redsup_truedmg,
+        "redsup_DMG": redsup_dmg,
+        "redsup_Taken": redsup_taken,
+        "redsup_VisionScore": redsup_vision,
+        "redsup_Summoner1": redsup_summoner1,
+        "redsup_Summoner2": redsup_summoner2,
+        "redsup_Minions": redsup_minions,
+        "redsup_Rank": redsup_rank,
+        "redsup_Tier": redsup_tier,
+        "redsup_lp": redsup_lp,
+        "redsup_Item0": redsup_item0,
+        "redsup_Item1": redsup_item1,
+        "redsup_Item2": redsup_item2,
+        "redsup_Item3": redsup_item3,
+        "redsup_Item4": redsup_item4,
+        "redsup_Item5": redsup_item5,
+        "redsup_Item6": redsup_item6,
+        "redsup_Rune0": redsup_rune0
+    }
+
+    return (match_id, summoner_champ, summoner_lane, puuid, gameduration, item_map[summoner_item0]['name'], summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+            bluetop_champ, bluetop_data,
+            redtop_champ, redtop_data,
+            bluejg_champ, bluejg_data,
+            redjg_champ, redjg_data,
+            bluemid_champ, bluemid_data,
+            redmid_champ, redmid_data,
+            bluebot_champ, bluebot_data,
+            redbot_champ, redbot_data,
+            bluesup_champ, bluesup_data,
+            redsup_champ, redsup_data)
 
 
 #fetches matches of user

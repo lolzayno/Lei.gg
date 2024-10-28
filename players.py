@@ -94,9 +94,34 @@ if __name__ == '__main__':
     player = fetch_data(region, ign, api_key)
     puuid = player[1]
     last_updated = player[4]
+    patch = match.fetch_patch()
+    item_map = match.fetch_item(patch)
     time_zone = pytz.timezone('America/Los_Angeles')
     all_matches = match.fetch_matches(region, puuid, int(last_updated.timestamp()), api_key)
     #update_time = database.update_time(engine, puuid, datetime.now())
     for game in all_matches:
-        details = match.fetch_match_data(game, puuid, region, api_key)
+        details = match.fetch_match_data(game, puuid, region, item_map, api_key)
+        if details is not None:
+            (match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+                bluetop_champ, bluetop_data,
+                redtop_champ, redtop_data,
+                bluejg_champ, bluejg_data,
+                redjg_champ, redjg_data,
+                bluemid_champ, bluemid_data,
+                redmid_champ, redmid_data,
+                bluebot_champ, bluebot_data,
+                redbot_champ, redbot_data,
+                bluesup_champ, bluesup_data,
+                redsup_champ, redsup_data) = details
+            database.insert_match(engine, match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+                bluetop_champ, bluetop_data,
+                redtop_champ, redtop_data,
+                bluejg_champ, bluejg_data,
+                redjg_champ, redjg_data,
+                bluemid_champ, bluemid_data,
+                redmid_champ, redmid_data,
+                bluebot_champ, bluebot_data,
+                redbot_champ, redbot_data,
+                bluesup_champ, bluesup_data,
+                redsup_champ, redsup_data)
         break
