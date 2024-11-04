@@ -1,0 +1,38 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2e5ff; /* Light lilac background */
+    color: #483d8b; /* Dark slate text color */
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #6857fb; /* Deep lilac purple */
+    border-bottom: 3px solid #6451fb; /* Slightly darker border */
+  }
+  
+  .nav-link {
+    color: #faf8ff; /* Soft white */
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .nav-link:hover {
+    color: #ddcdfe; /* Lighter lilac shade for hover effect */
+  }
+  
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+  }
+  
