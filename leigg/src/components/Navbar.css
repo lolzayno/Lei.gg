@@ -7,8 +7,8 @@
   
   body {
     font-family: Arial, sans-serif;
-    background-color: #f2e5ff; /* Light lilac background */
-    color: #483d8b; /* Dark slate text color */
+    background-color: #8275FD; /* Light lilac background */
+    color: #412DFC; /* Dark slate text color */
   }
   
   .navbar {
@@ -16,8 +16,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
-    background-color: #6857fb; /* Deep lilac purple */
-    border-bottom: 3px solid #6451fb; /* Slightly darker border */
+    background-color: #8275FD; /* Deep lilac purple */
+    border-bottom: 1px solid #6451fb; /* Slightly darker border */
   }
   
   .nav-link {
@@ -31,8 +31,29 @@
     color: #ddcdfe; /* Lighter lilac shade for hover effect */
   }
   
-  .nav-left, .nav-right {
+  .nav-left {
     display: flex;
     align-items: center;
+    height: 100%;  /* Aligns with the navbar height */
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    height: 100%;  /* Aligns with the navbar height */
+    gap: 35px;
+  }
+
+  .custom-button {
+    background-color: #8275FD;  /* Match navbar background color */
+    border: none;  /* Remove border to blend with navbar */
+    color: white;  /* Text color to match the navbar theme */
+    padding: 0;  /* Remove extra padding */
+    box-shadow: none;  /* Remove any button shadow */
   }
   
+  .custom-button .pi {
+    font-size: 1.5rem;  /* Adjust icon size if needed */
+  }
+  .custom-button:hover {
+    color: #6451fb;
+  }

@@ -1,0 +1,72 @@
+/* Full page styling */
+.coach-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #8275FD; /* Light background */
+  }
+  
+  /* Container for coaches */
+  .coach-container {
+    flex: 1;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .coach-container h2 {
+    color: #6451fb;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Card layout for coaches */
+  .coach-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+  }
+  
+  .coach-card {
+    background-color: #ffffff;
+    border: 2px solid #8275FD;
+    border-radius: 10px;
+    width: 250px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    transition: transform 0.2s;
+  }
+  
+  .coach-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .coach-card h3 {
+    color: #6451fb;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .coach-card p {
+    color: #483d8b;
+    margin: 0.3rem 0;
+  }
+  
+  .select-button {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #6451fb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .select-button:hover {
+    background-color: #483d8b;
+  }
+  

@@ -1,0 +1,103 @@
+/* Center the entire search container */
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* White pill background container for search bar, region, and button */
+.search-pill {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 50px;
+  background-color: #ffffff;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+}
+
+/* Wrapper for each input and label */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: auto;
+}
+
+/* Label positioned above input without affecting layout */
+.input-label {
+  position: absolute;
+  top: -18px;
+  left: 15px;
+  font-size: 0.9rem;
+  color: #6451fb;
+  margin-bottom: 0;
+}
+
+/* Input, region, and button styling */
+.search-input, .region-select {
+  width: 300px;
+  padding: 0.5rem;
+  border: 2px solid #6451fb;
+  border-radius: 50px;
+  outline: none;
+  font-size: 1rem;
+  color: #6451fb;
+  background-color: #f9f8ff;
+  margin-bottom: 0;
+}
+
+/* Custom dropdown arrow as background image */
+.region-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%236451fb'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+/* Styling for the dropdown itself */
+.region-select option {
+  background-color: #f9f8ff;
+  color: #6451fb;
+  padding: 10px;
+  font-size: 1rem;
+}  
+
+/* WebKit-based custom focus styling (limited browser support) */
+.region-select option:checked {
+    background-color: #6451fb;
+    color: #6451fb;
+  }
+  
+  .region-select option:hover {
+    background-color: #6451fb;
+    color: #6451fb;
+  }
+  
+
+/* Rotate arrow when dropdown is open */
+.region-select.open {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%236451fb'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+}
+
+/* Align search button with input fields */
+.search-button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f9f8ff;
+  background-color: #8275fd;
+  border: 2px solid #8275fd;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #6451fb;
+}

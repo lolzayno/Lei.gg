@@ -1,0 +1,103 @@
+/* Full-page container for centering */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #8275FD; /* Match your theme's background color */
+  }
+  
+  /* Centered login container */
+  .login-page .login-container {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #6451fb;
+  }
+  
+  .login-page h2 {
+    margin-bottom: 1.5rem;
+    color: #6451fb; /* Dark lilac color */
+  }
+  
+  /* Login form styling */
+  .login-page .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .login-page label {
+    font-size: 1rem;
+    color: #6451fb;
+    text-align: left;
+  }
+  
+  .login-page input[type="text"],
+  .login-page input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #6451fb;
+    border-radius: 5px;
+    background-color: #f9f8ff;
+    outline: none;
+    font-size: 1rem;
+    color: #6451fb;
+  }
+  
+  .login-page input[type="text"]::placeholder,
+  .login-page input[type="password"]::placeholder {
+    color: #8275fd;
+  }
+  
+  .login-page input:focus {
+    border-color: #483d8b;
+  }
+  
+  /* Login button */
+  .login-page .login-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #6451fb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .login-page .login-button:hover {
+    background-color: #483d8b;
+  }
+  
+  /* Links for sign up and forgot password */
+  .login-page .login-links {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #6451fb;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .login-page .login-links a {
+    color: #6451fb;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .login-page .login-links a:hover {
+    color: #ddcdfe;
+  }
+  
+  .login-page .login-links span {
+    color: #6451fb;
+  }
+  

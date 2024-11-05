@@ -1,0 +1,71 @@
+/* Footer container */
+.footer {
+    width: 100%;
+    padding: 1.5rem;
+    background-color: #8275FD;
+    color: #ffffff;
+    text-align: center;
+    border-top: 2px solid #6451fb;
+  }
+  
+  /* Footer content */
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  /* Social icons container */
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  /* Styling each social button */
+  .social-button {
+    background: none;
+    border: none;
+    color: #faf8ff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  /* Individual hover colors for each platform */
+  .social-button.twitch:hover {
+    color: #9146FF;
+  }
+  .social-button.youtube:hover {
+    color: #FF0000;
+  }
+  .social-button.linkedin:hover {
+    color: #0077B5;
+  }
+  .social-button.github:hover {
+    color: #333;
+  }
+  .social-button.discord:hover {
+    color: #5865F2;
+  }
+  
+  /* Footer links for Terms of Service and Privacy Policy */
+  .footer-links {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+  
+  .footer-links a {
+    color: #faf8ff;
+    text-decoration: none;
+    margin: 0 0.5rem;
+  }
+  
+  .footer-links a:hover {
+    color: #ddcdfe; /* Lighter lilac shade for hover effect */
+  }
+  
+  .footer-links span {
+    color: #faf8ff;
+  }
+  

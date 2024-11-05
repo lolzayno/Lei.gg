@@ -1,0 +1,86 @@
+/* Full-page forum layout */
+.forum-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #8275FD; /* Light background color */
+}
+
+/* Container for the forum content */
+.forum-container {
+  flex: 1;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.forum-container h1 {
+  color: #6451fb;
+  margin-bottom: 1.5rem;
+}
+
+/* Form for creating a post */
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+/* Label styling */
+.post-form label {
+  font-size: 1rem;
+  color: #6451fb;
+}
+
+/* Input and textarea styling */
+.post-form input[type="text"],
+.post-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #6451fb;
+  border-radius: 5px;
+  background-color: #f9f8ff;
+  outline: none;
+  font-size: 1rem;
+  color: #6451fb;
+}
+
+.post-form input[type="text"]::placeholder,
+.post-form textarea::placeholder {
+  color: #8275fd;
+}
+
+.post-form input:focus,
+.post-form textarea:focus {
+  border-color: #483d8b;
+}
+
+/* Textarea-specific styling */
+.post-form textarea {
+  height: 150px;
+  resize: vertical;
+}
+
+/* Submit button styling */
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #6451fb;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #483d8b;
+}
