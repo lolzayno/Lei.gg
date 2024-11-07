@@ -1,0 +1,51 @@
+.post-detail-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f9f8ff;
+  }
+  
+  .post-detail-container {
+    flex: 1;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .post-detail-container h2 {
+    color: #6451fb;
+    margin-bottom: 1rem;
+  }
+  
+  .replies-section {
+    margin-top: 2rem;
+  }
+  
+  .reply-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #6451fb;
+    border-radius: 5px;
+    margin-top: 1rem;
+  }
+  
+  .submit-reply-button {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #6451fb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .submit-reply-button:hover {
+    background-color: #483d8b;
+  }
+  

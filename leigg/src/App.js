@@ -7,6 +7,7 @@ import Coach from './components/Coach.js';
 import Login from './components/Login.js';
 import Signup from './components/Signup.js';
 import Forgot from './components/Forgot.js';
+import PostDetail from './components/PostDetail.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<Forgot />} />
+          <Route path="/post/:postid" element={<PostDetail />} />
       </Routes>
     </Router>
   );
