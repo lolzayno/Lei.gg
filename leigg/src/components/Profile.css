@@ -1,0 +1,73 @@
+/* Profile.css */
+
+.profile-page {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .user-profile, .match-history, .champions {
+    width: 80%;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-card {
+    background-color: #f3f4fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+  }
+  
+  .rank-info {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+  
+  .match-cards, .champion-cards {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .match-card, .champion-card {
+    background-color: #f9faff;
+    border-radius: 8px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+  
+  .match-card p, .champion-card p {
+    margin: 0.3rem 0;
+  }
+  
+  h2, h3 {
+    color: #6451fb;
+  }
+  
+  h3 {
+    text-align: left;
+    margin-bottom: 1rem;
+  }
+
+  .champion-link {
+    color: #6451fb;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+  }
+  
+  .champion-link:hover {
+    color: #483d8b;
+  }
+  

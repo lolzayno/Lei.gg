@@ -11,7 +11,7 @@ import match
 import players
 app = Flask(__name__)
 CORS(app)  # Enable CORS
-API_KEY = database.get_json("API_KEY")
+API_KEY = players.get_json("API_KEY")
 @app.route("/", methods=['POST'])
 def profile():
     engine = players.establish_connection()
@@ -26,9 +26,10 @@ def profile():
     item_map = match.fetch_item(patch)
     rune_map = match.fetch_rune(patch)
     all_matches = match.fetch_matches(region, puuid, int(last_updated.timestamp()), api_key)
-    database.update_timestamp(engine, puuid)
     dict_update = {}
+    counter = 0
     for game in all_matches:
+        counter = counter + 1
         details = match.fetch_match_data(game, puuid, region, item_map, rune_map, dict_update, api_key)
         if details is not None:
             (match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
@@ -53,8 +54,11 @@ def profile():
                 redbot_champ, redbot_data,
                 bluesup_champ, bluesup_data,
                 redsup_champ, redsup_data)
-        break
+        if counter == 3:
+            break
+    database.update_timestamp(engine, puuid)
     for champ in dict_update:
+        database.update_champions(engine, puuid, champ)
         for rune in dict_update[champ]['runes']:
             database.update_runes(engine, puuid, champ, rune)
         for item in dict_update[champ]['items']:
@@ -64,7 +68,11 @@ def profile():
     matchhistory = database.fetch_matchHistory(engine, puuid) #match history
     champions = database.fetch_champions(engine, puuid) #champions
     user = database.fetch_player(engine, puuid) #user info
-    return
+    user_json = {}
+    user_json["Matches"] = matchhistory
+    user_json["Champions"] = champions
+    user_json["User"] = user
+    return jsonify(user_json)
 
 @app.route("/profile/<region>/<ign>/<tag>/<champion>", methods=['GET'])
 def champion(region, ign, tag, champion):
@@ -73,8 +81,8 @@ def champion(region, ign, tag, champion):
     fullign = ign + '#' + tag
     player = players.fetch_data(region, fullign, engine, api_key)
     puuid = player[1]
-    champ_info = database.fetch_averages(engine, puuid)
-    return champ_info
+    champ_info = database.fetch_champion(engine, puuid, champion)
+    return jsonify(champ_info)
 @app.route("/profile/<region>/<ign>/<tag>", methods=['POST'])
 def updateprofile(region, ign, tag):
     engine = players.establish_connection()

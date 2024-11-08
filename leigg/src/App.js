@@ -8,6 +8,8 @@ import Login from './components/Login.js';
 import Signup from './components/Signup.js';
 import Forgot from './components/Forgot.js';
 import PostDetail from './components/PostDetail.js';
+import Profile from './components/Profile.js';
+import Champion from './components/Champion.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<Forgot />} />
           <Route path="/post/:postid" element={<PostDetail />} />
+          <Route path="/profile/:region/:ign/:tag/:champion" element={<Champion />} />
+          <Route path="/profile/:region/:ign/:tag" element={<Profile />} />
       </Routes>
     </Router>
   );

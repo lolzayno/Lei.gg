@@ -1,0 +1,31 @@
+.champion-page {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .champion-page h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .champion-stats {
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .champion-stats p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  .champion-stats p strong {
+    color: #333;
+  }
+  

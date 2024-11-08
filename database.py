@@ -51,7 +51,6 @@ def insert_player(engine, puuid, summoner_info, summoner_rank):
                 "puuid": puuid
             })
             player = fetch.fetchone()
-            print(player)
             return player
         except Exception as e:
             transaction.rollback()
@@ -488,25 +487,79 @@ def fetch_matchHistory(engine, puuid):
 
     with engine.connect() as connection:
         result = connection.execute(text(sql), {
-            "summoner_puuid": puuid,
+            "puuid": puuid,
         }).fetchall()
          
-        print(result)
-        return result
+        parsed_results = []
+        with engine.connect() as connection:
+            result = connection.execute(text(sql), {"puuid": puuid}).fetchall()
+            
+            for row in result:
+                # Convert row to dictionary using _mapping for dictionary-like access
+                row_dict = dict(row._mapping)
+                # Assuming the JSON data is in a column called "json_data"
+                row_dict["summoner_data"] = json.loads(row_dict["summoner_data"])  # Parse JSON field
+                row_dict["bluetop_data"] = json.loads(row_dict["bluetop_data"])
+                row_dict["redtop_data"] = json.loads(row_dict["redtop_data"])
+                row_dict["bluejg_data"] = json.loads(row_dict["bluejg_data"])
+                row_dict["redjg_data"] = json.loads(row_dict["redjg_data"])
+                row_dict["bluemid_data"] = json.loads(row_dict["bluemid_data"])
+                row_dict["redmid_data"] = json.loads(row_dict["redmid_data"])
+                row_dict["bluebot_data"] = json.loads(row_dict["bluebot_data"])
+                row_dict["redbot_data"] = json.loads(row_dict["redbot_data"])
+                row_dict["bluesup_data"] = json.loads(row_dict["bluesup_data"])
+                row_dict["redsup_data"] = json.loads(row_dict["redsup_data"])
+
+                parsed_results.append(row_dict)
+
+        return parsed_results
 
 def fetch_champions(engine, puuid):
     sql = """
     SELECT * FROM champions
-    WHERE summoner_puuid = :puuid
+    WHERE puuid = :puuid
     """
 
+    parsed_results = []
     with engine.connect() as connection:
-        result = connection.execute(text(sql), {
-            "summoner_puuid": puuid,
-        }).fetchall()
-         
-        print(result)
-        return result
+        result = connection.execute(text(sql), {"puuid": puuid}).fetchall()
+        
+        for row in result:
+            # Convert row to dictionary using _mapping for dictionary-like access
+            row_dict = dict(row._mapping)
+            # Assuming the JSON data is in a column called "json_data"
+            if "json_data" in row_dict:
+                try:
+                    row_dict["json_data"] = json.loads(row_dict["json_data"])  # Parse JSON field
+                except json.JSONDecodeError:
+                    print(f"Error decoding JSON for row with ID {row_dict.get('id')}")
+
+            parsed_results.append(row_dict)
+    return parsed_results
+
+def fetch_champion(engine, puuid, champion):
+    sql = """
+    SELECT * FROM champions
+    WHERE puuid = :puuid
+    AND champion = :champion
+    """
+
+    parsed_results = []
+    with engine.connect() as connection:
+        result = connection.execute(text(sql), {"puuid": puuid, "champion": champion}).fetchall()
+        
+        for row in result:
+            # Convert row to dictionary using _mapping for dictionary-like access
+            row_dict = dict(row._mapping)
+            # Assuming the JSON data is in a column called "json_data"
+            if "json_data" in row_dict:
+                try:
+                    row_dict["json_data"] = json.loads(row_dict["json_data"])  # Parse JSON field
+                except json.JSONDecodeError:
+                    print(f"Error decoding JSON for row with ID {row_dict.get('id')}")
+
+            parsed_results.append(row_dict)
+    return parsed_results
 
 def fetch_player(engine, puuid):
     sql = """
@@ -516,27 +569,11 @@ def fetch_player(engine, puuid):
 
     with engine.connect() as connection:
         result = connection.execute(text(sql), {
-            "summoner_puuid": puuid,
+            "puuid": puuid,
         }).fetchall()
-         
-        print(result)
-        return result
+        
+        return list(result[0][:4])
     
-def fetch_averages(engine, puuid, champion):
-    sql = """
-    SELECT * FROM champions
-    WHERE puuid = :puuid
-    AND champion = :champion
-    """
-
-    with engine.connect() as connection:
-        result = connection.execute(text(sql), {
-            "summoner_puuid": puuid,
-            "champion": champion
-        }).fetchall()
-         
-        print(result)
-        return result
     
 def update_champions(engine, puuid, champion):
     sql = """
