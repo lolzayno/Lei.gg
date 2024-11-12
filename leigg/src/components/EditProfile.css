@@ -1,0 +1,104 @@
+/* Full-page container for centering */
+.full-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    background-color: #f0f0f5; /* Optional background */
+  }
+  
+  /* Container styling */
+  .edit-profile-container {
+    max-width: 500px;
+    width: 90%; /* Responsive width */
+    padding: 20px;
+    background-color: #f9f9ff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Title and text */
+  .edit-profile-title {
+    font-size: 1.8rem;
+    color: #6451fb;
+    margin-bottom: 10px;
+  }
+  
+  .edit-profile-username {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  /* Current profile picture */
+  .current-profile {
+    margin-bottom: 20px;
+  }
+  
+  .current-profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #6451fb;
+    margin-top: 10px;
+  }
+  
+  /* Form and button styling */
+  .edit-profile-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .change-pic-button {
+    background-color: #6451fb;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .change-pic-button label {
+    cursor: pointer;
+  }
+  
+  .file-input {
+    display: none;
+  }
+  
+  /* New profile preview styling */
+  .new-profile-preview {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .preview-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    margin-top: 5px;
+  }
+  
+  /* Save button styling */
+  .save-changes-button {
+    background-color: #6451fb;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-changes-button:hover {
+    background-color: #483d8b;
+  }
+  
