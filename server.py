@@ -75,6 +75,7 @@ def profile():
     user_json["Matches"] = matchhistory
     user_json["Champions"] = champions
     user_json["User"] = user
+    print(user_json)
     return jsonify(user_json)
 
 @app.route("/profile/<region>/<ign>/<tag>/<champion>", methods=['GET'])
@@ -146,6 +147,7 @@ def updateprofile(region, ign, tag):
     user_json["Matches"] = matchhistory
     user_json["Champions"] = champions
     user_json["User"] = user
+    print(user_json)
     return jsonify(user_json)
 
 @app.route("/profile/<region>/<ign>/<tag>/<champion>", methods=['POST'])

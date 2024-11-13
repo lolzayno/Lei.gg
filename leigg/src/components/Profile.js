@@ -1,16 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useParams, Link } from 'react-router-dom';
 import './Profile.css';
 import Navbar from './Navbar.js';
+
 function Profile() {
   const { state } = useLocation();
   const { region, ign, tag } = useParams();
   const data = state?.profileData || {};
 
-  // Destructure data for cleaner access
+  const [itemMapping, setItemMapping] = useState({});
+  
+  function truncateIGN(ign) {
+    return ign.length > 10 ? ign.slice(0, 10) + '...' : ign;
+  }
+  
+  // Fetch item data and create the mapping
+  useEffect(() => {
+    fetch('https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/item.json')
+      .then(response => response.json())
+      .then(data => {
+        const items = data.data;
+        const mapping = {};
+
+        for (const id in items) {
+          const item = items[id];
+          mapping[item.name] = id;
+        }
+
+        setItemMapping(mapping);
+      })
+      .catch(error => console.error('Error fetching item data:', error));
+  }, []);
+
   const { User, Matches, Champions } = data;
 
-  // Check for data loading
   if (!User || !Matches || !Champions) {
     return <div>Loading profile data...</div>;
   }
@@ -20,9 +43,8 @@ function Profile() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="profile-page">
-        {/* User Profile Section */}
         <section className="user-profile">
           <div className="profile-card">
             <img
@@ -41,38 +63,88 @@ function Profile() {
           </div>
         </section>
 
-        {/* Match History Section */}
         <section className="match-history">
           <h3>Match History</h3>
           <div className="match-cards">
-            {Matches.map((match, index) => (
-              <div key={index} className="match-card">
-                <p><strong>Match ID:</strong> {match.match_code}</p>
-                <p><strong>Champion:</strong> {match.summoner_champ}</p>
-                <p><strong>Lane:</strong> {match.summoner_lane}</p>
-                <p><strong>Duration:</strong> {Math.floor(match.game_duration / 60)}m</p>
-                <p><strong>Result:</strong> {match.result === '1' ? 'Win' : 'Loss'}</p>
-                <p><strong>Items:</strong> {[match.summoner_item0, match.summoner_item1, match.summoner_item2, match.summoner_item3, match.summoner_item4, match.summoner_item5].join(', ')}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+            {Matches.map((match, index) => {
+              const summonerData = match.summoner_data;
 
-        {/* Champions Section */}
-        <section className="champions">
-          <h3>Champions Played</h3>
-          <div className="champion-cards">
-            {Champions.map((champion, index) => {
-              const champData = JSON.parse(champion.champ_data);
               return (
-                <div key={index} className="champion-card">
-                  <Link to={`/profile/${region}/${ign}/${tag}/${champion.champion}`}>
-                    <p><strong>{champion.champion}</strong></p>
-                  </Link>
-                  <p>Games: {champData.summoner_GamesPlayed}</p>
-                  <p>Win Rate: {(champData.summoner_Winrate * 100).toFixed(2)}%</p>
-                  <p>KDA: {champData.summoner_KDA}</p>
-                  <p>Avg. Damage: {champData.summoner_TotalDmg}</p>
+                <div 
+                  key={index} 
+                  className={`match-card ${match.result === '1' ? 'win' : 'loss'}`} 
+                  style={{
+                    borderLeft: `5px solid ${match.result === '1' ? '#7D94F2' : '#FF9A9A'}`,
+                  }}
+                >
+                  <div className="match-header">
+                    <div className="champion-icon-container">
+                      <img
+                        src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match.summoner_champ}.png`}
+                        alt={`${match.summoner_champ} icon`}
+                        className="champion-icon user-champion-icon"
+                      />
+                      <span className="champion-level">{summonerData.summoner_Level}</span>
+                    </div>
+                    <div>
+                      <p 
+                        className={`match-result ${match.result === '1' ? 'victory' : 'defeat'}`}
+                        style={{ color: match.result === '1' ? '#7D94F2' : '#FF9A9A' }}
+                      >
+                        {match.result === '1' ? 'Victory' : 'Defeat'}
+                      </p>
+                    </div>
+                  </div>
+                  <p><strong>{Math.floor(match.game_duration / 60)} min & {Math.floor(match.game_duration % 60)} sec</strong></p>
+                  <div className="kda">
+                    <p><strong>KDA:</strong> {summonerData.summoner_Kills}/{summonerData.summoner_Deaths}/{summonerData.summoner_Assists || 0}</p>
+                  </div>
+                  <div className="team-champions">
+                    <div className="champions-columns">
+                      <div className="blue-side-column">
+                        {["bluetop", "bluejg", "bluemid", "bluebot", "bluesup"].map((lane) => {
+                          const rank = match[`${lane}_data`][`${lane}_Rank`];
+                          const tier = match[`${lane}_data`][`${lane}_Tier`];
+                          return (
+                            <div className="lane" key={lane}>
+                              <span className="blue-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
+                              <div className="rank-icon-container">
+                                <img 
+                                  src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
+                                  alt={`${rank} rank icon`}
+                                  className="rank-icon blue-rank-icon"
+                                />
+                                <span className="rank-tier">{tier}</span>
+                              </div>
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Blue ${lane}`} />
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="red-side-column">
+                        {["redtop", "redjg", "redmid", "redbot", "redsup"].map((lane) => {
+                          const rank = match[`${lane}_data`][`${lane}_Rank`];
+                          const tier = match[`${lane}_data`][`${lane}_Tier`];
+                          return (
+                            <div className="lane" key={lane}>
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} />
+                              <div className="rank-icon-container">
+                                <img 
+                                  src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
+                                  alt={`${rank} rank icon`}
+                                  className="rank-icon red-rank-icon"
+                                />
+                                <span className="rank-tier">{tier}</span>
+                              </div>
+                              <span className="red-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               );
             })}
