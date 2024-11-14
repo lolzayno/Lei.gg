@@ -282,6 +282,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_healteam = player['totalHealsOnTeammates']
                 summoner_shield = player['totalDamageShieldedOnTeammates']
                 summoner_minions = player['totalMinionsKilled']
+                summoner_champid = player['championId']
                 summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5 = get_timeline(region, match_id, api_key, puuid, item_map, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5)
             if player['teamPosition'] == 'TOP' and player['teamId'] == 100:
                 bluetop_id = player['summonerId']
@@ -318,6 +319,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluetop_item6 = player['item6']
                 bluetop_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 bluetop_puuid = player['puuid']
+                bluetop_level = player['champLevel']
+                bluetop_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, bluetop_id, api_key)
                 bluetop_rank = rank_details[0]
                 bluetop_tier = rank_details[1]
@@ -358,6 +361,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redtop_item6 = player['item6']
                 redtop_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 redtop_puuid = player['puuid']
+                redtop_level = player['champLevel']
+                redtop_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, redtop_id, api_key)
                 redtop_rank = rank_details[0]
                 redtop_tier = rank_details[1]
@@ -398,6 +403,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluejg_item6 = player['item6']
                 bluejg_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 bluejg_puuid = player['puuid']
+                bluejg_level = player['champLevel']
+                bluejg_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, bluejg_id, api_key)
                 bluejg_rank = rank_details[0]
                 bluejg_tier = rank_details[1]
@@ -438,6 +445,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redjg_item6 = player['item6']
                 redjg_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 redjg_puuid = player['puuid']
+                redjg_level = player['champLevel']
+                redjg_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, redjg_id, api_key)
                 redjg_rank = rank_details[0]
                 redjg_tier = rank_details[1]
@@ -478,6 +487,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluemid_item6 = player['item6']
                 bluemid_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 bluemid_puuid = player['puuid']
+                bluemid_level = player['champLevel']
+                bluemid_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, bluemid_id, api_key)
                 bluemid_rank = rank_details[0]
                 bluemid_tier = rank_details[1]
@@ -518,6 +529,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redmid_item6 = player['item6']
                 redmid_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 redmid_puuid = player['puuid']
+                redmid_level = player['champLevel']
+                redmid_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, redmid_id, api_key)
                 redmid_rank = rank_details[0]
                 redmid_tier = rank_details[1]
@@ -558,6 +571,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluebot_item6 = player['item6']
                 bluebot_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 bluebot_puuid = player['puuid']
+                bluebot_level = player['champLevel']
+                bluebot_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, bluebot_id, api_key)
                 bluebot_rank = rank_details[0]
                 bluebot_tier = rank_details[1]
@@ -598,6 +613,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redbot_item6 = player['item6']
                 redbot_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 redbot_puuid = player['puuid']
+                redbot_level = player['champLevel']
+                redbot_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, redbot_id, api_key)
                 redbot_rank = rank_details[0]
                 redbot_tier = rank_details[1]
@@ -638,6 +655,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluesup_item6 = player['item6']
                 bluesup_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 bluesup_puuid = player['puuid']
+                bluesup_level = player['champLevel']
+                bluesup_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, bluesup_id, api_key)
                 bluesup_rank = rank_details[0]
                 bluesup_tier = rank_details[1]
@@ -678,6 +697,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redsup_item6 = player['item6']
                 redsup_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
                 redsup_puuid = player['puuid']
+                redsup_level = player['champLevel']
+                redsup_champid = player['championId']
                 rank_details = players.fetch_rank(true_region, redsup_id, api_key)
                 redsup_rank = rank_details[0]
                 redsup_tier = rank_details[1]
@@ -784,6 +805,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "summoner_HealTeam": summoner_healteam,
         "summoner_Shield": summoner_shield,
         "summoner_Minions": summoner_minions,
+        "summoner_ChampId": summoner_champid,
         "summoner_Rune6": rune_map[summoner_rune6],
         "summoner_Rune7": rune_map[summoner_rune7],
         "summoner_Rune8": rune_map[summoner_rune8],
@@ -804,7 +826,14 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "summoner_Rune43": summoner_rune43,
         "summoner_Rune51": summoner_rune51,
         "summoner_Rune52": summoner_rune52,
-        "summoner_Rune53": summoner_rune53
+        "summoner_Rune53": summoner_rune53,
+        "summoner_Item0Id": summoner_item0,
+        "summoner_Item1Id": summoner_item1,
+        "summoner_Item2Id": summoner_item2,
+        "summoner_Item3Id": summoner_item3,
+        "summoner_Item4Id": summoner_item4,
+        "summoner_Item5Id": summoner_item5,
+        "summoner_Item6Id": summoner_item6
     }
     bluetop_data = {
         "bluetop_ID": bluetop_id,
@@ -842,6 +871,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "bluetop_Item4": item_map[bluetop_item4]['name'],
         "bluetop_Item5": item_map[bluetop_item5]['name'],
         "bluetop_Item6": item_map[bluetop_item6]['name'],
+        "bluetop_Item0Id": bluetop_item0,
+        "bluetop_Item1Id": bluetop_item1,
+        "bluetop_Item2Id": bluetop_item2,
+        "bluetop_Item3Id": bluetop_item3,
+        "bluetop_Item4Id": bluetop_item4,
+        "bluetop_Item5Id": bluetop_item5,
+        "bluetop_Item6Id": bluetop_item6,
+        "bluetop_ChampLvl": bluetop_level,
+        "bluetop_ChampId": bluetop_champid,
         "bluetop_Rune0": rune_map[bluetop_rune0]
     }
     redtop_data = {
@@ -880,6 +918,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redtop_Item4": item_map[redtop_item4]['name'],
         "redtop_Item5": item_map[redtop_item5]['name'],
         "redtop_Item6": item_map[redtop_item6]['name'],
+        "redtop_Item0Id": redtop_item0,
+        "redtop_Item1Id": redtop_item1,
+        "redtop_Item2Id": redtop_item2,
+        "redtop_Item3Id": redtop_item3,
+        "redtop_Item4Id": redtop_item4,
+        "redtop_Item5Id": redtop_item5,
+        "redtop_Item6Id": redtop_item6,
+        "redtop_ChampLvl": redtop_level,
+        "redtop_ChampId": redtop_champid,
         "redtop_Rune0": rune_map[redtop_rune0]
     }
     bluejg_data = {
@@ -918,6 +965,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "bluejg_Item4": item_map[bluejg_item4]['name'],
         "bluejg_Item5": item_map[bluejg_item5]['name'],
         "bluejg_Item6": item_map[bluejg_item6]['name'],
+        "bluejg_Item0Id": bluejg_item0,
+        "bluejg_Item1Id": bluejg_item1,
+        "bluejg_Item2Id": bluejg_item2,
+        "bluejg_Item3Id": bluejg_item3,
+        "bluejg_Item4Id": bluejg_item4,
+        "bluejg_Item5Id": bluejg_item5,
+        "bluejg_Item6Id": bluejg_item6,
+        "bluejg_ChampLvl": bluejg_level,
+        "bluejg_ChampId": bluejg_champid,
         "bluejg_Rune0": rune_map[bluejg_rune0]
     }
     redjg_data = {
@@ -956,6 +1012,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redjg_Item4": item_map[redjg_item4]['name'],
         "redjg_Item5": item_map[redjg_item5]['name'],
         "redjg_Item6": item_map[redjg_item6]['name'],
+        "redjg_Item0Id": redjg_item0,
+        "redjg_Item1Id": redjg_item1,
+        "redjg_Item2Id": redjg_item2,
+        "redjg_Item3Id": redjg_item3,
+        "redjg_Item4Id": redjg_item4,
+        "redjg_Item5Id": redjg_item5,
+        "redjg_Item6Id": redjg_item6,
+        "redjg_ChampLvl": redjg_level,
+        "redjg_ChampId": redjg_champid,
         "redjg_Rune0": rune_map[redjg_rune0]
     }
     bluemid_data = {
@@ -994,6 +1059,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "bluemid_Item4": item_map[bluemid_item4]['name'],
         "bluemid_Item5": item_map[bluemid_item5]['name'],
         "bluemid_Item6": item_map[bluemid_item6]['name'],
+        "bluemid_Item0Id": bluemid_item0,
+        "bluemid_Item1Id": bluemid_item1,
+        "bluemid_Item2Id": bluemid_item2,
+        "bluemid_Item3Id": bluemid_item3,
+        "bluemid_Item4Id": bluemid_item4,
+        "bluemid_Item5Id": bluemid_item5,
+        "bluemid_Item6Id": bluemid_item6,
+        "bluemid_ChampLvl": bluemid_level,
+        "bluemid_ChampId": bluemid_champid,
         "bluemid_Rune0": rune_map[bluemid_rune0]
     }
     redmid_data = {
@@ -1032,6 +1106,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redmid_Item4": item_map[redmid_item4]['name'],
         "redmid_Item5": item_map[redmid_item5]['name'],
         "redmid_Item6": item_map[redmid_item6]['name'],
+        "redmid_Item0Id": redmid_item0,
+        "redmid_Item1Id": redmid_item1,
+        "redmid_Item2Id": redmid_item2,
+        "redmid_Item3Id": redmid_item3,
+        "redmid_Item4Id": redmid_item4,
+        "redmid_Item5Id": redmid_item5,
+        "redmid_Item6Id": redmid_item6,
+        "redmid_ChampLvl": redmid_level,
+        "redmid_ChampId": redmid_champid,
         "redmid_Rune0": rune_map[redmid_rune0]
     }
     bluebot_data = {
@@ -1070,6 +1153,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "bluebot_Item4": item_map[bluebot_item4]['name'],
         "bluebot_Item5": item_map[bluebot_item5]['name'],
         "bluebot_Item6": item_map[bluebot_item6]['name'],
+        "bluebot_Item0Id": bluebot_item0,
+        "bluebot_Item1Id": bluebot_item1,
+        "bluebot_Item2Id": bluebot_item2,
+        "bluebot_Item3Id": bluebot_item3,
+        "bluebot_Item4Id": bluebot_item4,
+        "bluebot_Item5Id": bluebot_item5,
+        "bluebot_Item6Id": bluebot_item6,
+        "bluebot_ChampLvl": bluebot_level,
+        "bluebot_ChampId": bluebot_champid,
         "bluebot_Rune0": rune_map[bluebot_rune0]
     }
     redbot_data = {
@@ -1108,6 +1200,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redbot_Item4": item_map[redbot_item4]['name'],
         "redbot_Item5": item_map[redbot_item5]['name'],
         "redbot_Item6": item_map[redbot_item6]['name'],
+        "redbot_Item0Id": redbot_item0,
+        "redbot_Item1Id": redbot_item1,
+        "redbot_Item2Id": redbot_item2,
+        "redbot_Item3Id": redbot_item3,
+        "redbot_Item4Id": redbot_item4,
+        "redbot_Item5Id": redbot_item5,
+        "redbot_Item6Id": redbot_item6,
+        "redbot_ChampLvl": redbot_level,
+        "redbot_ChampId": redbot_champid,
         "redbot_Rune0": rune_map[redbot_rune0]
     }
     bluesup_data = {
@@ -1146,6 +1247,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "bluesup_Item4": item_map[bluesup_item4]['name'],
         "bluesup_Item5": item_map[bluesup_item5]['name'],
         "bluesup_Item6": item_map[bluesup_item6]['name'],
+        "bluesup_Item0Id": bluesup_item0,
+        "bluesup_Item1Id": bluesup_item1,
+        "bluesup_Item2Id": bluesup_item2,
+        "bluesup_Item3Id": bluesup_item3,
+        "bluesup_Item4Id": bluesup_item4,
+        "bluesup_Item5Id": bluesup_item5,
+        "bluesup_Item6Id": bluesup_item6,
+        "bluesup_ChampLvl": bluesup_level,
+        "bluesup_ChampId": bluesup_champid,
         "bluesup_Rune0": rune_map[bluesup_rune0]
     }
     redsup_data = {
@@ -1184,6 +1294,15 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redsup_Item4": item_map[redsup_item4]['name'],
         "redsup_Item5": item_map[redsup_item5]['name'],
         "redsup_Item6": item_map[redsup_item6]['name'],
+        "redsup_Item0Id": redsup_item0,
+        "redsup_Item1Id": redsup_item1,
+        "redsup_Item2Id": redsup_item2,
+        "redsup_Item3Id": redsup_item3,
+        "redsup_Item4Id": redsup_item4,
+        "redsup_Item5Id": redsup_item5,
+        "redsup_Item6Id": redsup_item6,
+        "redsup_ChampLvl": redsup_level,
+        "redsup_ChampId": redsup_champid,
         "redsup_Rune0": rune_map[redsup_rune0]
     }
     return (match_id, summoner_champ, summoner_lane, puuid, gameduration, item_map[summoner_item0]['name'], item_map[summoner_item1]['name'], item_map[summoner_item2]['name'], item_map[summoner_item3]['name'], item_map[summoner_item4]['name'], item_map[summoner_item5]['name'], item_map[summoner_item6]['name'], rune_map[summoner_rune0], rune_map[summoner_rune1], rune_map[summoner_rune2], rune_map[summoner_rune3], rune_map[summoner_rune4], rune_map[summoner_rune5], summoner_data, summoner_result,

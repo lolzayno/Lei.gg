@@ -59,6 +59,7 @@ def profile():
                 redsup_champ, redsup_data)
         if counter == 3:
             break
+        break
     database.update_timestamp(engine, puuid)
     for champ in dict_update:
         database.update_champions(engine, puuid, champ)
@@ -75,7 +76,6 @@ def profile():
     user_json["Matches"] = matchhistory
     user_json["Champions"] = champions
     user_json["User"] = user
-    print(user_json)
     return jsonify(user_json)
 
 @app.route("/profile/<region>/<ign>/<tag>/<champion>", methods=['GET'])

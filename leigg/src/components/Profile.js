@@ -13,24 +13,7 @@ function Profile() {
   function truncateIGN(ign) {
     return ign.length > 10 ? ign.slice(0, 10) + '...' : ign;
   }
-  
-  // Fetch item data and create the mapping
-  useEffect(() => {
-    fetch('https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/item.json')
-      .then(response => response.json())
-      .then(data => {
-        const items = data.data;
-        const mapping = {};
 
-        for (const id in items) {
-          const item = items[id];
-          mapping[item.name] = id;
-        }
-
-        setItemMapping(mapping);
-      })
-      .catch(error => console.error('Error fetching item data:', error));
-  }, []);
 
   const { User, Matches, Champions } = data;
 
@@ -49,7 +32,7 @@ function Profile() {
           <div className="profile-card">
             <img
               className="profile-icon"
-              src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/${userInfo.profile_icon}.png`}
+              src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
               alt="Profile Icon"
             />
             <h2>{userInfo.summoner_name}</h2>
@@ -80,13 +63,29 @@ function Profile() {
                   <div className="match-header">
                     <div className="champion-icon-container">
                       <img
-                        src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match.summoner_champ}.png`}
+                        src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match.summoner_champ}.png`}
                         alt={`${match.summoner_champ} icon`}
                         className="champion-icon user-champion-icon"
                       />
                       <span className="champion-level">{summonerData.summoner_Level}</span>
                     </div>
-                    <div>
+                    <div className="items-section">
+                      <div className="items">
+                        {[summonerData.summoner_Item0Id, summonerData.summoner_Item1Id, summonerData.summoner_Item2Id, summonerData.summoner_Item3Id, summonerData.summoner_Item4Id, summonerData.summoner_Item5Id].map((itemId, idx) => (
+                          itemId ? (
+                            <img 
+                              key={idx} 
+                              src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`} 
+                              alt={`Item ${itemId}`} 
+                              className="item-icon" 
+                            />
+                            
+                          ) : null
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div>
                       <p 
                         className={`match-result ${match.result === '1' ? 'victory' : 'defeat'}`}
                         style={{ color: match.result === '1' ? '#7D94F2' : '#FF9A9A' }}
@@ -94,11 +93,11 @@ function Profile() {
                         {match.result === '1' ? 'Victory' : 'Defeat'}
                       </p>
                     </div>
-                  </div>
                   <p><strong>{Math.floor(match.game_duration / 60)} min & {Math.floor(match.game_duration % 60)} sec</strong></p>
                   <div className="kda">
                     <p><strong>KDA:</strong> {summonerData.summoner_Kills}/{summonerData.summoner_Deaths}/{summonerData.summoner_Assists || 0}</p>
                   </div>
+                  
                   <div className="team-champions">
                     <div className="champions-columns">
                       <div className="blue-side-column">
@@ -116,7 +115,7 @@ function Profile() {
                                 />
                                 <span className="rank-tier">{tier}</span>
                               </div>
-                              <img src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Blue ${lane}`} />
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Blue ${lane}`} />
                             </div>
                           );
                         })}
@@ -128,7 +127,7 @@ function Profile() {
                           const tier = match[`${lane}_data`][`${lane}_Tier`];
                           return (
                             <div className="lane" key={lane}>
-                              <img src={`https://ddragon.leagueoflegends.com/cdn/11.24.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} />
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} />
                               <div className="rank-icon-container">
                                 <img 
                                   src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
