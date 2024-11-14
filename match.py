@@ -833,7 +833,8 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "summoner_Item3Id": summoner_item3,
         "summoner_Item4Id": summoner_item4,
         "summoner_Item5Id": summoner_item5,
-        "summoner_Item6Id": summoner_item6
+        "summoner_Item6Id": summoner_item6,
+        "summoner_Rune0Id": summoner_rune0
     }
     bluetop_data = {
         "bluetop_ID": bluetop_id,

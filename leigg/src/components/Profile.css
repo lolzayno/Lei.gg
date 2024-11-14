@@ -43,14 +43,14 @@
 .blue-side-ign {
   width: 80px;
   text-align: right;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #7D94F2;
 }
 
 .red-side-ign {
   width: 80px;
   text-align: left;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #FF9A9A;
 }
 
@@ -73,8 +73,8 @@
 
 .champion-level {
   position: absolute;
-  bottom: 4px;
-  left: 2px;
+  bottom: -3px;
+  left: -8px;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
   color: #fff;
   border-radius: 50%; /* Circular shape */
@@ -85,7 +85,7 @@
   width: 25px; /* Adjust size to fit */
   height: 25px;
   text-align: center;
-  border: 1px solid white;
+  border: 2px solid black;
   font-size: 12px;
 }
 
@@ -111,6 +111,29 @@
   position: relative;
   display: inline-block;
 }
+
+.rank-icon-container[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%; /* Position above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75); /* Dark background */
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.rank-icon-container[data-tooltip]::after {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 .rank-icon {
   width: 10px; /* Adjust size as needed */
@@ -138,7 +161,6 @@
 .match-header {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between champion icon and items section */
 }
 .items {
   display: flex;
@@ -150,4 +172,127 @@
   height: 60px;
   border-radius: 25%;
   border: 2px solid black;
+}
+
+.damage-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.damage-bar-container {
+  width: 60px;
+  height: 6px;
+  background-color: #EEE;
+  border-radius: 3px;
+  display: flex;
+  overflow: visible;
+  margin: 0 0.5rem;
+  position: relative;
+}
+
+/* Individual bar colors */
+.red-bar {
+  background-color: #FF4C4C;
+}
+
+.blue-bar {
+  background-color: #4C6EFF;
+}
+
+.white-bar {
+  background-color: black;
+}
+
+.total-damage {
+  margin-top: 4px;
+  font-size: 0.65rem;
+  color: #333;
+  text-align: center;
+}
+.rune-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 8px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 2px solid black;
+}
+
+.damage-bar {
+  height: 100%;
+  position: relative;
+}
+
+.damage-bar[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -20px; /* Adjust as needed to position above the bar */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.damage-bar[data-tooltip]::after {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.match-info-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.result-duration {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 10px;
+}
+
+.summoner-spells {
+  display: flex;
+  flex-direction: column; /* Stack icons vertically */
+  align-items: center;
+  gap: 4px; /* Space between the icons */
+  margin: 0 10px; /* Adjust space between champion icon and items */
+}
+
+.summoner-spell-icon {
+  width: 40px; /* Adjust size as needed */
+  height: 40px;
+  border: 2px solid black;
+  border-radius: 25%;
+}
+
+
+.kda-kp, .farm-solo-kills {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.match-result {
+  font-weight: bold;
+}
+
+.game-duration, .kda, .farm-solo-kills, .kda-kp {
+  font-size: 0.85rem;
+}
+.corner-rune-icon {
+  position: absolute;
+  bottom: -5px;  /* Aligns icon to the bottom of the container */
+  right: -15px;   /* Aligns icon to the right of the container */
+  width: 30px; /* Adjust size as needed */
+  height: 30px;
+  border-radius: 50%; /* Optional: rounds the icon */
 }
