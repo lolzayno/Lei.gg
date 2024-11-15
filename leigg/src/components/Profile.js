@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams, Link } from 'react-router-dom';
+import { Bar, Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 import './Profile.css';
 import Navbar from './Navbar.js';
-
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ChartDataLabels);
 function Profile() {
   const { state } = useLocation();
   const { region, ign, tag } = useParams();
   const data = state?.profileData || {};
+
+  
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const toggleDropdown = (button) => {
+    setActiveDropdown((prev) => (prev === button ? null : button));
+  };
 
   const summonerSpellMap = {
     1: "SummonerBoost",      // Cleanse
@@ -136,6 +148,43 @@ function Profile() {
           <div className="match-cards">
             {Matches.map((match, index) => {
               const summonerData = match.summoner_data;
+              // Data for the ping wheel (doughnut chart with equal segments)
+              const getPingData = () => ({
+                labels: [
+                  'All-In', 'Assist Me', 'Total', 'Command', 'Danger', 
+                  'Missing', 'Vision', 'Back', 'Hold', 'Need Vision', 
+                  'On My Way', 'Push'
+                ],
+                datasets: [
+                  {
+                    // Set each data point to 1 for equal segment sizes
+                    data: new Array(12).fill(1),
+                    backgroundColor: [
+                      '#6451fb', '#6451fb', '#6451fb', '#6451fb', '#6451fb', 
+                      '#6451fb', '#6451fb', '#6451fb', '#6451fb', '#6451fb',
+                      '#6451fb', '#6451fb'
+                    ],
+                    borderWidth: 1,
+                  },
+                ],
+              });
+              const getAbilitiesData = () => ({
+                labels: ['Q', 'W', 'E', 'R', 'Spell1', 'Spell2'],
+                datasets: [
+                  {
+                    label: 'Casts',
+                    data: [
+                      summonerData.summoner_Q || 0,
+                      summonerData.summoner_W || 0,
+                      summonerData.summoner_E || 0,
+                      summonerData.summoner_R || 0,
+                      summonerData.summoner_Spell1 || 0,
+                      summonerData.summoner_Spell2 || 0
+                    ],
+                    backgroundColor: ['#4C6EFF', '#FF9A9A', '#7D94F2', '#FFD700', '#7D94F2', '#FFD700'], // Colors for each ability
+                  },
+                ],
+              });
               const maxDamage = Math.max(
                 ...["bluetop", "bluejg", "bluemid", "bluebot", "bluesup", "redtop", "redjg", "redmid", "redbot", "redsup"].map(
                   (lane) => match[`${lane}_data`][`${lane}_DMG`] || 0
@@ -153,7 +202,7 @@ function Profile() {
                   style={{
                     borderLeft: `5px solid ${match.result === '1' ? '#7D94F2' : '#FF9A9A'}`,
                   }}
-                >
+                  >
                   <div className="match-header">
                     <div className="champion-icon-container">
                       <img
@@ -206,7 +255,7 @@ function Profile() {
                         >
                           {match.result === '1' ? 'Victory' : 'Defeat'}
                         </p>
-                        <p className="game-duration"><strong>{Math.floor(match.game_duration / 60)} min & {Math.floor(match.game_duration % 60)} sec</strong></p>
+                        <p className="game-duration"><strong>{Math.floor(match.game_duration / 60)}:{Math.floor(match.game_duration % 60)}</strong></p>
                       </div>
                       <div className="kda-kp">
                         <p><strong>KDA:</strong> {summonerData.summoner_Kills}/{summonerData.summoner_Deaths}/{summonerData.summoner_Assists || 0}</p>
@@ -363,6 +412,160 @@ function Profile() {
                       </div>
                     </div>
                   </div>
+                  <div className="button-group">
+                    <button
+                      onClick={() => toggleDropdown('Rune')}
+                      className={`icon-button ${activeDropdown === 'Rune' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-scroll"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Abilities')}
+                      className={`icon-button ${activeDropdown === 'Abilities' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-wand-sparkles"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Objective')}
+                      className={`icon-button ${activeDropdown === 'Objective' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-dragon"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Ping')}
+                      className={`icon-button ${activeDropdown === 'Ping' ? 'active' : ''}`}
+                    >
+                      <i className="fas fa-bell"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Tower')}
+                      className={`icon-button ${activeDropdown === 'Tower' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-chess-rook"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Vision')}
+                      className={`icon-button ${activeDropdown === 'Vision' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-eye"></i>
+                    </button>
+                    <button
+                      onClick={() => toggleDropdown('Support')}
+                      className={`icon-button ${activeDropdown === 'Support' ? 'active' : ''}`}
+                    >
+                      <i class="fa-solid fa-heart-pulse"></i>
+                    </button>
+                  </div>
+
+
+                  {/* Dropdown content for each button */}
+                  {activeDropdown === 'Rune' && (
+                    <div className="dropdown-content">
+                      {/* Display rune-related data */}
+                      <p>Primary Rune: {summonerData.summoner_Rune01}</p>
+                      <p>Secondary Rune: {summonerData.summoner_Rune02}</p>
+                    </div>
+                  )}
+                  {activeDropdown === 'Abilities' && (
+                  <div className="dropdown-content">
+                    <Bar data={getAbilitiesData()} options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function (tooltipItem) {
+                              return ` ${tooltipItem.formattedValue} casts`;
+                            },
+                          },
+                        },
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          title: {
+                            display: true,
+                            text: 'Casts',
+                          },
+                        },
+                      },
+                    }} />
+                  </div>
+                )}
+                  {activeDropdown === 'Objective' && (
+                    <div className="dropdown-content">
+                      {/* Display objective damage data */}
+                      <p>Damage to Objectives: {summonerData.summoner_DamageObj}</p>
+                      <p>Damage to Turrets: {summonerData.summoner_DamageBuilding}</p>
+                    </div>
+                  )}
+                  {/* Dropdown content for ping data with doughnut chart */}
+                  {activeDropdown === 'Ping' && (
+                  <div className="dropdown-content">
+                    <Doughnut 
+                    data={getPingData()} 
+                    width={265}  
+                    height={265} 
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      cutout: '25%',  // Adjust this value to make the hole smaller (e.g., '30%' for an even smaller hole)
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                          callbacks: {
+                            label: function (tooltipItem) {
+                              const actualCounts = [
+                                summonerData.summoner_AllInPings || 0,
+                                summonerData.summoner_AssistMePings || 0,
+                                summonerData.summoner_Pings || 0,
+                                summonerData.summoner_CommandPings || 0,
+                                summonerData.summoner_DangerPing || 0,
+                                summonerData.summoner_MissingPing || 0,
+                                summonerData.summoner_VisionPing || 0,
+                                summonerData.summoner_BackPing || 0,
+                                summonerData.summoner_HoldPing || 0,
+                                summonerData.summoner_NeedVisionPing || 0,
+                                summonerData.summoner_OnMyWayPing || 0,
+                                summonerData.summoner_PushPings || 0,
+                              ];
+                              return `${tooltipItem.label}: ${actualCounts[tooltipItem.dataIndex]} uses`;
+                            },
+                          },
+                        },
+                        datalabels: {
+                          display: true,
+                          color: 'black',
+                          formatter: (value, ctx) => {
+                            const actualCounts = [
+                              summonerData.summoner_AllInPings || 0,
+                              summonerData.summoner_AssistMePings || 0,
+                              summonerData.summoner_Pings || 0,
+                              summonerData.summoner_CommandPings || 0,
+                              summonerData.summoner_DangerPing || 0,
+                              summonerData.summoner_MissingPing || 0,
+                              summonerData.summoner_VisionPing || 0,
+                              summonerData.summoner_BackPing || 0,
+                              summonerData.summoner_HoldPing || 0,
+                              summonerData.summoner_NeedVisionPing || 0,
+                              summonerData.summoner_OnMyWayPing || 0,
+                              summonerData.summoner_PushPings || 0,
+                            ];
+                            let label = ctx.chart.data.labels[ctx.dataIndex];
+                            return `${label}\n${actualCounts[ctx.dataIndex]}`;
+                          },
+                        },
+                      },
+                      rotation: -90,
+                      circumference: 360,
+                    }}
+                  />
+
+                  </div>
+                )}
+
                 </div>
               );
             })}

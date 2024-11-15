@@ -16,9 +16,10 @@
 .match-card {
   background-color: #f9faff;
   border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding-top: 1rem;
   padding-left: 1rem;
+  padding-right: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .champions-columns {
@@ -295,4 +296,54 @@
   width: 30px; /* Adjust size as needed */
   height: 30px;
   border-radius: 50%; /* Optional: rounds the icon */
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.icon-button {
+  background-color: #6451fb; /* Purple theme color for default state */
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-top-left-radius: 10px; /* Rounded corners on top */
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.icon-button:hover,
+.icon-button.active {
+  background-color: #907be2; /* Change color only on hover or when active */
+}
+
+.icon-button:focus {
+  outline: none;
+}
+
+
+
+.dropdown-content {
+  padding: 0.5rem;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 20px;
 }
