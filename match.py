@@ -128,12 +128,13 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
     print(f"Fetching Match Specific Data: {match_id}")
     print(response.status_code)
     data = response.json()
-    
     timestamp = data['info']['gameEndTimestamp']
     timestamp = timestamp / 1000.0
     timestamp = datetime.fromtimestamp(timestamp)
     timestamp = timestamp.strftime('%Y-%m-%d %H:%M:%S')
     gameduration = data['info']['gameDuration']
+    gameversion = data['info']['gameVersion']
+    gamecreation = data['info']['gameCreation']
     if gameduration <= 300:
         return None
     if data['info']['participants'][0]['win'] == True:
@@ -162,6 +163,10 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_needvisionping = player['needVisionPings']
                 summoner_onmywayping = player['onMyWayPings']
                 summoner_pushpings = player['pushPings']
+                summoner_penta = player['pentaKills']
+                summoner_quadra = player['quadraKills']
+                summoner_triple = player['tripleKills']
+                summoner_double = player['doubleKills']
                 summoner_supportitem = player['challenges']['completeSupportQuestInTime']
                 summoner_controlward = player['challenges']['controlWardsPlaced']
                 summoner_damagepermin = round(player['challenges']['damagePerMinute'], 0)
@@ -178,7 +183,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_minion10 = player['challenges']['laneMinionsFirst10Minutes']
                 summoner_maxcs = player['challenges']['maxCsAdvantageOnLaneOpponent']
                 summoner_maxlvl = player['challenges']['maxLevelLeadLaneOpponent']
-                summoner_rift = player['challenges']['riftHeraldTakedowns']
+                summoner_rift = player['challenges']['teamRiftHeraldKills']
                 summoner_scuttle = player['challenges']['scuttleCrabKills']
                 summoner_totaldodge = player['challenges']['skillshotsDodged']
                 summoner_totalland = player['challenges']['skillshotsHit']
@@ -193,10 +198,12 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_lvl = player['champLevel']
                 summoner_exp = player['champExperience']
                 summoner_damagebuilding = player['damageDealtToBuildings']
-                summoner_damageobj = player['damageDealtToTurrets']
+                summoner_damageturret = player['damageDealtToTurrets']
+                summoner_damageobj = player['damageDealtToObjectives']
+                summoner_mitigated = player['damageSelfMitigated']
                 summoner_deaths = player['deaths']
-                summoner_drag = player['dragonKills']
-                summoner_surrender = player['gameEndedInEarlySurrender']
+                summoner_earlysurrender = player['teamEarlySurrendered']
+                summoner_surrender = player['gameEndedInSurrender']
                 summoner_lane = player['teamPosition']
                 summoner_item0 = player['item0']
                 summoner_item1 = player['item1']
@@ -205,6 +212,13 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_item4 = player['item4']
                 summoner_item5 = player['item5']
                 summoner_item6 = player['item6']
+                summoner_firstblood = player['firstBloodKill']
+                summoner_consume = player['consumablesPurchased']
+                summoner_firsttower = player['challenges']['firstTurretKilled']
+                summoner_crit = player['largestCriticalStrike']
+                summoner_multikill = player['largestMultiKill']
+                summoner_objsteal = player['objectivesStolen']
+                summoner_abilities = player['challenges']['abilityUses']
                 if summoner_item0 not in dict_update[summoner_champ]['items'] and item_map[summoner_item0]['status'] == 'completed' and item_map[summoner_item0]['gold'] > 900:
                     dict_update[summoner_champ]['items'].append(item_map[summoner_item0]['name'])
                 if summoner_item1 not in dict_update[summoner_champ]['items'] and item_map[summoner_item1]['status'] == 'completed' and item_map[summoner_item1]['gold'] > 900:
@@ -235,6 +249,20 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_spell2casts = player['summoner2Casts']
                 summoner_spell2 = player['summoner2Id']
                 summoner_team = player['teamId']
+                if summoner_team == 200:
+                    summoner_drag = data['info']['teams'][1]['objectives']['dragon']['kills']
+                else:
+                    summoner_drag = data['info']['teams'][0]['objectives']['dragon']['kills']
+                red_drag = data['info']['teams'][1]['objectives']['dragon']['kills']
+                red_grub = data['info']['teams'][1]['objectives']['horde']['kills']
+                red_inhib = data['info']['teams'][1]['objectives']['inhibitor']['kills']
+                red_towers = data['info']['teams'][1]['objectives']['tower']['kills']
+                red_champ = data['info']['teams'][1]['objectives']['champion']['kills']
+                blue_drag = data['info']['teams'][0]['objectives']['dragon']['kills']
+                blue_grub = data['info']['teams'][0]['objectives']['horde']['kills']
+                blue_inhib = data['info']['teams'][0]['objectives']['inhibitor']['kills']
+                blue_towers = data['info']['teams'][0]['objectives']['tower']['kills']
+                blue_champ = data['info']['teams'][0]['objectives']['champion']['kills']    
                 summoner_ccing = player['timeCCingOthers']
                 summoner_visionscore = player['visionScore']
                 summoner_wardskilled = player['wardsKilled']
@@ -325,7 +353,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluetop_rank = rank_details[0]
                 bluetop_tier = rank_details[1]
                 bluetop_lp = rank_details[2]
-                bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5 = get_timeline(region, match_id, api_key, bluetop_puuid, item_map, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5)
+                #bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5 = get_timeline(region, match_id, api_key, bluetop_puuid, item_map, bluetop_item0, bluetop_item1, bluetop_item2, bluetop_item3, bluetop_item4, bluetop_item5)
             elif player['teamPosition'] == 'TOP' and player['teamId'] == 200:
                 redtop_id = player['summonerId']
                 redtop_ign = player['riotIdGameName']
@@ -367,7 +395,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redtop_rank = rank_details[0]
                 redtop_tier = rank_details[1]
                 redtop_lp = rank_details[2]
-                redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5 = get_timeline(region, match_id, api_key, redtop_puuid, item_map, redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5)
+                #redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5 = get_timeline(region, match_id, api_key, redtop_puuid, item_map, redtop_item0, redtop_item1, redtop_item2, redtop_item3, redtop_item4, redtop_item5)
             elif player['teamPosition'] == 'JUNGLE' and player['teamId'] == 100:
                 bluejg_id = player['summonerId']
                 bluejg_ign = player['riotIdGameName']
@@ -409,7 +437,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluejg_rank = rank_details[0]
                 bluejg_tier = rank_details[1]
                 bluejg_lp = rank_details[2]
-                bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5 = get_timeline(region, match_id, api_key, bluejg_puuid, item_map, bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5)
+                #bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5 = get_timeline(region, match_id, api_key, bluejg_puuid, item_map, bluejg_item0, bluejg_item1, bluejg_item2, bluejg_item3, bluejg_item4, bluejg_item5)
             elif player['teamPosition'] == 'JUNGLE' and player['teamId'] == 200:
                 redjg_id = player['summonerId']
                 redjg_ign = player['riotIdGameName']
@@ -451,7 +479,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redjg_rank = rank_details[0]
                 redjg_tier = rank_details[1]
                 redjg_lp = rank_details[2]
-                redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5 = get_timeline(region, match_id, api_key, redjg_puuid, item_map, redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5)
+                #redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5 = get_timeline(region, match_id, api_key, redjg_puuid, item_map, redjg_item0, redjg_item1, redjg_item2, redjg_item3, redjg_item4, redjg_item5)
             elif player['teamPosition'] == 'MIDDLE' and player['teamId'] == 100:
                 bluemid_id = player['summonerId']
                 bluemid_ign = player['riotIdGameName']
@@ -493,7 +521,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluemid_rank = rank_details[0]
                 bluemid_tier = rank_details[1]
                 bluemid_lp = rank_details[2]
-                bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5 = get_timeline(region, match_id, api_key, bluemid_puuid, item_map, bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5)
+                #bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5 = get_timeline(region, match_id, api_key, bluemid_puuid, item_map, bluemid_item0, bluemid_item1, bluemid_item2, bluemid_item3, bluemid_item4, bluemid_item5)
             elif player['teamPosition'] == 'MIDDLE' and player['teamId'] == 200:
                 redmid_id = player['summonerId']
                 redmid_ign = player['riotIdGameName']
@@ -535,7 +563,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redmid_rank = rank_details[0]
                 redmid_tier = rank_details[1]
                 redmid_lp = rank_details[2]
-                redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5 = get_timeline(region, match_id, api_key, redmid_puuid, item_map, redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5)
+                #redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5 = get_timeline(region, match_id, api_key, redmid_puuid, item_map, redmid_item0, redmid_item1, redmid_item2, redmid_item3, redmid_item4, redmid_item5)
             elif player['teamPosition'] == 'BOTTOM' and player['teamId'] == 100:
                 bluebot_id = player['summonerId']
                 bluebot_ign = player['riotIdGameName']
@@ -577,7 +605,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluebot_rank = rank_details[0]
                 bluebot_tier = rank_details[1]
                 bluebot_lp = rank_details[2]
-                bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5 = get_timeline(region, match_id, api_key, bluebot_puuid, item_map, bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5)
+                #bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5 = get_timeline(region, match_id, api_key, bluebot_puuid, item_map, bluebot_item0, bluebot_item1, bluebot_item2, bluebot_item3, bluebot_item4, bluebot_item5)
             elif player['teamPosition'] == 'BOTTOM' and player['teamId'] == 200:
                 redbot_id = player['summonerId']
                 redbot_ign = player['riotIdGameName']
@@ -619,7 +647,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redbot_rank = rank_details[0]
                 redbot_tier = rank_details[1]
                 redbot_lp = rank_details[2]
-                redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5 = get_timeline(region, match_id, api_key, redbot_puuid, item_map, redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5)
+                #redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5 = get_timeline(region, match_id, api_key, redbot_puuid, item_map, redbot_item0, redbot_item1, redbot_item2, redbot_item3, redbot_item4, redbot_item5)
             elif player['teamPosition'] == 'UTILITY' and player['teamId'] == 100:
                 bluesup_id = player['summonerId']
                 bluesup_ign = player['riotIdGameName']
@@ -661,7 +689,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 bluesup_rank = rank_details[0]
                 bluesup_tier = rank_details[1]
                 bluesup_lp = rank_details[2]
-                bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5 = get_timeline(region, match_id, api_key, bluesup_puuid, item_map, bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5)
+                #bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5 = get_timeline(region, match_id, api_key, bluesup_puuid, item_map, bluesup_item0, bluesup_item1, bluesup_item2, bluesup_item3, bluesup_item4, bluesup_item5)
             elif player['teamPosition'] == 'UTILITY' and player['teamId'] == 200:
                 redsup_id = player['summonerId']
                 redsup_ign = player['riotIdGameName']
@@ -703,7 +731,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 redsup_rank = rank_details[0]
                 redsup_tier = rank_details[1]
                 redsup_lp = rank_details[2]
-                redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5 = get_timeline(region, match_id, api_key, redsup_puuid, item_map, redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5)
+                #redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5 = get_timeline(region, match_id, api_key, redsup_puuid, item_map, redsup_item0, redsup_item1, redsup_item2, redsup_item3, redsup_item4, redsup_item5)
             else:
                 return None
         except KeyError as e:
@@ -775,8 +803,22 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "summoner_VisionScorePerMin": summoner_visionscorepermin,
         "summoner_Level": summoner_lvl,#
         "summoner_Exp": summoner_exp,
+        "summoner_Penta": summoner_penta,
+        "summoner_Quadra": summoner_quadra,
+        "summoner_Triple": summoner_triple,
+        "summoner_double": summoner_double,
         "summoner_DamageBuilding": summoner_damagebuilding,#
         "summoner_DamageObj": summoner_damageobj,#
+        "summoner_DamageTurret": summoner_damageturret,
+        "summoner_Mitigated": summoner_mitigated,
+        "summoner_EarlySurrender": summoner_earlysurrender,
+        "summoner_FirstBlood": summoner_firstblood,
+        "summoner_Consumables": summoner_consume,
+        "summoner_FirstTower": summoner_firsttower,
+        "summoner_LargestCrit": summoner_crit,
+        "summoner_LargestMultiKill": summoner_multikill,
+        "summoner_ObjectiveSteal": summoner_objsteal,
+        "summoner_TotalAbilities": summoner_abilities,
         "summoner_Deaths": summoner_deaths,#
         "summoner_Dragon": summoner_drag,#
         "summoner_Surrender": summoner_surrender, #
@@ -834,7 +876,17 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "summoner_Item4Id": summoner_item4,#
         "summoner_Item5Id": summoner_item5,#
         "summoner_Item6Id": summoner_item6,# 
-        "summoner_Rune0Id": summoner_rune0 #
+        "summoner_Rune0Id": summoner_rune0, #
+        "red_Dragon": red_drag,
+        "red_Grub": red_grub,
+        "red_Inhib": red_inhib,
+        "red_Turrets": red_towers,
+        "red_Champ": red_champ,
+        "blue_Dragon": blue_drag,
+        "blue_Grub": blue_grub,
+        "blue_Inhib": blue_inhib,
+        "blue_Turrets": blue_towers,
+        "blue_Champ": blue_champ
     }
     bluetop_data = {
         "bluetop_ID": bluetop_id,
@@ -1306,7 +1358,7 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         "redsup_ChampId": redsup_champid,
         "redsup_Rune0": rune_map[redsup_rune0]
     }
-    return (match_id, summoner_champ, summoner_lane, puuid, gameduration, item_map[summoner_item0]['name'], item_map[summoner_item1]['name'], item_map[summoner_item2]['name'], item_map[summoner_item3]['name'], item_map[summoner_item4]['name'], item_map[summoner_item5]['name'], item_map[summoner_item6]['name'], rune_map[summoner_rune0], rune_map[summoner_rune1], rune_map[summoner_rune2], rune_map[summoner_rune3], rune_map[summoner_rune4], rune_map[summoner_rune5], summoner_data, summoner_result,
+    return (match_id, gameversion, gamecreation, summoner_team, summoner_champ, summoner_lane, puuid, gameduration, item_map[summoner_item0]['name'], item_map[summoner_item1]['name'], item_map[summoner_item2]['name'], item_map[summoner_item3]['name'], item_map[summoner_item4]['name'], item_map[summoner_item5]['name'], item_map[summoner_item6]['name'], rune_map[summoner_rune0], rune_map[summoner_rune1], rune_map[summoner_rune2], rune_map[summoner_rune3], rune_map[summoner_rune4], rune_map[summoner_rune5], summoner_data, summoner_result,
             bluetop_champ, bluetop_data,
             redtop_champ, redtop_data,
             bluejg_champ, bluejg_data,

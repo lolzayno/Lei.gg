@@ -57,7 +57,7 @@ def insert_player(engine, puuid, summoner_info, summoner_rank):
             raise e
         
         
-def insert_match(engine, match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+def insert_match(engine, match_id, gameversion, gamecreation, summoner_team, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
                 bluetop_champ, bluetop_data,
                 redtop_champ, redtop_data,
                 bluejg_champ, bluejg_data,
@@ -69,7 +69,7 @@ def insert_match(engine, match_id, summoner_champ, summoner_lane, summoner_puuid
                 bluesup_champ, bluesup_data,
                 redsup_champ, redsup_data):
     insert_sql = """
-    INSERT INTO matches(match_code, game_duration, result, summoner_puuid, summoner_champ, summoner_lane, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, bluetop_champ, bluetop_data, redtop_champ, redtop_data, bluejg_champ, bluejg_data, redjg_champ, redjg_data, bluemid_champ, bluemid_data, redmid_champ, redmid_data, bluebot_champ, bluebot_data, redbot_champ, redbot_data, bluesup_champ, bluesup_data, redsup_champ, redsup_data) VALUES (:match_code, :game_duration, :result, :summoner_puuid, :summoner_champ, :summoner_lane, :summoner_item0, :summoner_item1, :summoner_item2, :summoner_item3, :summoner_item4, :summoner_item5, :summoner_item6, :summoner_rune0, :summoner_rune1, :summoner_rune2, :summoner_rune3, :summoner_rune4, :summoner_rune5, :summoner_data, :bluetop_champ, :bluetop_data, :redtop_champ, :redtop_data, :bluejg_champ, :bluejg_data, :redjg_champ, :redjg_data, :bluemid_champ, :bluemid_data, :redmid_champ, :redmid_data, :bluebot_champ, :bluebot_data, :redbot_champ, :redbot_data, :bluesup_champ, :bluesup_data, :redsup_champ, :redsup_data)
+    INSERT INTO matches(match_code, game_version, game_creation, game_duration, result, summoner_puuid, summoner_team, summoner_champ, summoner_lane, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, bluetop_champ, bluetop_data, redtop_champ, redtop_data, bluejg_champ, bluejg_data, redjg_champ, redjg_data, bluemid_champ, bluemid_data, redmid_champ, redmid_data, bluebot_champ, bluebot_data, redbot_champ, redbot_data, bluesup_champ, bluesup_data, redsup_champ, redsup_data) VALUES (:match_code, :game_version, :game_creation, :game_duration, :result, :summoner_puuid, :summoner_team, :summoner_champ, :summoner_lane, :summoner_item0, :summoner_item1, :summoner_item2, :summoner_item3, :summoner_item4, :summoner_item5, :summoner_item6, :summoner_rune0, :summoner_rune1, :summoner_rune2, :summoner_rune3, :summoner_rune4, :summoner_rune5, :summoner_data, :bluetop_champ, :bluetop_data, :redtop_champ, :redtop_data, :bluejg_champ, :bluejg_data, :redjg_champ, :redjg_data, :bluemid_champ, :bluemid_data, :redmid_champ, :redmid_data, :bluebot_champ, :bluebot_data, :redbot_champ, :redbot_data, :bluesup_champ, :bluesup_data, :redsup_champ, :redsup_data)
     """
 
     with engine.connect() as connection:
@@ -77,9 +77,12 @@ def insert_match(engine, match_id, summoner_champ, summoner_lane, summoner_puuid
         try:
             connection.execute(text(insert_sql),{
                 "match_code": match_id,
+                "game_version": gameversion,
+                "game_creation": gamecreation,
                 "game_duration": gameduration,
                 "result": summoner_result,
                 "summoner_puuid": summoner_puuid,
+                "summoner_team": summoner_team,
                 "summoner_champ": summoner_champ,
                 "summoner_lane": summoner_lane,
                 "summoner_item0": summoner_item0,

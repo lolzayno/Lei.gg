@@ -35,7 +35,7 @@ def profile():
         counter = counter + 1
         details = match.fetch_match_data(game, puuid, region, item_map, rune_map, dict_update, api_key)
         if details is not None:
-            (match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+            (match_id, gameversion, gamecreation, summoner_team, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
                 bluetop_champ, bluetop_data,
                 redtop_champ, redtop_data,
                 bluejg_champ, bluejg_data,
@@ -46,7 +46,7 @@ def profile():
                 redbot_champ, redbot_data,
                 bluesup_champ, bluesup_data,
                 redsup_champ, redsup_data) = details
-            database.insert_match(engine, match_id, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
+            database.insert_match(engine, match_id, gameversion, gamecreation, summoner_team, summoner_champ, summoner_lane, summoner_puuid, gameduration, summoner_item0, summoner_item1, summoner_item2, summoner_item3, summoner_item4, summoner_item5, summoner_item6, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data, summoner_result,
                 bluetop_champ, bluetop_data,
                 redtop_champ, redtop_data,
                 bluejg_champ, bluejg_data,
