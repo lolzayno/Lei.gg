@@ -304,12 +304,6 @@
   margin-top: 1rem;
 }
 
-.button-group {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
-}
-
 .icon-button {
   background-color: #6451fb; /* Purple theme color for default state */
   color: white;
@@ -347,3 +341,59 @@
   text-align: center;
   margin-bottom: 20px;
 }
+
+.control-wards {
+  position: relative; /* Allows positioning of the tooltip relative to this element */
+  display: flex;
+  flex-direction: column; /* Ensures items stack vertically */
+  justify-content: center; /* Centers items vertically */
+  align-items: center; /* Centers items horizontally */
+  cursor: pointer; /* Changes cursor to indicate interactivity */
+}
+
+.control-wards::after {
+  content: attr(data-tooltip); /* Dynamically display the tooltip text */
+  visibility: hidden; /* Hidden by default */
+  opacity: 0; /* Transparent by default */
+  position: absolute; /* Positioned relative to .control-wards */
+  top: -35px; /* Position the tooltip above the element */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center alignment */
+  background-color: #333; /* Dark background */
+  color: #fff; /* White text */
+  text-align: center; /* Center text */
+  padding: 5px 10px; /* Padding around the tooltip text */
+  border-radius: 5px; /* Rounded corners */
+  white-space: nowrap; /* Prevent text wrapping */
+  z-index: 10; /* Ensures the tooltip appears above other elements */
+  transition: opacity 0.3s ease; /* Smooth fade-in transition */
+  pointer-events: none; /* Ensures the tooltip doesn't interfere with hovering */
+}
+
+.control-wards:hover::after {
+  visibility: visible; /* Show the tooltip on hover */
+  opacity: 1; /* Fully opaque */
+}
+
+.top-container {
+  display: flex; /* Align elements in a single row */
+  flex-wrap: wrap; /* Allow elements to wrap if they don't fit in a single row */
+  align-items: center; /* Align content vertically */
+  gap: 20px; /* Add spacing between sections */
+}
+
+.vision,
+.objectives {
+  display: flex;
+  flex-direction: row; /* Stack items vertically */
+  bottom: 0; /* Aligns to the bottom of the parent */
+  left: 0; /* Aligns to the left */
+  gap: 15px; /* Add spacing between individual items */
+}
+
+.control-wards {
+  display: flex;
+  align-items: center; /* Align icon and text vertically */
+  gap: 8px; /* Add spacing between icon and text */
+}
+

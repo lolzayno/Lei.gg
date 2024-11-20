@@ -37,34 +37,28 @@ function Profile() {
   };
 
   const runePaths = {
-    // Precision
+    // Precision Tree
+    "Precision": "Styles/Precision/Precision.png",
     "Press the Attack": "Styles/Precision/PressTheAttack/PressTheAttack.png",
     "Fleet Footwork": "Styles/Precision/FleetFootwork/FleetFootwork.png",
     "Conqueror": "Styles/Precision/Conqueror/Conqueror.png",
     "Lethal Tempo": "Styles/Precision/LethalTempo/LethalTempoTemp.png",
+    "Overheal": "Styles/Precision/Overheal/Overheal.png",
+    "Triumph": "Styles/Precision/Triumph/Triumph.png",
+    "Presence of Mind": "Styles/Precision/PresenceOfMind/PresenceOfMind.png",
+    "Legend: Alacrity": "Styles/Precision/LegendAlacrity/LegendAlacrity.png",
+    "Legend: Tenacity": "Styles/Precision/LegendTenacity/LegendTenacity.png",
+    "Legend: Bloodline": "Styles/Precision/LegendBloodline/LegendBloodline.png",
+    "Coup de Grace": "Styles/Precision/CoupDeGrace/CoupDeGrace.png",
+    "Cut Down": "Styles/Precision/CutDown/CutDown.png",
+    "Last Stand": "Styles/Precision/LastStand/LastStand.png",
   
-    // Domination
+    // Domination Tree
+    "Domination": "Styles/Domination/Domination.png",
     "Electrocute": "Styles/Domination/Electrocute/Electrocute.png",
     "Dark Harvest": "Styles/Domination/DarkHarvest/DarkHarvest.png",
     "Hail of Blades": "Styles/Domination/HailOfBlades/HailOfBlades.png",
     "Predator": "Styles/Domination/Predator/Predator.png",
-  
-    // Sorcery
-    "Arcane Comet": "Styles/Sorcery/ArcaneComet/ArcaneComet.png",
-    "Summon Aery": "Styles/Sorcery/SummonAery/SummonAery.png",
-    "Phase Rush": "Styles/Sorcery/PhaseRush/PhaseRush.png",
-  
-    // Resolve
-    "Grasp of the Undying": "Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png",
-    "Aftershock": "Styles/Resolve/Aftershock/Aftershock.png",
-    "Guardian": "Styles/Resolve/Guardian/Guardian.png",
-  
-    // Inspiration
-    "Glacial Augment": "Styles/Inspiration/GlacialAugment/GlacialAugment.png",
-    "Unsealed Spellbook": "Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png",
-    "First Strike": "Styles/Inspiration/FirstStrike/FirstStrike.png",
-  
-    // Secondary Runes (examples)
     "Cheap Shot": "Styles/Domination/CheapShot/CheapShot.png",
     "Taste of Blood": "Styles/Domination/TasteOfBlood/GreenTerror_TasteOfBlood.png",
     "Sudden Impact": "Styles/Domination/SuddenImpact/SuddenImpact.png",
@@ -75,7 +69,11 @@ function Profile() {
     "Relentless Hunter": "Styles/Domination/RelentlessHunter/RelentlessHunter.png",
     "Ultimate Hunter": "Styles/Domination/UltimateHunter/UltimateHunter.png",
   
-    // More examples from Sorcery
+    // Sorcery Tree
+    "Sorcery": "Styles/Sorcery/Sorcery.png",
+    "Arcane Comet": "Styles/Sorcery/ArcaneComet/ArcaneComet.png",
+    "Summon Aery": "Styles/Sorcery/SummonAery/SummonAery.png",
+    "Phase Rush": "Styles/Sorcery/PhaseRush/PhaseRush.png",
     "Nullifying Orb": "Styles/Sorcery/NullifyingOrb/Pokeshield.png",
     "Manaflow Band": "Styles/Sorcery/ManaflowBand/ManaflowBand.png",
     "Nimbus Cloak": "Styles/Sorcery/NimbusCloak/NimbusCloak.png",
@@ -86,7 +84,11 @@ function Profile() {
     "Waterwalking": "Styles/Sorcery/Waterwalking/Waterwalking.png",
     "Gathering Storm": "Styles/Sorcery/GatheringStorm/GatheringStorm.png",
   
-    // Resolve Secondary Runes
+    // Resolve Tree
+    "Resolve": "Styles/Resolve/Resolve.png",
+    "Grasp of the Undying": "Styles/Resolve/GraspOfTheUndying/GraspOfTheUndying.png",
+    "Aftershock": "Styles/Resolve/Aftershock/Aftershock.png",
+    "Guardian": "Styles/Resolve/Guardian/Guardian.png",
     "Demolish": "Styles/Resolve/Demolish/Demolish.png",
     "Font of Life": "Styles/Resolve/FontOfLife/FontOfLife.png",
     "Shield Bash": "Styles/Resolve/ShieldBash/ShieldBash.png",
@@ -97,7 +99,11 @@ function Profile() {
     "Revitalize": "Styles/Resolve/Revitalize/Revitalize.png",
     "Unflinching": "Styles/Resolve/Unflinching/Unflinching.png",
   
-    // Inspiration Secondary Runes
+    // Inspiration Tree
+    "Inspiration": "Styles/Inspiration/Inspiration.png",
+    "Glacial Augment": "Styles/Inspiration/GlacialAugment/GlacialAugment.png",
+    "Unsealed Spellbook": "Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png",
+    "First Strike": "Styles/Inspiration/FirstStrike/FirstStrike.png",
     "Hextech Flashtraption": "Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png",
     "Magical Footwear": "Styles/Inspiration/MagicalFootwear/MagicalFootwear.png",
     "Biscuit Delivery": "Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png",
@@ -105,7 +111,10 @@ function Profile() {
     "Approach Velocity": "Styles/Inspiration/ApproachVelocity/ApproachVelocity.png",
     "Time Warp Tonic": "Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png",
     "Future's Market": "Styles/Inspiration/FuturesMarket/FuturesMarket.png",
+    "Minion Dematerializer": "Styles/Inspiration/MinionDematerializer/MinionDematerializer.png",
+    "Perfect Timing": "Styles/Inspiration/PerfectTiming/PerfectTiming.png"
   };
+  
   
   
   function truncateIGN(ign) {
@@ -169,11 +178,13 @@ function Profile() {
                 ],
               });
               const getAbilitiesData = () => ({
-                labels: ['Q', 'W', 'E', 'R', 'Spell1', 'Spell2'],
+                labels: ['Total', "Early", 'Q', 'W', 'E', 'R', 'Spell1', 'Spell2'],
                 datasets: [
                   {
                     label: 'Casts',
                     data: [
+                      summonerData.summoner_TotalLand || 0,
+                      summonerData.summoner_EarlySkillShots || 0,
                       summonerData.summoner_Q || 0,
                       summonerData.summoner_W || 0,
                       summonerData.summoner_E || 0,
@@ -181,7 +192,35 @@ function Profile() {
                       summonerData.summoner_Spell1 || 0,
                       summonerData.summoner_Spell2 || 0
                     ],
-                    backgroundColor: ['#4C6EFF', '#FF9A9A', '#7D94F2', '#FFD700', '#7D94F2', '#FFD700'], // Colors for each ability
+                    backgroundColor: ['#4C6EFF', '#4C6EFF', '#FF9A9A', '#FFD700', '#7D94F2', '#FFD700', '#7D94F2', '#FFD700'], // Colors for each ability
+                  },
+                ],
+              });
+              const getSupportData = () => ({
+                labels: ['Healing+Shielding', 'Healing', 'Shielding', 'Healed'],
+                datasets: [
+                  {
+                    label: 'HP',
+                    data: [
+                      summonerData.summoner_HealShield || 0,
+                      summonerData.summoner_HealTeam || 0,
+                      summonerData.summoner_Shield || 0,
+                      summonerData.summoner_TotalHealing || 0
+                    ],
+                    backgroundColor: ['#4C6EFF', '#4C6EFF', '#FF9A9A', '#7D94F2', '#FFD700', '#7D94F2', '#FFD700'], // Colors for each ability
+                  },
+                ],
+              });
+              const getObjectiveData = () => ({
+                labels: ['Objective Damage', 'Building Damage'],
+                datasets: [
+                  {
+                    label: 'Damage',
+                    data: [
+                      summonerData.summoner_DamageBuilding || 0,
+                      summonerData.summoner_DamageObj || 0
+                    ],
+                    backgroundColor: ['#4C6EFF', '#4C6EFF'], // Colors for each ability
                   },
                 ],
               });
@@ -262,10 +301,51 @@ function Profile() {
                         <p><strong>KP:</strong> {summonerData.summoner_KP}</p>
                       </div>
                       <div className="farm-solo-kills">
-                        <p><strong>Farm:</strong> {summonerData.summoner_Minions} ({(summonerData.summoner_Minions / Math.floor(match.game_duration / 60)).toFixed(1)})</p>
+                        <p><strong>Farm:</strong> {summonerData.summoner_Minions} ({(summonerData.summoner_Minions / Math.floor(match.game_duration / 60)).toFixed(1)}) ({summonerData.summoner_Minions10})</p>
                         <p><strong>Solo Kills:</strong> {summonerData.summoner_SoloKill}</p>
                       </div>
+                      <div className="control-wards"data-tooltip={`Turret Plating`}>
+                        <i class="fa-solid fa-shield"></i>
+                        <p>{summonerData.summoner_Plates}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Turrets`}>
+                        <i class="fa-solid fa-chess-rook"></i>
+                        <p>{summonerData.summoner_Turrets}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Early Turrets`}>
+                        <i class="fa-solid fa-tower-cell"></i>
+                        <p>{summonerData.summoner_EarlyTurretsBeforePlates}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Kills under Turret`}>
+                        <i class="fa-solid fa-tower-observation"></i>
+                        <p>{summonerData.summoner_KillsUnderTurret}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Surrender`}>
+                        <i class="fa-regular fa-flag"></i>
+                        <p>{summonerData.summoner_Surrender}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Close Dodges`}>
+                        <i class="fa-solid fa-person-circle-exclamation"></i>
+                        <p>{summonerData.summoner_DodgeClose}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Total Dodges`}>
+                        <i class="fa-solid fa-person-circle-question"></i>
+                        <p>{summonerData.summoner_TotalDodges}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Max Level Advantage`}>
+                        <i class="fa-solid fa-fire-flame-simple"></i>
+                        <p>{summonerData.summoner_MaxLevelLead}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Max Minion Advantange`}>
+                      <i class="fa-solid fa-fire-flame-curved"></i>
+                        <p>{Math.floor(summonerData.summoner_MaxCSAdvantage)}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Total Immobilizations`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_CC}</p>
+                      </div>
                     </div>
+                    
                   </div>
                   <div className="team-champions">
                     <div className="champions-columns">
@@ -412,59 +492,89 @@ function Profile() {
                       </div>
                     </div>
                   </div>
-                  <div className="button-group">
-                    <button
-                      onClick={() => toggleDropdown('Rune')}
-                      className={`icon-button ${activeDropdown === 'Rune' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-scroll"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Abilities')}
-                      className={`icon-button ${activeDropdown === 'Abilities' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-wand-sparkles"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Objective')}
-                      className={`icon-button ${activeDropdown === 'Objective' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-dragon"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Ping')}
-                      className={`icon-button ${activeDropdown === 'Ping' ? 'active' : ''}`}
-                    >
-                      <i className="fas fa-bell"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Tower')}
-                      className={`icon-button ${activeDropdown === 'Tower' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-chess-rook"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Vision')}
-                      className={`icon-button ${activeDropdown === 'Vision' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-eye"></i>
-                    </button>
-                    <button
-                      onClick={() => toggleDropdown('Support')}
-                      className={`icon-button ${activeDropdown === 'Support' ? 'active' : ''}`}
-                    >
-                      <i class="fa-solid fa-heart-pulse"></i>
-                    </button>
+                  <div className="top-container">
+                    <div className="vision">
+                      <div className="control-wards" data-tooltip={`Control Wards`}>
+                        <i className="fa-solid fa-eye-low-vision"></i>
+                        <p>{summonerData.summoner_ControlWard}</p>
+                      </div>
+                      <div className="control-wards" data-tooltip={`Wards`}>
+                        <i className="fa-solid fa-eye"></i>
+                        <p>{summonerData.summoner_Wards}</p>
+                      </div>
+                      <div className="control-wards" data-tooltip={`Wards Killed`}>
+                        <i className="fa-solid fa-eye-slash"></i>
+                        <p>{summonerData.summoner_WardsKilled}</p>
+                      </div>
+                      <div className="control-wards" data-tooltip={`Vision Score`}>
+                        <i className="fa-solid fa-arrows-to-eye"></i>
+                        <p>{summonerData.summoner_VisionScore}</p>
+                      </div>
+                    </div>
+                    <div className="button-group">
+                      <button
+                        onClick={() => toggleDropdown('Rune')}
+                        className={`icon-button ${activeDropdown === 'Rune' ? 'active' : ''}`}
+                      >
+                        <i class="fa-solid fa-hat-wizard"></i>
+                      </button>
+                      <button
+                        onClick={() => toggleDropdown('Abilities')}
+                        className={`icon-button ${activeDropdown === 'Abilities' ? 'active' : ''}`}
+                      >
+                        <i className="fa-solid fa-wand-sparkles"></i>
+                      </button>
+                      <button
+                        onClick={() => toggleDropdown('Objective')}
+                        className={`icon-button ${activeDropdown === 'Objective' ? 'active' : ''}`}
+                      >
+                        <i class="fa-solid fa-dungeon"></i>
+                      </button>
+                      <button
+                        onClick={() => toggleDropdown('Ping')}
+                        className={`icon-button ${activeDropdown === 'Ping' ? 'active' : ''}`}
+                      >
+                        <i className="fas fa-bell"></i>
+                      </button>
+                      <button
+                        onClick={() => toggleDropdown('Support')}
+                        className={`icon-button ${activeDropdown === 'Support' ? 'active' : ''}`}
+                      >
+                        <i className="fa-solid fa-heart-pulse"></i>
+                      </button>
+                    </div>
+                    <div className="objectives">
+                      <div className="control-wards"data-tooltip={`Dragons`}>
+                        <i class="fa-solid fa-dragon"></i>
+                        <p>{summonerData.summoner_Dragon}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Barons`}>
+                        <i class="fa-solid fa-spaghetti-monster-flying"></i>
+                        <p>{summonerData.summoner_Baron}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Rift Heralds`}>
+                        <i class="fa-solid fa-bug"></i>
+                        <p>{summonerData.summoner_RiftHeraldTakedown}</p>
+                      </div>
+                    </div>
                   </div>
-
-
                   {/* Dropdown content for each button */}
                   {activeDropdown === 'Rune' && (
                     <div className="dropdown-content">
-                      {/* Display rune-related data */}
-                      <p>Primary Rune: {summonerData.summoner_Rune01}</p>
-                      <p>Secondary Rune: {summonerData.summoner_Rune02}</p>
-                    </div>
+                    {/* Loop through all six runes */}
+                    {[0, 1, 2, 3, 4, 5].map((runeIndex) => (
+                      <div key={runeIndex} className="rune-section">
+                        <img
+                          src={`https://ddragon.leagueoflegends.com/cdn/img/perk-images/${runePaths[match[`summoner_rune${runeIndex}`]]}`}
+                          alt={`Rune ${runeIndex}`}
+                          className="rune-icon"
+                        />
+                        <p className="rune-stat">
+                          Rune {runeIndex + 1}: {summonerData[`summoner_rune${runeIndex}_statistic`]}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                   )}
                   {activeDropdown === 'Abilities' && (
                   <div className="dropdown-content">
@@ -496,9 +606,30 @@ function Profile() {
                 )}
                   {activeDropdown === 'Objective' && (
                     <div className="dropdown-content">
-                      {/* Display objective damage data */}
-                      <p>Damage to Objectives: {summonerData.summoner_DamageObj}</p>
-                      <p>Damage to Turrets: {summonerData.summoner_DamageBuilding}</p>
+                      <Bar data={getObjectiveData()} options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function (tooltipItem) {
+                              return ` ${tooltipItem.formattedValue} Damage`;
+                            },
+                          },
+                        },
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          title: {
+                            display: true,
+                            text: 'Damage',
+                          },
+                        },
+                      },
+                    }} />
                     </div>
                   )}
                   {/* Dropdown content for ping data with doughnut chart */}
@@ -564,8 +695,36 @@ function Profile() {
                   />
 
                   </div>
+                  
                 )}
-
+                {activeDropdown === 'Support' && (
+                    <div className="dropdown-content">
+                    <Bar data={getSupportData()} options={{
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          display: false,
+                        },
+                        tooltip: {
+                          callbacks: {
+                            label: function (tooltipItem) {
+                              return ` ${tooltipItem.formattedValue} HP`;
+                            },
+                          },
+                        },
+                      },
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                          title: {
+                            display: true,
+                            text: 'HP',
+                          },
+                        },
+                      },
+                    }} />
+                  </div>
+                  )}
                 </div>
               );
             })}
