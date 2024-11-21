@@ -60,15 +60,16 @@ def profile():
         if counter == 3:
             break
         break
-    database.update_timestamp(engine, puuid)
+    #database.update_timestamp(engine, puuid)
     for champ in dict_update:
-        database.update_champions(engine, puuid, champ)
-        for rune in dict_update[champ]['runes']:
-            database.update_runes(engine, puuid, champ, rune)
-        for item in dict_update[champ]['items']:
-            database.update_items(engine, puuid, champ, item)
-        for matchup in dict_update[champ]['matchups']:
-            database.update_matchups(engine, puuid, champ, matchup)
+        for lane in dict_update[champ]:
+            database.update_champions(engine, puuid, champ, lane)
+            for rune in dict_update[champ][lane]['runes']:
+                database.update_runes(engine, puuid, champ, rune, lane)
+            for item in dict_update[champ][lane]['items']:
+                database.update_items(engine, puuid, champ, item, lane)
+            for matchup in dict_update[champ][lane]['matchups']:
+                database.update_matchups(engine, puuid, champ, matchup, lane)
     matchhistory = database.fetch_matchHistory(engine, puuid) #match history
     champions = database.fetch_champions(engine, puuid) #champions
     user = database.fetch_player(engine, puuid) #user info

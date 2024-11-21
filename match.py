@@ -145,12 +145,6 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         try:
             if player['puuid'] == puuid:
                 summoner_champ = player['championName']
-                if summoner_champ not in dict_update:
-                    dict_update[summoner_champ] = {
-                        'items': [],
-                        'runes': [],
-                        'matchups': []
-                    }
                 summoner_allin = player['allInPings']
                 summoner_assistme = player['assistMePings']
                 summoner_pings = player['basicPings']
@@ -205,6 +199,14 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_earlysurrender = player['teamEarlySurrendered']
                 summoner_surrender = player['gameEndedInSurrender']
                 summoner_lane = player['teamPosition']
+                if summoner_champ not in dict_update:
+                    dict_update[summoner_champ] = {}
+                if summoner_lane not in dict_update[summoner_champ]:
+                    dict_update[summoner_champ][summoner_lane] = {
+                        'items': [],
+                        'runes': [],
+                        'matchups': []
+                    }
                 summoner_item0 = player['item0']
                 summoner_item1 = player['item1']
                 summoner_item2 = player['item2']
@@ -219,18 +221,18 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_multikill = player['largestMultiKill']
                 summoner_objsteal = player['objectivesStolen']
                 summoner_abilities = player['challenges']['abilityUses']
-                if summoner_item0 not in dict_update[summoner_champ]['items'] and item_map[summoner_item0]['status'] == 'completed' and item_map[summoner_item0]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item0]['name'])
-                if summoner_item1 not in dict_update[summoner_champ]['items'] and item_map[summoner_item1]['status'] == 'completed' and item_map[summoner_item1]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item1]['name'])
-                if summoner_item2 not in dict_update[summoner_champ]['items'] and item_map[summoner_item2]['status'] == 'completed' and item_map[summoner_item2]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item2]['name'])
-                if summoner_item3 not in dict_update[summoner_champ]['items'] and item_map[summoner_item3]['status'] == 'completed' and item_map[summoner_item3]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item3]['name'])
-                if summoner_item4 not in dict_update[summoner_champ]['items'] and item_map[summoner_item4]['status'] == 'completed' and item_map[summoner_item4]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item4]['name'])
-                if summoner_item5 not in dict_update[summoner_champ]['items'] and item_map[summoner_item5]['status'] == 'completed' and item_map[summoner_item5]['gold'] > 900:
-                    dict_update[summoner_champ]['items'].append(item_map[summoner_item5]['name'])
+                if summoner_item0 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item0]['status'] == 'completed' and item_map[summoner_item0]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item0]['name'])
+                if summoner_item1 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item1]['status'] == 'completed' and item_map[summoner_item1]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item1]['name'])
+                if summoner_item2 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item2]['status'] == 'completed' and item_map[summoner_item2]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item2]['name'])
+                if summoner_item3 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item3]['status'] == 'completed' and item_map[summoner_item3]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item3]['name'])
+                if summoner_item4 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item4]['status'] == 'completed' and item_map[summoner_item4]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item4]['name'])
+                if summoner_item5 not in dict_update[summoner_champ][summoner_lane]['items'] and item_map[summoner_item5]['status'] == 'completed' and item_map[summoner_item5]['gold'] > 900:
+                    dict_update[summoner_champ][summoner_lane]['items'].append(item_map[summoner_item5]['name'])
                 summoner_kills = player['kills']
                 summoner_magictaken = player['magicDamageTaken']
                 summoner_magicdmg = player['magicDamageDealtToChampions']
@@ -268,38 +270,38 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
                 summoner_wardskilled = player['wardsKilled']
                 summoner_result = player['win']
                 summoner_rune0 = player['perks']['styles'][0]['selections'][0]['perk']
-                if summoner_rune0 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune0])
+                if summoner_rune0 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune0])
                 summoner_rune01 = player['perks']['styles'][0]['selections'][0]['var1']
                 summoner_rune02 = player['perks']['styles'][0]['selections'][0]['var2']
                 summoner_rune03 = player['perks']['styles'][0]['selections'][0]['var3']
                 summoner_rune1 = player['perks']['styles'][0]['selections'][1]['perk']
-                if summoner_rune1 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune1])
+                if summoner_rune1 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune1])
                 summoner_rune11 = player['perks']['styles'][0]['selections'][1]['var1']
                 summoner_rune12 = player['perks']['styles'][0]['selections'][1]['var2']
                 summoner_rune13 = player['perks']['styles'][0]['selections'][1]['var3']
                 summoner_rune2 = player['perks']['styles'][0]['selections'][2]['perk']
-                if summoner_rune2 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune2])
+                if summoner_rune2 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune2])
                 summoner_rune21 = player['perks']['styles'][0]['selections'][2]['var1']
                 summoner_rune22 = player['perks']['styles'][0]['selections'][2]['var2']
                 summoner_rune23 = player['perks']['styles'][0]['selections'][2]['var3']
                 summoner_rune3 = player['perks']['styles'][0]['selections'][3]['perk']
-                if summoner_rune3 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune3])
+                if summoner_rune3 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune3])
                 summoner_rune31 = player['perks']['styles'][0]['selections'][3]['var1']
                 summoner_rune32 = player['perks']['styles'][0]['selections'][3]['var2']
                 summoner_rune33 = player['perks']['styles'][0]['selections'][3]['var3']
                 summoner_rune4 = player['perks']['styles'][1]['selections'][0]['perk']
-                if summoner_rune4 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune4])
+                if summoner_rune4 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune4])
                 summoner_rune41 = player['perks']['styles'][0]['selections'][0]['var1']
                 summoner_rune42 = player['perks']['styles'][0]['selections'][0]['var2']
                 summoner_rune43 = player['perks']['styles'][0]['selections'][0]['var3']
                 summoner_rune5 = player['perks']['styles'][1]['selections'][1]['perk']
-                if summoner_rune5 not in dict_update[summoner_champ]['runes']:
-                    dict_update[summoner_champ]['runes'].append(rune_map[summoner_rune5])
+                if summoner_rune5 not in dict_update[summoner_champ][summoner_lane]['runes']:
+                    dict_update[summoner_champ][summoner_lane]['runes'].append(rune_map[summoner_rune5])
                 summoner_rune51 = player['perks']['styles'][0]['selections'][1]['var1']
                 summoner_rune52 = player['perks']['styles'][0]['selections'][1]['var2']
                 summoner_rune53 = player['perks']['styles'][0]['selections'][1]['var3']
@@ -740,26 +742,26 @@ def fetch_match_data(match_id, puuid, region, item_map, rune_map, dict_update, a
         except Exception as e:
             print(f"An error occurred: {e}. Skipping match.")
             return None
-    if summoner_lane == "TOP" and bluetop_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(bluetop_champ)
-    elif summoner_lane == "TOP" and redtop_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(redtop_champ)
-    elif summoner_lane == "JUNGLE" and bluejg_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(bluejg_champ)
-    elif summoner_lane == "JUNGLE" and redjg_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(redjg_champ)
-    elif summoner_lane == "MIDDLE" and bluemid_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(bluemid_champ)
-    elif summoner_lane == "MIDDLE" and redmid_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(redmid_champ)
-    elif summoner_lane == "BOTTOM" and bluebot_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(bluebot_champ)
-    elif summoner_lane == "BOTTOM" and redbot_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(redbot_champ)
-    elif summoner_lane == "UTILITY" and bluesup_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(bluesup_champ)
-    elif summoner_lane == "UTILITY" and redsup_champ != summoner_champ:
-        dict_update[summoner_champ]['matchups'].append(redsup_champ)
+    if summoner_lane == "TOP" and bluetop_champ != summoner_champ and bluetop_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(bluetop_champ)
+    elif summoner_lane == "TOP" and redtop_champ != summoner_champ and redtop_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(redtop_champ)
+    elif summoner_lane == "JUNGLE" and bluejg_champ != summoner_champ and bluejg_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(bluejg_champ)
+    elif summoner_lane == "JUNGLE" and redjg_champ != summoner_champ and redjg_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(redjg_champ)
+    elif summoner_lane == "MIDDLE" and bluemid_champ != summoner_champ and bluemid_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(bluemid_champ)
+    elif summoner_lane == "MIDDLE" and redmid_champ != summoner_champ and redmid_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(redmid_champ)
+    elif summoner_lane == "BOTTOM" and bluebot_champ != summoner_champ and bluebot_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(bluebot_champ)
+    elif summoner_lane == "BOTTOM" and redbot_champ != summoner_champ and redbot_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(redbot_champ)
+    elif summoner_lane == "UTILITY" and bluesup_champ != summoner_champ and bluesup_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(bluesup_champ)
+    elif summoner_lane == "UTILITY" and redsup_champ != summoner_champ and redsup_champ not in dict_update[summoner_champ][summoner_lane]['matchups']:
+        dict_update[summoner_champ][summoner_lane]['matchups'].append(redsup_champ)
     summoner_data = {
         "summoner_AllInPings": summoner_allin,#
         "summoner_AssistMePings": summoner_assistme,#

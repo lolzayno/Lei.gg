@@ -125,21 +125,22 @@ def insert_match(engine, match_id, gameversion, gamecreation, summoner_team, sum
             transaction.rollback()
             raise e
 
-def update_runes(engine, puuid, champion, rune):
+def update_runes(engine, puuid, champion, rune, lane):
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM runes
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND rune = :rune
+    AND lane = :lane
     """
     
     # SQL to insert a new record
     insert_sql = """
     INSERT INTO runes (
-        summoner_puuid, champion, rune, games, wins, losses, winrate, variable1, variable2, variable3
+        summoner_puuid, champion, lane, rune, games, wins, losses, winrate, variable1, variable2, variable3
     ) VALUES (
-        :summoner_puuid, :champion, :rune, :games, :wins, :losses, :winrate, :variable1, :variable2, :variable3
+        :summoner_puuid, :champion, :lane, :rune, :games, :wins, :losses, :winrate, :variable1, :variable2, :variable3
     )
     """
     
@@ -156,6 +157,7 @@ def update_runes(engine, puuid, champion, rune):
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND rune = :rune
+    AND lane = :lane
     """
     
     rune_win = 0
@@ -170,6 +172,7 @@ def update_runes(engine, puuid, champion, rune):
         FROM matches
         WHERE summoner_puuid = :summoner_puuid
         AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
         AND (
             summoner_rune0 = :rune
             OR summoner_rune1 = :rune
@@ -182,7 +185,8 @@ def update_runes(engine, puuid, champion, rune):
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
-            "rune": rune
+            "rune": rune,
+            "lane": lane
         }).fetchall()
 
         if not result:
@@ -232,7 +236,8 @@ def update_runes(engine, puuid, champion, rune):
         exists = connection.execute(text(check_sql), {
             "summoner_puuid": puuid,
             "champion": champion,
-            "rune": rune
+            "rune": rune,
+            "lane": lane
         }).fetchone()
 
         try:
@@ -242,6 +247,7 @@ def update_runes(engine, puuid, champion, rune):
                     "summoner_puuid": puuid,
                     "champion": champion,
                     "rune": rune,
+                    "lane": lane,
                     "games": games,
                     "wins": rune_win,
                     "losses": games - rune_win,
@@ -257,6 +263,7 @@ def update_runes(engine, puuid, champion, rune):
                 connection.execute(text(insert_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "rune": rune,
                     "games": games,
                     "wins": rune_win,
@@ -271,21 +278,22 @@ def update_runes(engine, puuid, champion, rune):
         except Exception as e:
             print("Failed to insert or update data:", e)
 
-def update_items(engine, puuid, champion, item):
+def update_items(engine, puuid, champion, item, lane):
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM items
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND item = :item
+    AND lane = :lane
     """
     
     # SQL to insert a new record
     insert_sql = """
     INSERT INTO items (
-        summoner_puuid, champion, item, games, wins, losses, winrate
+        summoner_puuid, champion, lane, item, games, wins, losses, winrate
     ) VALUES (
-        :summoner_puuid, :champion, :item, :games, :wins, :losses, :winrate
+        :summoner_puuid, :champion, :lane, :item, :games, :wins, :losses, :winrate
     )
     """
     
@@ -299,6 +307,7 @@ def update_items(engine, puuid, champion, item):
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND item = :item
+    AND lane = :lane
     """
     
     item_win = 0
@@ -310,6 +319,7 @@ def update_items(engine, puuid, champion, item):
         FROM matches
         WHERE summoner_puuid = :summoner_puuid
         AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
         AND (
             summoner_item0 = :item
             OR summoner_item1 = :item
@@ -322,6 +332,7 @@ def update_items(engine, puuid, champion, item):
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
+            "lane": lane,
             "item": item
         }).fetchall()
 
@@ -341,6 +352,7 @@ def update_items(engine, puuid, champion, item):
         exists = connection.execute(text(check_sql), {
             "summoner_puuid": puuid,
             "champion": champion,
+            "lane": lane,
             "item": item
         }).fetchone()
 
@@ -350,6 +362,7 @@ def update_items(engine, puuid, champion, item):
                 connection.execute(text(update_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "item": item,
                     "games": games,
                     "wins": item_win,
@@ -363,6 +376,7 @@ def update_items(engine, puuid, champion, item):
                 connection.execute(text(insert_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "item": item,
                     "games": games,
                     "wins": item_win,
@@ -375,21 +389,22 @@ def update_items(engine, puuid, champion, item):
             print("Failed to insert or update data:", e)
 
 
-def update_matchups(engine, puuid, champion, matchup):
+def update_matchups(engine, puuid, champion, matchup, lane):
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM matchups
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND matchup = :matchup
+    AND lane = :lane
     """
     
     # SQL to insert a new record
     insert_sql = """
     INSERT INTO matchups (
-        summoner_puuid, champion, matchup, games, wins, losses, winrate
+        summoner_puuid, champion, lane, matchup, games, wins, losses, winrate
     ) VALUES (
-        :summoner_puuid, :champion, :matchup, :games, :wins, :losses, :winrate
+        :summoner_puuid, :champion, :lane, :matchup, :games, :wins, :losses, :winrate
     )
     """
     
@@ -403,6 +418,7 @@ def update_matchups(engine, puuid, champion, matchup):
     WHERE summoner_puuid = :summoner_puuid
     AND champion = :champion
     AND matchup = :matchup
+    AND lane = :lane
     """
     
     matchup_win = 0
@@ -414,6 +430,7 @@ def update_matchups(engine, puuid, champion, matchup):
         FROM matches
         WHERE summoner_puuid = :summoner_puuid
         AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
         AND (
             bluetop_champ = :matchup
             OR redtop_champ = :matchup
@@ -430,6 +447,7 @@ def update_matchups(engine, puuid, champion, matchup):
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
+            "lane": lane,
             "matchup": matchup
         }).fetchall()
 
@@ -449,6 +467,7 @@ def update_matchups(engine, puuid, champion, matchup):
         exists = connection.execute(text(check_sql), {
             "summoner_puuid": puuid,
             "champion": champion,
+            "lane": lane,
             "matchup": matchup
         }).fetchone()
 
@@ -458,6 +477,7 @@ def update_matchups(engine, puuid, champion, matchup):
                 connection.execute(text(update_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "matchup": matchup,
                     "games": games,
                     "wins": matchup_win,
@@ -471,6 +491,7 @@ def update_matchups(engine, puuid, champion, matchup):
                 connection.execute(text(insert_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "matchup": matchup,
                     "games": games,
                     "wins": matchup_win,
@@ -578,20 +599,21 @@ def fetch_player(engine, puuid):
         return list(result[0][:4])
     
     
-def update_champions(engine, puuid, champion):
+def update_champions(engine, puuid, champion, lane):
     sql = """
     SELECT game_duration, result, summoner_champ, summoner_lane, summoner_data
     FROM matches
     WHERE summoner_puuid = :puuid
     AND summoner_champ = :champion
+    AND summoner_lane = :lane
     """
 
     # SQL to insert a new record
     insert_sql = """
     INSERT INTO champions (
-        puuid, champion, champ_data
+        puuid, champion, lane, champ_data
     ) VALUES (
-        :puuid, :champion, :champ_data
+        :puuid, :champion, :lane, :champ_data
     )
     """
     
@@ -601,16 +623,19 @@ def update_champions(engine, puuid, champion):
     SET champ_data = :champ_data
     WHERE puuid = :puuid
     AND champion = :champion
+    AND lane = :lane
     """
     check_sql = """
     SELECT * FROM champions
     WHERE puuid = :puuid
     AND champion = :champion
+    AND lane = :lane
     """
     with engine.connect() as connection:
         result = connection.execute(text(sql), {
             "puuid": puuid,
-            "champion": champion
+            "champion": champion,
+            "lane": lane
         }).fetchall()
         games_played = len(result)
         games_won = 0
@@ -919,7 +944,8 @@ def update_champions(engine, puuid, champion):
 
         exists = connection.execute(text(check_sql), {
             "puuid": puuid,
-            "champion": champion
+            "champion": champion,
+            "lane": lane
         }).fetchall()
 
         try:
@@ -928,6 +954,7 @@ def update_champions(engine, puuid, champion):
                 connection.execute(text(update_sql), {
                     "puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "champ_data": json.dumps(summoner_data)
                 })
                 connection.commit()
@@ -936,6 +963,7 @@ def update_champions(engine, puuid, champion):
                 connection.execute(text(insert_sql), {
                     "puuid": puuid,
                     "champion": champion,
+                    "lane": lane,
                     "champ_data": json.dumps(summoner_data)
                 })
                 connection.commit()
