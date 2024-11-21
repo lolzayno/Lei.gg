@@ -192,7 +192,7 @@ def update_runes(engine, puuid, champion, rune, lane, matchup):
     AND champion = :champion
     AND rune = :rune
     AND lane = :lane
-    AND matchup = :matchup
+    AND ((:matchup IS NULL AND matchup IS NULL) OR (:matchup IS NOT NULL AND matchup = :matchup))
     """
     
     # SQL to insert a new record
@@ -218,7 +218,7 @@ def update_runes(engine, puuid, champion, rune, lane, matchup):
     AND champion = :champion
     AND rune = :rune
     AND lane = :lane
-    AND matchup = :matchup
+    AND ((:matchup IS NULL AND matchup IS NULL) OR (:matchup IS NOT NULL AND matchup = :matchup))
     """
     
     rune_win = 0
