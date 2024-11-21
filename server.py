@@ -63,13 +63,20 @@ def profile():
     #database.update_timestamp(engine, puuid)
     for champ in dict_update:
         for lane in dict_update[champ]:
-            database.update_champions(engine, puuid, champ, lane)
+            game_info = database.fetch_games(engine, puuid, champ, lane)
+            database.update_champions(engine, puuid, champ, lane, game_info)
             for rune in dict_update[champ][lane]['runes']:
-                database.update_runes(engine, puuid, champ, rune, lane)
+                database.update_runes(engine, puuid, champ, rune, lane, None)
+                database.update_runes(engine, puuid, champ, rune, "OVERALL", None)
+                for matcher in dict_update[champ][lane]['matchups']:
+                    database.update_runes(engine, puuid, champ, rune, lane, matcher)
             for item in dict_update[champ][lane]['items']:
                 database.update_items(engine, puuid, champ, item, lane)
+                database.update_items(engine, puuid, champ, item, "OVERALL")
             for matchup in dict_update[champ][lane]['matchups']:
                 database.update_matchups(engine, puuid, champ, matchup, lane)
+                database.update_matchups(engine, puuid, champ, matchup, "OVERALL")
+        database.update_champions(engine, puuid, champ, "OVERALL", game_info)
     matchhistory = database.fetch_matchHistory(engine, puuid) #match history
     champions = database.fetch_champions(engine, puuid) #champions
     user = database.fetch_player(engine, puuid) #user info
@@ -77,7 +84,6 @@ def profile():
     user_json["Matches"] = matchhistory
     user_json["Champions"] = champions
     user_json["User"] = user
-    print(user_json)
     return jsonify(user_json)
 
 @app.route("/profile/<region>/<ign>/<tag>/<champion>", methods=['GET'])

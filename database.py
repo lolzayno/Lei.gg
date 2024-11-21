@@ -125,7 +125,66 @@ def insert_match(engine, match_id, gameversion, gamecreation, summoner_team, sum
             transaction.rollback()
             raise e
 
-def update_runes(engine, puuid, champion, rune, lane):
+def update_runes(engine, puuid, champion, rune, lane, matchup):
+    # Fetch match data
+    if lane == "OVERALL":
+        sql = """
+        SELECT result, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND (
+            summoner_rune0 = :rune
+            OR summoner_rune1 = :rune
+            OR summoner_rune2 = :rune
+            OR summoner_rune3 = :rune
+            OR summoner_rune4 = :rune
+            OR summoner_rune5 = :rune
+        )
+        """
+    elif matchup != None:
+        sql = """
+        SELECT result, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND (
+            summoner_rune0 = :rune
+            OR summoner_rune1 = :rune
+            OR summoner_rune2 = :rune
+            OR summoner_rune3 = :rune
+            OR summoner_rune4 = :rune
+            OR summoner_rune5 = :rune
+        )
+        AND (
+            bluetop_champ = :matchup
+            OR redtop_champ = :matchup
+            OR bluejg_champ = :matchup
+            OR redjg_champ = :matchup
+            OR bluemid_champ = :matchup
+            OR redmid_champ = :matchup
+            OR bluebot_champ = :matchup
+            OR redbot_champ = :matchup
+            OR bluesup_champ = :matchup
+            OR redsup_champ = :matchup
+        )
+        """
+    else:
+        sql = """
+        SELECT result, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
+        AND (
+            summoner_rune0 = :rune
+            OR summoner_rune1 = :rune
+            OR summoner_rune2 = :rune
+            OR summoner_rune3 = :rune
+            OR summoner_rune4 = :rune
+            OR summoner_rune5 = :rune
+        )
+        """
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM runes
@@ -133,14 +192,15 @@ def update_runes(engine, puuid, champion, rune, lane):
     AND champion = :champion
     AND rune = :rune
     AND lane = :lane
+    AND matchup = :matchup
     """
     
     # SQL to insert a new record
     insert_sql = """
     INSERT INTO runes (
-        summoner_puuid, champion, lane, rune, games, wins, losses, winrate, variable1, variable2, variable3
+        summoner_puuid, champion, matchup, lane, rune, games, wins, losses, winrate, variable1, variable2, variable3
     ) VALUES (
-        :summoner_puuid, :champion, :lane, :rune, :games, :wins, :losses, :winrate, :variable1, :variable2, :variable3
+        :summoner_puuid, :champion, :matchup, :lane, :rune, :games, :wins, :losses, :winrate, :variable1, :variable2, :variable3
     )
     """
     
@@ -158,6 +218,7 @@ def update_runes(engine, puuid, champion, rune, lane):
     AND champion = :champion
     AND rune = :rune
     AND lane = :lane
+    AND matchup = :matchup
     """
     
     rune_win = 0
@@ -166,27 +227,12 @@ def update_runes(engine, puuid, champion, rune, lane):
     avg_var3 = 0
     
     with engine.connect() as connection:
-        # Fetch match data
-        sql = """
-        SELECT result, summoner_rune0, summoner_rune1, summoner_rune2, summoner_rune3, summoner_rune4, summoner_rune5, summoner_data
-        FROM matches
-        WHERE summoner_puuid = :summoner_puuid
-        AND summoner_champ = :summoner_champ
-        AND summoner_lane = :lane
-        AND (
-            summoner_rune0 = :rune
-            OR summoner_rune1 = :rune
-            OR summoner_rune2 = :rune
-            OR summoner_rune3 = :rune
-            OR summoner_rune4 = :rune
-            OR summoner_rune5 = :rune
-        )
-        """
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
             "rune": rune,
-            "lane": lane
+            "lane": lane,
+            "matchup": matchup
         }).fetchall()
 
         if not result:
@@ -237,7 +283,8 @@ def update_runes(engine, puuid, champion, rune, lane):
             "summoner_puuid": puuid,
             "champion": champion,
             "rune": rune,
-            "lane": lane
+            "lane": lane,
+            "matchup": matchup
         }).fetchone()
 
         try:
@@ -246,6 +293,7 @@ def update_runes(engine, puuid, champion, rune, lane):
                 connection.execute(text(update_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "matchup": matchup,
                     "rune": rune,
                     "lane": lane,
                     "games": games,
@@ -263,6 +311,7 @@ def update_runes(engine, puuid, champion, rune, lane):
                 connection.execute(text(insert_sql), {
                     "summoner_puuid": puuid,
                     "champion": champion,
+                    "matchup": matchup,
                     "lane": lane,
                     "rune": rune,
                     "games": games,
@@ -279,6 +328,38 @@ def update_runes(engine, puuid, champion, rune, lane):
             print("Failed to insert or update data:", e)
 
 def update_items(engine, puuid, champion, item, lane):
+    # Fetch match data
+    if lane == "OVERALL":
+        sql = """
+        SELECT result
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND (
+            summoner_item0 = :item
+            OR summoner_item1 = :item
+            OR summoner_item2 = :item
+            OR summoner_item3 = :item
+            OR summoner_item4 = :item
+            OR summoner_item5 = :item
+        )
+        """
+    else:
+        sql = """
+        SELECT result
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
+        AND (
+            summoner_item0 = :item
+            OR summoner_item1 = :item
+            OR summoner_item2 = :item
+            OR summoner_item3 = :item
+            OR summoner_item4 = :item
+            OR summoner_item5 = :item
+        )
+        """
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM items
@@ -313,22 +394,6 @@ def update_items(engine, puuid, champion, item, lane):
     item_win = 0
     
     with engine.connect() as connection:
-        # Fetch match data
-        sql = """
-        SELECT result
-        FROM matches
-        WHERE summoner_puuid = :summoner_puuid
-        AND summoner_champ = :summoner_champ
-        AND summoner_lane = :lane
-        AND (
-            summoner_item0 = :item
-            OR summoner_item1 = :item
-            OR summoner_item2 = :item
-            OR summoner_item3 = :item
-            OR summoner_item4 = :item
-            OR summoner_item5 = :item
-        )
-        """
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
@@ -390,6 +455,46 @@ def update_items(engine, puuid, champion, item, lane):
 
 
 def update_matchups(engine, puuid, champion, matchup, lane):
+     # Fetch match data
+    if lane == "OVERALL":
+        sql = """
+        SELECT result
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND (
+            bluetop_champ = :matchup
+            OR redtop_champ = :matchup
+            OR bluejg_champ = :matchup
+            OR redjg_champ = :matchup
+            OR bluemid_champ = :matchup
+            OR redmid_champ = :matchup
+            OR bluebot_champ = :matchup
+            OR redbot_champ = :matchup
+            OR bluesup_champ = :matchup
+            OR redsup_champ = :matchup
+        )
+        """
+    else:
+        sql = """
+        SELECT result
+        FROM matches
+        WHERE summoner_puuid = :summoner_puuid
+        AND summoner_champ = :summoner_champ
+        AND summoner_lane = :lane
+        AND (
+            bluetop_champ = :matchup
+            OR redtop_champ = :matchup
+            OR bluejg_champ = :matchup
+            OR redjg_champ = :matchup
+            OR bluemid_champ = :matchup
+            OR redmid_champ = :matchup
+            OR bluebot_champ = :matchup
+            OR redbot_champ = :matchup
+            OR bluesup_champ = :matchup
+            OR redsup_champ = :matchup
+        )
+        """
     # SQL to check if the record already exists
     check_sql = """
     SELECT 1 FROM matchups
@@ -424,26 +529,6 @@ def update_matchups(engine, puuid, champion, matchup, lane):
     matchup_win = 0
     
     with engine.connect() as connection:
-        # Fetch match data
-        sql = """
-        SELECT result
-        FROM matches
-        WHERE summoner_puuid = :summoner_puuid
-        AND summoner_champ = :summoner_champ
-        AND summoner_lane = :lane
-        AND (
-            bluetop_champ = :matchup
-            OR redtop_champ = :matchup
-            OR bluejg_champ = :matchup
-            OR redjg_champ = :matchup
-            OR bluemid_champ = :matchup
-            OR redmid_champ = :matchup
-            OR bluebot_champ = :matchup
-            OR redbot_champ = :matchup
-            OR bluesup_champ = :matchup
-            OR redsup_champ = :matchup
-        )
-        """
         result = connection.execute(text(sql), {
             "summoner_puuid": puuid,
             "summoner_champ": champion,
@@ -599,28 +684,36 @@ def fetch_player(engine, puuid):
         return list(result[0][:4])
     
     
-def update_champions(engine, puuid, champion, lane):
-    sql = """
-    SELECT game_duration, result, summoner_champ, summoner_lane, summoner_data
-    FROM matches
-    WHERE summoner_puuid = :puuid
-    AND summoner_champ = :champion
-    AND summoner_lane = :lane
-    """
+def update_champions(engine, puuid, champion, lane, game_info):
+    if lane == "OVERALL":
+        sql = """
+        SELECT game_duration, result, summoner_champ, summoner_lane, summoner_data
+        FROM matches
+        WHERE summoner_puuid = :puuid
+        AND summoner_champ = :champion
+        """
+    else:
+        sql = """
+        SELECT game_duration, result, summoner_champ, summoner_lane, summoner_data
+        FROM matches
+        WHERE summoner_puuid = :puuid
+        AND summoner_champ = :champion
+        AND summoner_lane = :lane
+        """
 
-    # SQL to insert a new record
+    #SQL to insert a new record
     insert_sql = """
     INSERT INTO champions (
-        puuid, champion, lane, champ_data
+        puuid, champion, lane, champ_data, game_data
     ) VALUES (
-        :puuid, :champion, :lane, :champ_data
+        :puuid, :champion, :lane, :champ_data, :game_data
     )
     """
     
-    # SQL to update an existing record
     update_sql = """
     UPDATE champions
-    SET champ_data = :champ_data
+    SET champ_data = :champ_data,
+        game_data = :game_data
     WHERE puuid = :puuid
     AND champion = :champion
     AND lane = :lane
@@ -955,7 +1048,8 @@ def update_champions(engine, puuid, champion, lane):
                     "puuid": puuid,
                     "champion": champion,
                     "lane": lane,
-                    "champ_data": json.dumps(summoner_data)
+                    "champ_data": json.dumps(summoner_data),
+                    "game_data": json.dumps(game_info)
                 })
                 connection.commit()
                 print("Data updated successfully.")
@@ -964,7 +1058,8 @@ def update_champions(engine, puuid, champion, lane):
                     "puuid": puuid,
                     "champion": champion,
                     "lane": lane,
-                    "champ_data": json.dumps(summoner_data)
+                    "champ_data": json.dumps(summoner_data),
+                    "game_data": json.dumps(game_info)
                 })
                 connection.commit()
                 print("Data updated successfully.")
@@ -987,3 +1082,129 @@ def update_timestamp(engine, puuid):
         connection.commit()
         return
     
+def fetch_gametime(rows):
+    game_15 = 0
+    win_15 = 0
+    game_20 = 0
+    win_20 = 0
+    game_25 = 0
+    win_25 = 0
+    game_30 = 0
+    win_30 = 0
+    game_35 = 0
+    win_35 = 0
+    game_40 = 0
+    win_40 = 0
+    game_45 = 0
+    win_45 = 0
+    game_50 = 0
+    win_50 = 0
+
+
+    #Check if any rows are returned
+    if rows:
+        for row in rows:
+            if row[0] < 1200: #Less than 20 minutes
+                game_15 += 1
+                if row[1] == 1:
+                    win_15 += 1
+            elif row[0] < 1500: #Less than 25
+                game_20 += 1
+                if row[1] == 1:
+                    win_20 += 1
+            elif row[0] < 1800: #Less than 30
+                game_25 += 1
+                if row[1] == 1:
+                    win_25 += 1
+            elif row[0] < 2100: #less than 35
+                game_30 += 1
+                if row[1] == 1:
+                    win_30 += 1
+            elif row[0] < 2400: #less than 40
+                game_35 += 1
+                if row[1] == 1:
+                    win_35 += 1   
+            elif row[0] < 2700: #less than 45
+                game_40 += 1
+                if row[1] == 1:
+                    win_40 += 1
+            elif row[0] < 3000: #less than 50
+                game_45 += 1
+                if row[1] == 1:
+                    win_45 += 1   
+            else:               #Greater than 50
+                game_50 += 1
+                if row[1] == 1:
+                    win_50 += 1
+        wr_15 = 0
+        wr_20 = 0
+        wr_25 = 0
+        wr_30 = 0
+        wr_35 = 0
+        wr_40 = 0
+        wr_45 = 0
+        wr_50 = 0
+
+        if game_15 != 0:
+            wr_15 = round(win_15 / game_15,2)
+        if game_20 != 0:
+            wr_20 = round(win_20 / game_20,2)
+        if game_25 != 0:
+            wr_25 = round(win_25 / game_25,2)
+        if game_30 != 0:
+            wr_30 = round(win_30 / game_30,2)
+        if game_35 != 0:
+            wr_35 = round(win_35 / game_35,2)
+        if game_40 != 0:
+            wr_40 = round(win_40 / game_40,2)
+        if game_45 != 0:
+            wr_45 = round(win_45 / game_45,2)
+        if game_50 != 0:
+            wr_50 = round(win_50 / game_50,2)         
+        gameDetails = {
+            "game_15": game_15,
+            "wr_15": wr_15,
+            "game_20": game_20,
+            "wr_20": wr_20,
+            "game_25": game_25,
+            "wr_25": wr_25,
+            "game_30": game_30,
+            "wr_30": wr_30,
+            "game_35": game_35,
+            "wr_35": wr_35,
+            "game_40": game_40,
+            "wr_40": wr_40,
+            "game_45": game_45,
+            "wr_45": wr_45,
+            "game_50": game_50,
+            "wr_50": wr_50
+        }
+        print(gameDetails)
+        return gameDetails
+
+def fetch_games(engine, puuid, champion, lane):
+    if lane == "OVERALL":
+        sql = """
+        SELECT game_duration, result
+        FROM matches
+        WHERE summoner_puuid = :puuid
+        AND summoner_champ = :champion
+        """
+    else:
+        sql = """
+        SELECT game_duration, result
+        FROM matches
+        WHERE summoner_puuid = :puuid
+        AND summoner_champ = :champion
+        AND summoner_lane = :lane
+        """
+    with engine.connect() as connection:
+        result = connection.execute(text(sql), {
+            "puuid": puuid,
+            "champion": champion,
+            "lane": lane
+        }).fetchall()
+        print(result)
+        gameInfo = fetch_gametime(result)
+        return gameInfo
+        
