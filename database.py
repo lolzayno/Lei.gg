@@ -1082,117 +1082,53 @@ def update_timestamp(engine, puuid):
         connection.commit()
         return
     
-def fetch_gametime(rows):
-    game_15 = 0
-    win_15 = 0
-    game_20 = 0
-    win_20 = 0
-    game_25 = 0
-    win_25 = 0
-    game_30 = 0
-    win_30 = 0
-    game_35 = 0
-    win_35 = 0
-    game_40 = 0
-    win_40 = 0
-    game_45 = 0
-    win_45 = 0
-    game_50 = 0
-    win_50 = 0
-
-
-    #Check if any rows are returned
-    if rows:
-        for row in rows:
-            if row[0] < 1200: #Less than 20 minutes
-                game_15 += 1
-                if row[1] == 1:
-                    win_15 += 1
-            elif row[0] < 1500: #Less than 25
-                game_20 += 1
-                if row[1] == 1:
-                    win_20 += 1
-            elif row[0] < 1800: #Less than 30
-                game_25 += 1
-                if row[1] == 1:
-                    win_25 += 1
-            elif row[0] < 2100: #less than 35
-                game_30 += 1
-                if row[1] == 1:
-                    win_30 += 1
-            elif row[0] < 2400: #less than 40
-                game_35 += 1
-                if row[1] == 1:
-                    win_35 += 1   
-            elif row[0] < 2700: #less than 45
-                game_40 += 1
-                if row[1] == 1:
-                    win_40 += 1
-            elif row[0] < 3000: #less than 50
-                game_45 += 1
-                if row[1] == 1:
-                    win_45 += 1   
-            else:               #Greater than 50
-                game_50 += 1
-                if row[1] == 1:
-                    win_50 += 1
-        wr_15 = 0
-        wr_20 = 0
-        wr_25 = 0
-        wr_30 = 0
-        wr_35 = 0
-        wr_40 = 0
-        wr_45 = 0
-        wr_50 = 0
-
-        if game_15 != 0:
-            wr_15 = round(win_15 / game_15,2)
-        if game_20 != 0:
-            wr_20 = round(win_20 / game_20,2)
-        if game_25 != 0:
-            wr_25 = round(win_25 / game_25,2)
-        if game_30 != 0:
-            wr_30 = round(win_30 / game_30,2)
-        if game_35 != 0:
-            wr_35 = round(win_35 / game_35,2)
-        if game_40 != 0:
-            wr_40 = round(win_40 / game_40,2)
-        if game_45 != 0:
-            wr_45 = round(win_45 / game_45,2)
-        if game_50 != 0:
-            wr_50 = round(win_50 / game_50,2)         
-        gameDetails = {
-            "game_15": game_15,
-            "wr_15": wr_15,
-            "game_20": game_20,
-            "wr_20": wr_20,
-            "game_25": game_25,
-            "wr_25": wr_25,
-            "game_30": game_30,
-            "wr_30": wr_30,
-            "game_35": game_35,
-            "wr_35": wr_35,
-            "game_40": game_40,
-            "wr_40": wr_40,
-            "game_45": game_45,
-            "wr_45": wr_45,
-            "game_50": game_50,
-            "wr_50": wr_50
-        }
-        print(gameDetails)
-        return gameDetails
-
 def fetch_games(engine, puuid, champion, lane):
     if lane == "OVERALL":
         sql = """
-        SELECT game_duration, result
+        SELECT
+            COUNT(*) AS games_played,
+            SUM(CASE WHEN CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS total_wins,
+            SUM(CASE WHEN game_duration < 1200 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_under_1200,
+            SUM(CASE WHEN game_duration < 1200 THEN 1 ELSE 0 END) as games_under_1200, 
+            SUM(CASE WHEN game_duration >= 1200 AND game_duration < 1500 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1200_1500,
+            SUM(CASE WHEN game_duration >= 1200 AND game_duration < 1500 THEN 1 ELSE 0 END) AS games_between_1200_1500,
+            SUM(CASE WHEN game_duration >= 1500 AND game_duration < 1800 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1500_1800,
+            SUM(CASE WHEN game_duration >= 1500 AND game_duration < 1800 THEN 1 ELSE 0 END) AS games_between_1500_1800,
+            SUM(CASE WHEN game_duration >= 1800 AND game_duration < 2100 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1800_2100,
+            SUM(CASE WHEN game_duration >= 1800 AND game_duration < 2100 THEN 1 ELSE 0 END) AS games_between_1800_2100,
+            SUM(CASE WHEN game_duration >= 2100 AND game_duration < 2400 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2100_2400,
+            SUM(CASE WHEN game_duration >= 2100 AND game_duration < 2400 THEN 1 ELSE 0 END) AS games_between_2100_2400,
+            SUM(CASE WHEN game_duration >= 2400 AND game_duration < 2700 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2400_2700,
+            SUM(CASE WHEN game_duration >= 2400 AND game_duration < 2700 THEN 1 ELSE 0 END) AS games_between_2400_2700,
+            SUM(CASE WHEN game_duration >= 2700 AND game_duration < 3000 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2700_3000,
+            SUM(CASE WHEN game_duration >= 2700 AND game_duration < 3000 THEN 1 ELSE 0 END) AS games_between_2700_3000,
+            SUM(CASE WHEN game_duration >= 3000 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_over_3000,
+            SUM(CASE WHEN game_duration >= 3000 THEN 1 ELSE 0 END) AS games_over_3000
         FROM matches
         WHERE summoner_puuid = :puuid
         AND summoner_champ = :champion
         """
     else:
         sql = """
-        SELECT game_duration, result
+        SELECT
+            COUNT(*) AS games_played,
+            SUM(CASE WHEN CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS total_wins,
+            SUM(CASE WHEN game_duration < 1200 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_under_1200,
+            SUM(CASE WHEN game_duration < 1200 THEN 1 ELSE 0 END) as games_under_1200, 
+            SUM(CASE WHEN game_duration >= 1200 AND game_duration < 1500 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1200_1500,
+            SUM(CASE WHEN game_duration >= 1200 AND game_duration < 1500 THEN 1 ELSE 0 END) AS games_between_1200_1500,
+            SUM(CASE WHEN game_duration >= 1500 AND game_duration < 1800 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1500_1800,
+            SUM(CASE WHEN game_duration >= 1500 AND game_duration < 1800 THEN 1 ELSE 0 END) AS games_between_1500_1800,
+            SUM(CASE WHEN game_duration >= 1800 AND game_duration < 2100 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_1800_2100,
+            SUM(CASE WHEN game_duration >= 1800 AND game_duration < 2100 THEN 1 ELSE 0 END) AS games_between_1800_2100,
+            SUM(CASE WHEN game_duration >= 2100 AND game_duration < 2400 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2100_2400,
+            SUM(CASE WHEN game_duration >= 2100 AND game_duration < 2400 THEN 1 ELSE 0 END) AS games_between_2100_2400,
+            SUM(CASE WHEN game_duration >= 2400 AND game_duration < 2700 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2400_2700,
+            SUM(CASE WHEN game_duration >= 2400 AND game_duration < 2700 THEN 1 ELSE 0 END) AS games_between_2400_2700,
+            SUM(CASE WHEN game_duration >= 2700 AND game_duration < 3000 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_between_2700_3000,
+            SUM(CASE WHEN game_duration >= 2700 AND game_duration < 3000 THEN 1 ELSE 0 END) AS games_between_2700_3000,
+            SUM(CASE WHEN game_duration >= 3000 AND CAST(result AS UNSIGNED) = 1 THEN 1 ELSE 0 END) AS wins_over_3000,
+            SUM(CASE WHEN game_duration >= 3000 THEN 1 ELSE 0 END) AS games_over_3000
         FROM matches
         WHERE summoner_puuid = :puuid
         AND summoner_champ = :champion
@@ -1203,8 +1139,62 @@ def fetch_games(engine, puuid, champion, lane):
             "puuid": puuid,
             "champion": champion,
             "lane": lane
-        }).fetchall()
-        print(result)
-        gameInfo = fetch_gametime(result)
-        return gameInfo
+        }).fetchone()
         
+        # Extract the counts into separate variables
+        games_played = int(result[0])
+        total_wins = int(result[1])
+        wins_under_1200 = int(result[2])
+        games_under_1200 = int(result[3])
+        wins_between_1200_1500 = int(result[4])
+        games_between_1200_1500 = int(result[5])
+        wins_between_1500_1800 = int(result[6])
+        games_between_1500_1800 = int(result[7])
+        wins_between_1800_2100 = int(result[8])
+        games_between_1800_2100 = int(result[9])
+        wins_between_2100_2400 = int(result[10])
+        games_between_2100_2400 = int(result[11])
+        wins_between_2400_2700 = int(result[12])
+        games_between_2400_2700 = int(result[13])
+        wins_between_2700_3000 = int(result[14])
+        games_between_2700_3000 = int(result[15])
+        wins_over_3000 = int(result[16])
+        games_over_3000 = int(result[17])
+
+        # Helper function to calculate winrate
+        def calculate_wr(wins, games):
+            return round(wins / games, 2) if games > 0 else 0
+
+        game_info = {
+            "games_played": games_played,
+            "games_won": total_wins,
+            "games_lost": games_played - total_wins,
+            "games_wr": calculate_wr(total_wins, games_played),
+            "wins_under_20": wins_under_1200,
+            "games_under_20": games_under_1200,
+            "wr_under_20": calculate_wr(wins_under_1200, games_under_1200),
+            "wins_under_25": wins_between_1200_1500,
+            "games_under_25": games_between_1200_1500,
+            "wr_under_25": calculate_wr(wins_between_1200_1500, games_between_1200_1500),
+            "wins_under_30": wins_between_1500_1800,
+            "games_under_30": games_between_1500_1800,
+            "wr_under_30": calculate_wr(wins_between_1500_1800, games_between_1500_1800),
+            "wins_under_35": wins_between_1800_2100,
+            "games_under_35": games_between_1800_2100,
+            "wr_under_35": calculate_wr(wins_between_1800_2100, games_between_1800_2100),
+            "wins_under_40": wins_between_2100_2400,
+            "games_under_40": games_between_2100_2400,
+            "wr_under_40": calculate_wr(wins_between_2100_2400, games_between_2100_2400),
+            "wins_under_45": wins_between_2400_2700,
+            "games_under_45": games_between_2400_2700,
+            "wr_under_45": calculate_wr(wins_between_2400_2700, games_between_2400_2700),
+            "wins_under_50": wins_between_2700_3000,
+            "games_under_50": games_between_2700_3000,
+            "wr_under_50": calculate_wr(wins_between_2700_3000, games_between_2700_3000),
+            "wins_over_50": wins_over_3000,
+            "games_over_50": games_over_3000,
+            "wr_over_50": calculate_wr(wins_over_3000, games_over_3000)
+        }
+        print(game_info)
+        return game_info
+
