@@ -4,9 +4,17 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-
 import './Profile.css';
 import Navbar from './Navbar.js';
+import { Card, CardContent } from ".//ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "./ui/carousel";
+
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title, ChartDataLabels);
 function Profile() {
   const { state } = useLocation();
@@ -134,9 +142,11 @@ function Profile() {
   return (
     <div>
       <Navbar />
+      
       <div className="profile-page">
         <section className="user-profile">
           <div className="profile-card">
+            
             <img
               className="profile-icon"
               src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
@@ -154,6 +164,14 @@ function Profile() {
         </section>
 
         <section className="match-history">
+          <Carousel
+              opts={{
+                align: "start",
+              }}
+              orientation="vertical"
+              className="w-full h-full"
+            >
+          <CarouselContent className="h-auto">
           <div className="match-cards">
             {Matches.map((match, index) => {
               const summonerData = match.summoner_data;
@@ -235,6 +253,7 @@ function Profile() {
                 )
               );
               return (
+                <CarouselItem key={index} className="w-full">
                 <div 
                   key={index} 
                   className={`match-card ${match.result === '1' ? 'win' : 'loss'}`} 
@@ -726,9 +745,14 @@ function Profile() {
                   </div>
                   )}
                 </div>
+                </CarouselItem>
               );
             })}
           </div>
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+          </Carousel>
         </section>
       </div>
     </div>

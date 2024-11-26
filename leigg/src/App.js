@@ -13,6 +13,7 @@ import Champion from './components/Champion.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext';
 import EditProfile from './components/EditProfile.js';
+import { Button } from './components/ui/button';
 function App() {
   return (
     <AuthProvider>
@@ -24,6 +25,7 @@ function App() {
               <div className="App">
                 <Navbar />
                 <Search />
+                <Button>Hello World</Button>
                 <Footer />
               </div>
             }
