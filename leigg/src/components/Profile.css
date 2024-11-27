@@ -6,7 +6,14 @@
   font-family: Arial, sans-serif;
   color: #333;
 }
-
+.profile-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  position: relative;
+  border: 4px solid #6451fb; /* Purple border for a clean look */
+  margin-bottom: -20px;
+}
 .match-cards {
   display: flex;
   flex-direction: column;
@@ -396,4 +403,102 @@
   align-items: center; /* Align icon and text vertically */
   gap: 8px; /* Add spacing between icon and text */
 }
+.profile-details {
+  display: flex; /* Arrange icon and rank info horizontally */
+  align-items: flex-start; /* Align items at the top */
+  gap: 20px; /* Add space between the profile section and rank info */
+  background-color: #BF9AF7;
+  padding: 20px 20px 20px 20px;
+  border-radius: 10px;
+}
 
+.profile-icon-section {
+  display: flex;
+  flex-direction: column; /* Stack icon and summoner name vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center text for the summoner name */
+}
+
+.profile-icon-container {
+  position: relative;
+  width: 100px; /* Define a fixed size for the profile icon */
+  height: 100px;
+}
+
+.profile-icon {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%; /* Make the profile icon circular */
+  object-fit: cover;
+}
+
+.profile-level {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: #6451fb;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.profile-header h2 {
+  margin: 0 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.profilerank-info {
+  display: flex;
+  flex-direction: row; /* Arrange rank icon and details horizontally */
+  align-items: center; /* Align rank icon and text vertically */
+  gap: 10px; /* Add space between rank icon and details */
+}
+
+.profilerank-icon-container {
+  width: 80px; /* Define a fixed size for the rank icon */
+  height: 80px;
+}
+.profile-header {
+  text-align: left;
+}
+
+.profilerank-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensure the icon scales properly */
+  background-color: white;
+  padding: 5px 5px 5px 5px;
+  border-radius: 50%;
+  border: 3px solid #6451fb;
+}
+
+.profilerank-details {
+  flex-grow: 1; /* Allow the rank details to take up remaining space */
+}
+
+.rank-and-tier {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.games-played {
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+}
+
+.profilerank-stats {
+  margin-top: 25px;
+  text-align: right; /* Align stats to the right side */
+  font-size: 16px;
+  font-weight: bold;
+}

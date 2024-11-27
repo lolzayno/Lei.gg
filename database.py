@@ -933,7 +933,7 @@ def update_runes(engine, puuid, champion, rune, lane, matchup):
             "lane": lane,
             "matchup": matchup
         }).fetchone()
-
+        print(result)
         # Extract values from query result
         games = int(result[0])
         wins = int(result[1])

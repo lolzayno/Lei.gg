@@ -28,6 +28,11 @@ function Profile() {
     setActiveDropdown((prev) => (prev === button ? null : button));
   };
 
+  const [isChatOpen, setIsChatOpen] = useState(null);
+
+  const toggleChat = (index) => {
+    setIsChatOpen(isChatOpen === index ? null : index);
+  };
   const summonerSpellMap = {
     1: "SummonerBoost",      // Cleanse
     3: "SummonerExhaust",    // Exhaust
@@ -126,7 +131,7 @@ function Profile() {
   
   
   function truncateIGN(ign) {
-    return ign.length > 15 ? ign.slice(0, 15) + '...' : ign;
+    return ign.length > 15 ? ign.slice(0, 10) + '...' : ign;
   }
 
 
@@ -147,31 +152,47 @@ function Profile() {
         <section className="user-profile">
           <div className="profile-card">
             
-            <img
-              className="profile-icon"
-              src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
-              alt="Profile Icon"
-            />
-            <h2>{userInfo.summoner_name}</h2>
-            <p>Level {userInfo.summoner_level}</p>
-            <div className="rank-info">
-              <p><strong>{userRankData.Rank} {userRankData.Tier}</strong></p>
-              <p>LP: {userRankData.LP}</p>
-              <p>Win Rate: {(userRankData.WR * 100).toFixed(2)}%</p>
-              <p>Games: {userRankData.Wins}/{userRankData.Games}</p>
+          <div className="profile-details">
+            <div className="profile-icon-section">
+              <div className="profile-icon-container">
+                <img
+                  className="profile-icon"
+                  src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
+                  alt="Profile Icon"
+                />
+                <div className="profile-level">{userInfo.summoner_level}</div>
+              </div>
+              <div className="profile-header">
+                <h2>{ign}#{tag}</h2>
+                <h3>{region}</h3>
+              </div>
+            </div>
+            <div className="profilerank-info">
+              <div className="profilerank-icon-container" data-tooltip={`${userRankData.LP} LP`}>
+                <img 
+                  src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${userRankData.Rank.toLowerCase()}.svg`}
+                  alt={`${userRankData.Rank} rank icon`}
+                  className="profilerank-icon"
+                />
+              </div>
+              <div className="profilerank-details">
+                <div className="rank-and-tier">
+                  <p><strong>{userRankData.Rank} {userRankData.Tier}</strong></p>
+                  <p>{userRankData.LP} LP</p>
+                </div>
+                <div className="games-played">
+                  <p>{userRankData.Games} GP</p>
+                </div>
+              </div>
+              <div className="profilerank-stats">
+                <p>{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</p>
+                <p>{(userRankData.WR * 100).toFixed(0)}% WR</p>
+              </div>
             </div>
           </div>
+          </div>
         </section>
-
         <section className="match-history">
-          <Carousel
-              opts={{
-                align: "start",
-              }}
-              orientation="vertical"
-              className="w-full h-full"
-            >
-          <CarouselContent className="h-auto">
           <div className="match-cards">
             {Matches.map((match, index) => {
               const summonerData = match.summoner_data;
@@ -253,7 +274,6 @@ function Profile() {
                 )
               );
               return (
-                <CarouselItem key={index} className="w-full">
                 <div 
                   key={index} 
                   className={`match-card ${match.result === '1' ? 'win' : 'loss'}`} 
@@ -575,6 +595,10 @@ function Profile() {
                         <i class="fa-solid fa-bug"></i>
                         <p>{summonerData.summoner_RiftHeraldTakedown}</p>
                       </div>
+                      <div className="control-wards"data-tooltip={`Grubs`}>
+                      <i class="fa-solid fa-hippo"></i>
+                        <p>{summonerData.summoner_RiftHeraldTakedown}</p>
+                      </div>
                     </div>
                   </div>
                   {/* Dropdown content for each button */}
@@ -745,14 +769,9 @@ function Profile() {
                   </div>
                   )}
                 </div>
-                </CarouselItem>
               );
             })}
           </div>
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-          </Carousel>
         </section>
       </div>
     </div>

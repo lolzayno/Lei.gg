@@ -59,6 +59,7 @@ def profile():
                 redsup_champ, redsup_data)
         if counter == 3:
             break
+        break
     #database.update_timestamp(engine, puuid)
     for champ in dict_update:
         for lane in dict_update[champ]:
