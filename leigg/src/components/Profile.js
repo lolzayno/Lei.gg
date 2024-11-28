@@ -147,49 +147,41 @@ function Profile() {
   return (
     <div>
       <Navbar />
-      
       <div className="profile-page">
         <section className="user-profile">
           <div className="profile-card">
-            
-          <div className="profile-details">
-            <div className="profile-icon-section">
-              <div className="profile-icon-container">
-                <img
-                  className="profile-icon"
-                  src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
-                  alt="Profile Icon"
-                />
-                <div className="profile-level">{userInfo.summoner_level}</div>
-              </div>
-              <div className="profile-header">
-                <h2>{ign}#{tag}</h2>
-                <h3>{region}</h3>
-              </div>
-            </div>
-            <div className="profilerank-info">
-              <div className="profilerank-icon-container" data-tooltip={`${userRankData.LP} LP`}>
-                <img 
-                  src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${userRankData.Rank.toLowerCase()}.svg`}
-                  alt={`${userRankData.Rank} rank icon`}
-                  className="profilerank-icon"
-                />
-              </div>
-              <div className="profilerank-details">
-                <div className="rank-and-tier">
-                  <p><strong>{userRankData.Rank} {userRankData.Tier}</strong></p>
-                  <p>{userRankData.LP} LP</p>
+            <div className="profile-details">
+              <div className="profile-icon-section">
+                <div className="profile-icon-container">
+                  <img
+                    className="profile-icon"
+                    src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/profileicon/${userInfo.profile_icon}.png`}
+                    alt="Profile Icon"
+                  />
+                  <div className="profile-level">{userInfo.summoner_level}</div>
                 </div>
-                <div className="games-played">
-                  <p>{userRankData.Games} GP</p>
+                <div className="profile-header">
+                  <h1>{ign}</h1>
+                  <h2>#{tag}</h2>
+                  <h3>{region}</h3>
                 </div>
               </div>
-              <div className="profilerank-stats">
-                <p>{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</p>
-                <p>{(userRankData.WR * 100).toFixed(0)}% WR</p>
+              <div className="rank-details">
+                <div className="rank-details-text">
+                  <h1>{userRankData.Rank}</h1>
+                  <h3>{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</h3>
+                  <h3>{(userRankData.WR * 100).toFixed(0)}% WR</h3>
+                  <h2>{userRankData.LP} LP</h2>
+                </div>
+                <div className="rank-details-icon" data-tooltip={`${userRankData.LP} LP`}>
+                  <img 
+                    src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${userRankData.Rank.toLowerCase()}.svg`}
+                    alt={`${userRankData.Rank} rank icon`}
+                    className="rank-icon-details"
+                  />
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </section>
         <section className="match-history">

@@ -71,8 +71,9 @@ def profile():
                 for matcher in dict_update[champ][lane]['matchups']:
                     database.update_runes(engine, puuid, champ, rune, lane, matcher)
             for item in dict_update[champ][lane]['items']:
-                database.update_items(engine, puuid, champ, item, lane)
-                database.update_items(engine, puuid, champ, item, "OVERALL")
+                if item != "Seraph's Embrace":
+                    database.update_items(engine, puuid, champ, item, lane)
+                    database.update_items(engine, puuid, champ, item, "OVERALL")
             for matchup in dict_update[champ][lane]['matchups']:
                 database.update_matchups(engine, puuid, champ, matchup, lane)
                 database.update_matchups(engine, puuid, champ, matchup, "OVERALL")

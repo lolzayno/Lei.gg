@@ -993,6 +993,7 @@ def update_runes(engine, puuid, champion, rune, lane, matchup):
             print("Failed to insert or update data:", e)
 
 def update_items(engine, puuid, champion, item, lane):
+    print(item)
     # Fetch match data with aggregate calculations
     if lane == "OVERALL":
         sql = """
@@ -1070,7 +1071,7 @@ def update_items(engine, puuid, champion, item, lane):
             "item": item
         }).fetchone()
 
-
+        print(result)
         # Extract values from query result
         games = int(result[0])
         wins = int(result[1])

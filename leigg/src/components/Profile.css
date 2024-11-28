@@ -26,7 +26,8 @@
   padding-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Add shadow to text */
 }
 
 .champions-columns {
@@ -405,24 +406,30 @@
 }
 .profile-details {
   display: flex; /* Arrange icon and rank info horizontally */
+  position: relative;
+  justify-content: space-between; /* Space between the sections */
   align-items: flex-start; /* Align items at the top */
   gap: 20px; /* Add space between the profile section and rank info */
   background-color: #BF9AF7;
   padding: 20px 20px 20px 20px;
   border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  width: 2000px;
 }
 
 .profile-icon-section {
   display: flex;
-  flex-direction: column; /* Stack icon and summoner name vertically */
+  flex-direction: row; /* Stack icon and summoner name vertically */
   align-items: center; /* Center content horizontally */
   text-align: center; /* Center text for the summoner name */
+  gap: 15px;
 }
 
 .profile-icon-container {
   position: relative;
-  width: 100px; /* Define a fixed size for the profile icon */
-  height: 100px;
+  gap: 100px;
+  width: 200px; /* Define a fixed size for the profile icon */
+  height: 200px;
 }
 
 .profile-icon {
@@ -430,7 +437,9 @@
   height: 100%;
   border-radius: 50%; /* Make the profile icon circular */
   object-fit: cover;
-}
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
+} 
+
 
 .profile-level {
   position: absolute;
@@ -439,8 +448,8 @@
   background-color: #6451fb;
   color: white;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -449,11 +458,32 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+.profile-header h1 {
+  font-size: 128px; /* Largest font size for IGN */
+  font-weight: bold; /* Thick text */
+  text-transform: uppercase; /* Capitalize all letters */
+  margin: -25px; /* Add vertical spacing */
+  margin-top: -40px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
 .profile-header h2 {
-  margin: 0 0;
-  font-size: 18px;
+  margin: -75px;
+  font-size: 64px;
+  font-weight: bold;
+  color: whitesmoke;
+  margin-top: -100px;
+  text-align: end;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
+.profile-header h3 {
+  font-size: 48px;
   font-weight: bold;
   color: #333;
+  margin: 30px;
+  margin-left: 0px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
 }
 
 .profilerank-info {
@@ -469,6 +499,7 @@
 }
 .profile-header {
   text-align: left;
+  margin: -10px;
 }
 
 .profilerank-icon {
@@ -496,9 +527,60 @@
   color: #666;
 }
 
-.profilerank-stats {
-  margin-top: 25px;
-  text-align: right; /* Align stats to the right side */
-  font-size: 16px;
+.rank-details {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-direction: row;
+  position: relative;
+}
+
+.rank-details h1 {
+  font-size: 64px;
   font-weight: bold;
+  color: black;
+  margin-right: 150px;
+  display: inline;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
+.rank-details h2 {
+  font-size: 64px;
+  font-weight: bold;
+  color: black;
+  text-align: end;
+  margin-right: 100px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
+.rank-details h3 {
+  font-size: 32px;
+  font-weight: bold;
+  color: black;
+  text-align: end;
+  margin-right: 250px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+}
+
+.rank-details-text {
+  position: absolute; /* Place the text absolutely relative to .rank-details */
+  z-index: 2; /* Ensure the text is above the icon */
+  margin-top: 100px;
+  color: white; /* Optional: Change text color for visibility */
+  font-weight: bold; /* Make the text more prominent */
+  text-align: flex-start;
+}
+
+.rank-icon-details {
+  height: 215px;
+  width: 215px;
+  object-fit: contain; /* Ensure the icon scales proportionally */
+  border-radius: 50%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.rank-details-icon {
+  position: relative; /* Icon remains within the .rank-details */
+  z-index: 1; /* Ensure the icon is below the text */
+  margin-bottom: 60px; /* Optional: Adjust spacing to fine-tune positioning */
 }
