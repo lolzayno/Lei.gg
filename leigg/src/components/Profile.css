@@ -17,6 +17,8 @@
 .match-cards {
   display: flex;
   flex-direction: column;
+  margin-right: 800px;
+  margin-top: 25px;
   gap: 1rem;
 }
 
@@ -414,7 +416,7 @@
   padding: 20px 20px 20px 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  width: 2000px;
+  width: 1400px;
 }
 
 .profile-icon-section {
@@ -538,37 +540,39 @@
 .rank-details h1 {
   font-size: 64px;
   font-weight: bold;
-  color: black;
-  margin-right: 150px;
+  color: #33332f;
+  margin-right: 175px;
   display: inline;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
 }
 
 .rank-details h2 {
-  font-size: 64px;
+  font-size: 16px;
   font-weight: bold;
-  color: black;
+  color: whitesmoke;
   text-align: end;
-  margin-right: 100px;
+  margin-right: 80px;
+  margin-bottom: 100px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
+  
 }
 
 .rank-details h3 {
   font-size: 32px;
   font-weight: bold;
-  color: black;
+  color: whitesmoke;
   text-align: end;
-  margin-right: 250px;
+  margin-right: 220px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Add shadow to text */
 }
 
 .rank-details-text {
   position: absolute; /* Place the text absolutely relative to .rank-details */
   z-index: 2; /* Ensure the text is above the icon */
-  margin-top: 100px;
   color: white; /* Optional: Change text color for visibility */
   font-weight: bold; /* Make the text more prominent */
   text-align: flex-start;
+  margin-bottom: -75px;
 }
 
 .rank-icon-details {
@@ -577,10 +581,22 @@
   object-fit: contain; /* Ensure the icon scales proportionally */
   border-radius: 50%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  background-color: #F4DAFA;
+  border: 3px solid #6451fb;
 }
 
 .rank-details-icon {
   position: relative; /* Icon remains within the .rank-details */
   z-index: 1; /* Ensure the icon is below the text */
   margin-bottom: 60px; /* Optional: Adjust spacing to fine-tune positioning */
+}
+
+.text-bg {
+  background-color: #6451fb; /* Desired background color */
+  padding: 5px; /* Optional: adds a bit of space around the text */
+  display: inline; /* Keeps the background tight around the text */
+  border-radius: 25px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  padding: 10px;
 }

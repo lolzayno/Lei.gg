@@ -169,9 +169,10 @@ function Profile() {
               <div className="rank-details">
                 <div className="rank-details-text">
                   <h1>{userRankData.Rank}</h1>
+                  <h3>Ranked Solo/Duo</h3>
                   <h3>{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</h3>
                   <h3>{(userRankData.WR * 100).toFixed(0)}% WR</h3>
-                  <h2>{userRankData.LP} LP</h2>
+                  <h2><span className="text-bg">{userRankData.LP} LP</span></h2>
                 </div>
                 <div className="rank-details-icon" data-tooltip={`${userRankData.LP} LP`}>
                   <img 
