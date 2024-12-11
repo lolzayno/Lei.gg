@@ -305,14 +305,17 @@ function Profile() {
                     <div className="items-section">
                       <div className="items">
                         {[summonerData.summoner_Item0Id, summonerData.summoner_Item1Id, summonerData.summoner_Item2Id, summonerData.summoner_Item3Id, summonerData.summoner_Item4Id, summonerData.summoner_Item5Id, summonerData.summoner_Item6Id].map((itemId, idx) => (
-                          itemId ? (
-                            <img 
-                              key={idx} 
-                              src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`} 
-                              alt={`Item ${itemId}`} 
-                              className="item-icon" 
-                            />
-                          ) : null
+                          <div key={idx} className="item-container">
+                            {itemId && itemId !== 0 ? (
+                              <img
+                                src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`}
+                                alt={`Item ${itemId}`}
+                                className="item-icon"
+                              />
+                            ) : (
+                              <div className="empty-icon"></div>
+                            )}
+                          </div>
                         ))}
                       </div>
                     </div>
@@ -396,9 +399,33 @@ function Profile() {
                           const damageTrueTaken = match[`${lane}_data`][`${lane}_TrueTaken`] || 0;
                           const totalDamageTaken = damagePhysicalTaken + damageMagicTaken + damageTrueTaken;
                           const damagePercentTaken = (totalDamageTaken / maxDamageTaken) * 100;
+                          const item0 = match[`${lane}_data`][`${lane}_Item0Id`] || 0;
+                          const item1 = match[`${lane}_data`][`${lane}_Item1Id`] || 0;
+                          const item2 = match[`${lane}_data`][`${lane}_Item2Id`] || 0;
+                          const item3 = match[`${lane}_data`][`${lane}_Item3Id`] || 0;
+                          const item4 = match[`${lane}_data`][`${lane}_Item4Id`] || 0;
+                          const item5 = match[`${lane}_data`][`${lane}_Item5Id`] || 0;
                           return (
                             <div className="lane" key={lane}>
                               <span className="blue-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
+                              <div className="items-section">
+                                <div className="items">
+                                  {[item0, item1, item2, item3, item4, item5].map((itemId, idx) => (
+                                    <div key={idx} className="item-container">
+                                      {itemId && itemId !== 0 ? (
+                                        <img
+                                          src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`}
+                                          alt={`Item ${itemId}`}
+                                          className="item-icon"
+                                        />
+                                      ) : (
+                                        <div className="empty-item"></div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+
                               <div className="damage-bar-wrapper">
                                 <div className="damage-bar-container">
                                   <div
@@ -467,7 +494,12 @@ function Profile() {
                           const damageTrueTaken = match[`${lane}_data`][`${lane}_TrueTaken`] || 0;
                           const totalDamageTaken = damagePhysicalTaken + damageMagicTaken + damageTrueTaken;
                           const damagePercentTaken = (totalDamageTaken / maxDamageTaken) * 100;
-
+                          const item0 = match[`${lane}_data`][`${lane}_Item0Id`] || 0;
+                          const item1 = match[`${lane}_data`][`${lane}_Item1Id`] || 0;
+                          const item2 = match[`${lane}_data`][`${lane}_Item2Id`] || 0;
+                          const item3 = match[`${lane}_data`][`${lane}_Item3Id`] || 0;
+                          const item4 = match[`${lane}_data`][`${lane}_Item4Id`] || 0;
+                          const item5 = match[`${lane}_data`][`${lane}_Item5Id`] || 0;
                           return (
                             <div className="lane" key={lane}>
                               <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} />
@@ -516,6 +548,23 @@ function Profile() {
                                   />
                                 </div>
                                 <div className="total-damage">{totalDamageTaken}</div>
+                              </div>
+                              <div className="items-section">
+                                <div className="items">
+                                  {[item0, item1, item2, item3, item4, item5].map((itemId, idx) => (
+                                    <div key={idx} className="item-container">
+                                      {itemId && itemId !== 0 ? (
+                                        <img
+                                          src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`}
+                                          alt={`Item ${itemId}`}
+                                          className="item-icon"
+                                        />
+                                      ) : (
+                                        <div className="empty-item"></div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                               <span className="red-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
                             </div>

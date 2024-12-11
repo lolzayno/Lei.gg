@@ -184,7 +184,18 @@
   border-radius: 25%;
   border: 2px solid black;
 }
-
+.empty-item {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid black;
+}
+.empty-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 25%;
+  border: 2px solid black;
+}
 .damage-bar-wrapper {
   display: flex;
   flex-direction: column;

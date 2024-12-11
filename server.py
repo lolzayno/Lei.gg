@@ -83,6 +83,7 @@ def profile():
     user = database.fetch_player(engine, puuid) #user info
     user_json = {}
     user_json["Matches"] = matchhistory
+    print(user_json["Matches"])
     user_json["Champions"] = champions
     user_json["User"] = user
     return jsonify(user_json)
