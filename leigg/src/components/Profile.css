@@ -17,7 +17,7 @@
 .match-cards {
   display: flex;
   flex-direction: column;
-  margin-right: 800px;
+  margin-right: 520px;
   margin-top: 25px;
   gap: 1rem;
 }
@@ -42,9 +42,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 20px;
+}
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
 }
 
+.item-grider {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lane .blue-champ {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #FF9A9A;
+}
+.lane .red-champ {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #7D94F2;
+}
 .lane {
   display: flex;
   align-items: center;
@@ -109,7 +131,6 @@
 .blue-rank-icon {
   width: 18px;
   height: 18px;
-  margin-right: 5px;
 }
 
 .red-rank-icon {
@@ -118,12 +139,44 @@
   margin-left: 5px;
 }
 
-.rank-icon-container {
-  position: relative;
-  display: inline-block;
+.rank-icon-container-blue {
+  position: absolute;
+  margin-left: 450px;
+  margin-top: 40px;
+  border-radius: 50%;
+  background-color: #BF9AF7;
+  border: 2px solid #6451fb;
+  height: 35px;
+  width: 35px;
+}
+.rank-icon-container-red {
+  position: absolute;
+  margin-left: 40px;
+  margin-top: 40px;
+  border-radius: 50%;
+  background-color: #BF9AF7;
+  border: 2px solid #6451fb;
+  height: 35px;
+  width: 35px;
 }
 
-.rank-icon-container[data-tooltip]:hover::after {
+.rank-icon-container-blue[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%; /* Position above the icon */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.75); /* Dark background */
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+.rank-icon-container-red[data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
   bottom: 100%; /* Position above the icon */
@@ -151,10 +204,21 @@
   height: 10px;
 }
 
-.rank-tier {
+.rank-tier-blue {
   position: absolute;
   bottom: 0;
-  left: 2px;
+  left: 4px;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  color: white;
+  padding: 1px 2px;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: bold;
+}
+.rank-tier-red {
+  position: absolute;
+  bottom: 0;
+  left: 25px;
   background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
   color: white;
   padding: 1px 2px;
@@ -178,17 +242,44 @@
   gap: 1px;
 }
 
+.item-grider .item-icon-red {
+  width: 40px;
+  height: 40px;
+  border-radius: 25%;
+  border: 2px solid #7D94F2;
+}
+.item-grider .item-icon-blue {
+  width: 40px;
+  height: 40px;
+  border-radius: 25%;
+  border: 2px solid #FF9A9A;
+}
+
 .item-icon {
   width: 60px;
   height: 60px;
   border-radius: 25%;
   border: 2px solid black;
 }
+
 .empty-item {
   width: 40px;
   height: 40px;
   border-radius: 5px;
   border: 2px solid black;
+}
+
+.empty-item-blue {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid #7D94F2;
+}
+.empty-item-red {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid #FF9A9A
 }
 .empty-icon {
   width: 60px;
@@ -427,7 +518,7 @@
   padding: 20px 20px 20px 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-  width: 1400px;
+  width: 1600px;
 }
 
 .profile-icon-section {
@@ -585,7 +676,12 @@
   text-align: flex-start;
   margin-bottom: -75px;
 }
-
+.offset-wr {
+  transform: translateX(40px);
+}
+.offset-games {
+  transform: translateX(10px);
+}
 .rank-icon-details {
   height: 215px;
   width: 215px;

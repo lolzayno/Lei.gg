@@ -131,7 +131,11 @@ function Profile() {
   
   
   function truncateIGN(ign) {
-    return ign.length > 15 ? ign.slice(0, 10) + '...' : ign;
+    if (ign.length > 10) {
+      return ign.slice(0, 7) + '...';
+    } else {
+      return ign.padEnd(10, ' ');
+    }
   }
 
 
@@ -170,8 +174,8 @@ function Profile() {
                 <div className="rank-details-text">
                   <h1>{userRankData.Rank}</h1>
                   <h3>Ranked Solo/Duo</h3>
-                  <h3>{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</h3>
-                  <h3>{(userRankData.WR * 100).toFixed(0)}% WR</h3>
+                  <h3 className="offset-games">{userRankData.Wins}W {userRankData.Games - userRankData.Wins}L</h3>
+                  <h3 className="offset-wr">{(userRankData.WR * 100).toFixed(0)}% WR</h3>
                   <h2><span className="text-bg">{userRankData.LP} LP</span></h2>
                 </div>
                 <div className="rank-details-icon" data-tooltip={`${userRankData.LP} LP`}>
@@ -288,7 +292,7 @@ function Profile() {
                         className="rune-icon corner-rune-icon"
                       />
                     </div>
-
+                    
                     <div className="summoner-spells">
                       <img 
                         src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/spell/${summonerSpellMap[summonerData.summoner_Spell1]}.png`}
@@ -405,21 +409,48 @@ function Profile() {
                           const item3 = match[`${lane}_data`][`${lane}_Item3Id`] || 0;
                           const item4 = match[`${lane}_data`][`${lane}_Item4Id`] || 0;
                           const item5 = match[`${lane}_data`][`${lane}_Item5Id`] || 0;
+                          const kills = match[`${lane}_data`][`${lane}_Kills`] || 0;
+                          const deaths = match[`${lane}_data`][`${lane}_Deaths`] || 0;
+                          const assists = match[`${lane}_data`][`${lane}_Assists`] || 0;
+                          const kp = match[`${lane}_data`][`${lane}_KP`] || 0;
+                          const minions = match[`${lane}_data`][`${lane}_Minions`] || 0;
                           return (
                             <div className="lane" key={lane}>
                               <span className="blue-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
+                              <div className="control-wards" data-tooltip={`Kills`}>
+                                <i className="fa-solid fa-skull"></i>
+                                <p>{kills}</p>
+                              </div>
+                              <p>/</p>
+                              <div className="control-wards" data-tooltip={`Deaths`}>
+                                <i className="fa-solid fa-skull-crossbones"></i>
+                                <p>{deaths}</p>
+                              </div>
+                              <p>/</p>
+                              <div className="control-wards" data-tooltip={`Assists`}>
+                                <i class="fa-solid fa-handshake-angle"></i>
+                                <p>{assists}</p>
+                              </div>
+                              <div className="control-wards" data-tooltip={`Kill Participation`}>
+                                <i class="fa-solid fa-hands"></i>
+                                <p>{kp}</p>
+                              </div>
+                              <div className="control-wards" data-tooltip={`Minions`}>
+                                <i class="fa-solid fa-ghost"></i>
+                                <p>{minions}</p>
+                              </div>
                               <div className="items-section">
-                                <div className="items">
+                                <div className="items-grid">
                                   {[item0, item1, item2, item3, item4, item5].map((itemId, idx) => (
-                                    <div key={idx} className="item-container">
+                                    <div key={idx} className="item-grider">
                                       {itemId && itemId !== 0 ? (
                                         <img
                                           src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`}
                                           alt={`Item ${itemId}`}
-                                          className="item-icon"
+                                          className="item-icon-red"
                                         />
                                       ) : (
-                                        <div className="empty-item"></div>
+                                        <div className="empty-item-blue"></div>
                                       )}
                                     </div>
                                   ))}
@@ -464,16 +495,15 @@ function Profile() {
                                 </div>
                                 <div className="total-damage">{totalDamageTaken}</div>
                               </div>
-                              
-                              <div className="rank-icon-container" data-tooltip={`${lp} LP`}>
+                              <div className="rank-icon-container-blue" data-tooltip={`${lp} LP`}>
                                 <img 
                                   src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
                                   alt={`${rank} rank icon`}
                                   className="rank-icon blue-rank-icon"
                                 />
-                                <span className="rank-tier">{tier}</span>
+                                <span className="rank-tier-blue">{tier}</span>
                               </div>
-                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Blue ${lane}`} />
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Blue ${lane}`} className="red-champ" />
                             </div>
                           );
                         })}
@@ -500,17 +530,23 @@ function Profile() {
                           const item3 = match[`${lane}_data`][`${lane}_Item3Id`] || 0;
                           const item4 = match[`${lane}_data`][`${lane}_Item4Id`] || 0;
                           const item5 = match[`${lane}_data`][`${lane}_Item5Id`] || 0;
+                          const kills = match[`${lane}_data`][`${lane}_Kills`] || 0;
+                          const deaths = match[`${lane}_data`][`${lane}_Deaths`] || 0;
+                          const assists = match[`${lane}_data`][`${lane}_Assists`] || 0;
+                          const kp = match[`${lane}_data`][`${lane}_KP`] || 0;
+                          const minions = match[`${lane}_data`][`${lane}_Minions`] || 0;
                           return (
                             <div className="lane" key={lane}>
-                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} />
-                              <div className="rank-icon-container" data-tooltip={`${lp} LP`}>
+                              <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} className="blue-champ"/>
+                              <div className="rank-icon-container-red" data-tooltip={`${lp} LP`}>
                                 <img 
                                   src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
                                   alt={`${rank} rank icon`}
                                   className="rank-icon blue-rank-icon"
                                 />
-                                <span className="rank-tier">{tier}</span>
+                                <span className="rank-tier-red">{tier}</span>
                               </div>
+                              
                               <div className="damage-bar-wrapper">
                                 <div className="damage-bar-container">
                                   <div
@@ -550,21 +586,43 @@ function Profile() {
                                 <div className="total-damage">{totalDamageTaken}</div>
                               </div>
                               <div className="items-section">
-                                <div className="items">
+                                <div className="items-grid">
                                   {[item0, item1, item2, item3, item4, item5].map((itemId, idx) => (
-                                    <div key={idx} className="item-container">
+                                    <div key={idx} className="item-grider">
                                       {itemId && itemId !== 0 ? (
                                         <img
                                           src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/item/${itemId}.png`}
                                           alt={`Item ${itemId}`}
-                                          className="item-icon"
+                                          className="item-icon-blue"
                                         />
                                       ) : (
-                                        <div className="empty-item"></div>
+                                        <div className="empty-item-red"></div>
                                       )}
                                     </div>
                                   ))}
                                 </div>
+                              </div>
+                              <div className="control-wards" data-tooltip={`Kills`}>
+                                <i className="fa-solid fa-skull"></i>
+                                <p>{kills}</p>
+                              </div>
+                              <p>/</p>
+                              <div className="control-wards" data-tooltip={`Deaths`}>
+                                <i className="fa-solid fa-skull-crossbones"></i>
+                                <p>{deaths}</p>
+                              </div>
+                              <p>/</p>
+                              <div className="control-wards" data-tooltip={`Assists`}>
+                                <i class="fa-solid fa-handshake-angle"></i>
+                                <p>{assists}</p>
+                              </div>
+                              <div className="control-wards" data-tooltip={`Kill Participation`}>
+                                <i class="fa-solid fa-hands"></i>
+                                <p>{kp.toFixed(2)}</p>
+                              </div>
+                              <div className="control-wards" data-tooltip={`Minions`}>
+                                <i class="fa-solid fa-ghost"></i>
+                                <p>{minions}</p>
                               </div>
                               <span className="red-side-ign">{truncateIGN(match[`${lane}_data`][`${lane}_IGN`])}</span>
                             </div>
