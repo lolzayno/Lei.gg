@@ -323,6 +323,46 @@ function Profile() {
                         ))}
                       </div>
                     </div>
+                    <div className="control-wards"data-tooltip={`Turret Plating`}>
+                        <i class="fa-solid fa-shield"></i>
+                        <p>{summonerData.summoner_Plates}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Turrets`}>
+                        <i class="fa-solid fa-chess-rook"></i>
+                        <p>{summonerData.summoner_Turrets}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Early Turrets`}>
+                        <i class="fa-solid fa-tower-cell"></i>
+                        <p>{summonerData.summoner_EarlyTurretsBeforePlates}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Kills under Turret`}>
+                        <i class="fa-solid fa-tower-observation"></i>
+                        <p>{summonerData.summoner_KillsUnderTurret}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Surrender`}>
+                        <i class="fa-regular fa-flag"></i>
+                        <p>{summonerData.summoner_Surrender}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Close Dodges`}>
+                        <i class="fa-solid fa-person-circle-exclamation"></i>
+                        <p>{summonerData.summoner_DodgeClose}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Total Dodges`}>
+                        <i class="fa-solid fa-person-circle-question"></i>
+                        <p>{summonerData.summoner_TotalDodges}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Max Level Advantage`}>
+                        <i class="fa-solid fa-fire-flame-simple"></i>
+                        <p>{summonerData.summoner_MaxLevelLead}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Max Minion Advantange`}>
+                      <i class="fa-solid fa-fire-flame-curved"></i>
+                        <p>{Math.floor(summonerData.summoner_MaxCSAdvantage)}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Total Immobilizations`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_CC}</p>
+                      </div>
                   </div>
                   <div>
                     <div className="match-info-container">
@@ -383,6 +423,51 @@ function Profile() {
                         <i class="fa-solid fa-hurricane"></i>
                         <p>{summonerData.summoner_CC}</p>
                       </div>
+                      <div className="control-wards"data-tooltip={`Knock Into Team and Killed`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_KnockIntoTeamKill}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Largest Multikill`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_LargestMultiKill}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Objective Steals`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_ObjectiveSteal}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`DamagePerMin`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_DamagePerMin}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Largest Crit`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_LargestCrit}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Consumables`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_Consumables}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`FirstBlood`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_FirstBlood}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Minions @ 10 Minutes`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_Minions10}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Vision Score Per Min`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_VisionScorePerMin}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`Vision Advantage`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_VisionAdvantange}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`ScuttleCrabs`}>
+                        <i class="fa-solid fa-hurricane"></i>
+                        <p>{summonerData.summoner_ScuttleCrabs}</p>
+                      </div>
+
                     </div>
                     
                   </div>
@@ -475,7 +560,7 @@ function Profile() {
                                     data-tooltip={`${damageTrue} True Damage`}
                                   />
                                 </div>
-                                <div className="total-damage">{totalDamage}</div>
+                                <div className="total-damage">{totalDamage} D</div>
                                 <div className="damage-bar-container">
                                   <div
                                     className="damage-bar red-bar"
@@ -493,9 +578,9 @@ function Profile() {
                                     data-tooltip={`${damageTrueTaken} True Damage`}
                                   />
                                 </div>
-                                <div className="total-damage">{totalDamageTaken}</div>
+                                <div className="total-damage">{totalDamageTaken} R</div>
                               </div>
-                              <div className="rank-icon-container-blue" data-tooltip={`${lp} LP`}>
+                              <div className="rank-icon-container-blue" data-tooltip={`${rank} ${lp} LP`}>
                                 <img 
                                   src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
                                   alt={`${rank} rank icon`}
@@ -538,7 +623,7 @@ function Profile() {
                           return (
                             <div className="lane" key={lane}>
                               <img src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match[`${lane}_champ`]}.png`} alt={`Red ${lane}`} className="blue-champ"/>
-                              <div className="rank-icon-container-red" data-tooltip={`${lp} LP`}>
+                              <div className="rank-icon-container-red" data-tooltip={`${rank} ${lp} LP`}>
                                 <img 
                                   src={`https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-mini-crests/${rank.toLowerCase()}.svg`}
                                   alt={`${rank} rank icon`}
@@ -565,7 +650,7 @@ function Profile() {
                                     data-tooltip={`${damageTrue} True Damage`}
                                   />
                                 </div>
-                                <div className="total-damage">{totalDamage}</div>
+                                <div className="total-damage">{totalDamage} D</div>
                                 <div className="damage-bar-container">
                                   <div
                                     className="damage-bar red-bar"
@@ -583,7 +668,7 @@ function Profile() {
                                     data-tooltip={`${damageTrueTaken} True Damage`}
                                   />
                                 </div>
-                                <div className="total-damage">{totalDamageTaken}</div>
+                                <div className="total-damage">{totalDamageTaken} R</div>
                               </div>
                               <div className="items-section">
                                 <div className="items-grid">

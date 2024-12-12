@@ -17,7 +17,7 @@
 .match-cards {
   display: flex;
   flex-direction: column;
-  margin-right: 520px;
+  margin-right: 485px;
   margin-top: 25px;
   gap: 1rem;
 }
@@ -492,6 +492,8 @@
   flex-wrap: wrap; /* Allow elements to wrap if they don't fit in a single row */
   align-items: center; /* Align content vertically */
   gap: 20px; /* Add spacing between sections */
+  flex-direction: center;
+  justify-content: center;
 }
 
 .vision,
