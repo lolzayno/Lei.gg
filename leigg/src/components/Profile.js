@@ -323,107 +323,48 @@ function Profile() {
                         ))}
                       </div>
                     </div>
-                    <div className="control-wards"data-tooltip={`Turret Plating`}>
-                        <i class="fa-solid fa-shield"></i>
-                        <p>{summonerData.summoner_Plates}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Turrets`}>
-                        <i class="fa-solid fa-chess-rook"></i>
-                        <p>{summonerData.summoner_Turrets}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Early Turrets`}>
-                        <i class="fa-solid fa-tower-cell"></i>
-                        <p>{summonerData.summoner_EarlyTurretsBeforePlates}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Kills under Turret`}>
-                        <i class="fa-solid fa-tower-observation"></i>
-                        <p>{summonerData.summoner_KillsUnderTurret}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Surrender`}>
-                        <i class="fa-regular fa-flag"></i>
-                        <p>{summonerData.summoner_Surrender}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Close Dodges`}>
-                        <i class="fa-solid fa-person-circle-exclamation"></i>
-                        <p>{summonerData.summoner_DodgeClose}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Total Dodges`}>
-                        <i class="fa-solid fa-person-circle-question"></i>
-                        <p>{summonerData.summoner_TotalDodges}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Max Level Advantage`}>
-                        <i class="fa-solid fa-fire-flame-simple"></i>
-                        <p>{summonerData.summoner_MaxLevelLead}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Max Minion Advantange`}>
-                      <i class="fa-solid fa-fire-flame-curved"></i>
-                        <p>{Math.floor(summonerData.summoner_MaxCSAdvantage)}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Total Immobilizations`}>
-                        <i class="fa-solid fa-hurricane"></i>
-                        <p>{summonerData.summoner_CC}</p>
-                      </div>
-                  </div>
-                  <div>
-                    <div className="match-info-container">
-                      <div className="result-duration">
-                        <p 
-                          className={`match-result ${match.result === '1' ? 'victory' : 'defeat'}`}
-                          style={{ color: match.result === '1' ? '#7D94F2' : '#FF9A9A' }}
-                        >
-                          {match.result === '1' ? 'Victory' : 'Defeat'}
-                        </p>
-                        <p className="game-duration"><strong>{Math.floor(match.game_duration / 60)}:{Math.floor(match.game_duration % 60)}</strong></p>
-                      </div>
-                      <div className="kda-kp">
-                        <p><strong>KDA:</strong> {summonerData.summoner_Kills}/{summonerData.summoner_Deaths}/{summonerData.summoner_Assists || 0}</p>
-                        <p><strong>KP:</strong> {summonerData.summoner_KP}</p>
-                      </div>
-                      <div className="farm-solo-kills">
-                        <p><strong>Farm:</strong> {summonerData.summoner_Minions} ({(summonerData.summoner_Minions / Math.floor(match.game_duration / 60)).toFixed(1)}) ({summonerData.summoner_Minions10})</p>
-                        <p><strong>Solo Kills:</strong> {summonerData.summoner_SoloKill}</p>
-                      </div>
+                    <div className="stat-container">
                       <div className="control-wards"data-tooltip={`Turret Plating`}>
-                        <i class="fa-solid fa-shield"></i>
-                        <p>{summonerData.summoner_Plates}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Turrets`}>
-                        <i class="fa-solid fa-chess-rook"></i>
-                        <p>{summonerData.summoner_Turrets}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Early Turrets`}>
-                        <i class="fa-solid fa-tower-cell"></i>
-                        <p>{summonerData.summoner_EarlyTurretsBeforePlates}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Kills under Turret`}>
-                        <i class="fa-solid fa-tower-observation"></i>
-                        <p>{summonerData.summoner_KillsUnderTurret}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Surrender`}>
-                        <i class="fa-regular fa-flag"></i>
-                        <p>{summonerData.summoner_Surrender}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Close Dodges`}>
-                        <i class="fa-solid fa-person-circle-exclamation"></i>
-                        <p>{summonerData.summoner_DodgeClose}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Total Dodges`}>
-                        <i class="fa-solid fa-person-circle-question"></i>
-                        <p>{summonerData.summoner_TotalDodges}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Max Level Advantage`}>
-                        <i class="fa-solid fa-fire-flame-simple"></i>
-                        <p>{summonerData.summoner_MaxLevelLead}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Max Minion Advantange`}>
-                      <i class="fa-solid fa-fire-flame-curved"></i>
-                        <p>{Math.floor(summonerData.summoner_MaxCSAdvantage)}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Total Immobilizations`}>
-                        <i class="fa-solid fa-hurricane"></i>
-                        <p>{summonerData.summoner_CC}</p>
-                      </div>
-                      <div className="control-wards"data-tooltip={`Knock Into Team and Killed`}>
+                          <i class="fa-solid fa-shield"></i>
+                          <p>{summonerData.summoner_Plates}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Turrets`}>
+                          <i class="fa-solid fa-chess-rook"></i>
+                          <p>{summonerData.summoner_Turrets}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Early Turrets`}>
+                          <i class="fa-solid fa-tower-cell"></i>
+                          <p>{summonerData.summoner_EarlyTurretsBeforePlates}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Kills under Turret`}>
+                          <i class="fa-solid fa-tower-observation"></i>
+                          <p>{summonerData.summoner_KillsUnderTurret}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Surrender`}>
+                          <i class="fa-regular fa-flag"></i>
+                          <p>{summonerData.summoner_Surrender}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Close Dodges`}>
+                          <i class="fa-solid fa-person-circle-exclamation"></i>
+                          <p>{summonerData.summoner_DodgeClose}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Total Dodges`}>
+                          <i class="fa-solid fa-person-circle-question"></i>
+                          <p>{summonerData.summoner_TotalDodges}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Max Level Advantage`}>
+                          <i class="fa-solid fa-fire-flame-simple"></i>
+                          <p>{summonerData.summoner_MaxLevelLead}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Max Minion Advantange`}>
+                        <i class="fa-solid fa-fire-flame-curved"></i>
+                          <p>{Math.floor(summonerData.summoner_MaxCSAdvantage)}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Total Immobilizations`}>
+                          <i class="fa-solid fa-hurricane"></i>
+                          <p>{summonerData.summoner_CC}</p>
+                        </div>
+                        <div className="control-wards"data-tooltip={`Knock Into Team and Killed`}>
                         <i class="fa-solid fa-hurricane"></i>
                         <p>{summonerData.summoner_KnockIntoTeamKill}</p>
                       </div>
@@ -455,19 +396,27 @@ function Profile() {
                         <i class="fa-solid fa-hurricane"></i>
                         <p>{summonerData.summoner_Minions10}</p>
                       </div>
-                      <div className="control-wards"data-tooltip={`Vision Score Per Min`}>
-                        <i class="fa-solid fa-hurricane"></i>
-                        <p>{summonerData.summoner_VisionScorePerMin}</p>
                       </div>
-                      <div className="control-wards"data-tooltip={`Vision Advantage`}>
-                        <i class="fa-solid fa-hurricane"></i>
-                        <p>{summonerData.summoner_VisionAdvantange}</p>
+                  </div>
+                  <div>
+                    <div className="match-info-container">
+                      <div className="result-duration">
+                        <p 
+                          className={`match-result ${match.result === '1' ? 'victory' : 'defeat'}`}
+                          style={{ color: match.result === '1' ? '#7D94F2' : '#FF9A9A' }}
+                        >
+                          {match.result === '1' ? 'Victory' : 'Defeat'}
+                        </p>
+                        <p className="game-duration"><strong>{Math.floor(match.game_duration / 60)}:{Math.floor(match.game_duration % 60)}</strong></p>
                       </div>
-                      <div className="control-wards"data-tooltip={`ScuttleCrabs`}>
-                        <i class="fa-solid fa-hurricane"></i>
-                        <p>{summonerData.summoner_ScuttleCrabs}</p>
+                      <div className="kda-kp">
+                        <p><strong>KDA:</strong> {summonerData.summoner_Kills}/{summonerData.summoner_Deaths}/{summonerData.summoner_Assists || 0}</p>
+                        <p><strong>KP:</strong> {summonerData.summoner_KP}</p>
                       </div>
-
+                      <div className="farm-solo-kills">
+                        <p><strong>Farm:</strong> {summonerData.summoner_Minions} ({(summonerData.summoner_Minions / Math.floor(match.game_duration / 60)).toFixed(1)}) ({summonerData.summoner_Minions10})</p>
+                        <p><strong>Solo Kills:</strong> {summonerData.summoner_SoloKill}</p>
+                      </div>
                     </div>
                     
                   </div>
@@ -718,6 +667,10 @@ function Profile() {
                   </div>
                   <div className="top-container">
                     <div className="vision">
+                      <div className="control-wards"data-tooltip={`Vision Advantage`}>
+                        <i class="fa-regular fa-eye"></i>
+                        <p>{summonerData.summoner_VisionAdvantange}</p>
+                      </div>
                       <div className="control-wards" data-tooltip={`Control Wards`}>
                         <i className="fa-solid fa-eye-low-vision"></i>
                         <p>{summonerData.summoner_ControlWard}</p>
@@ -783,6 +736,10 @@ function Profile() {
                       <div className="control-wards"data-tooltip={`Grubs`}>
                       <i class="fa-solid fa-hippo"></i>
                         <p>{summonerData.summoner_RiftHeraldTakedown}</p>
+                      </div>
+                      <div className="control-wards"data-tooltip={`ScuttleCrabs`}>
+                        <i class="fa-solid fa-fish"></i>
+                        <p>{summonerData.summoner_ScuttleCrabs}</p>
                       </div>
                     </div>
                   </div>
